@@ -2,4 +2,18 @@ This repository contains the spec files for creating all necessary RPMs for
 running Opencast Matterhorn.
 
 The inclusion of the EPEL repository from the Fedora project and the rpmforge
-repository is necessary to build and run these files.
+repository is necessary to build and run these files. The build process was
+tested on a system running CentOS 6.2 and Scientific Linux 6.2, both with a
+x86_64 architecture.
+
+Important: This repository only contains the spec files. The source files can
+			  be either retrieved directly from upstream or bundled with the specs
+			  from the source repository located at:
+			  http://lernfunk.de/matterhorn_3rd-party_repo/CentOS/6/SRPMS/
+
+			  If you only want to build your own RPM repository, I highly
+			  encourage you to use the source RPMs instead of downloading all
+			  source files by yourself. If you have improvements for the specs
+			  however, it would be nice if you fork this git repository and send
+			  me a pull request so that I can integrate them into the source
+			  repository and  everyone can benefit from your changes.
