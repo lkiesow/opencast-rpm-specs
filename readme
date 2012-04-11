@@ -1,0 +1,5 @@
+This repository contains the spec files for creating all necessary RPMs for
+running Opencast Matterhorn.
+
+The inclusion of the EPEL repository from the Fedora project and the rpmforge
+repository is necessary to build and run these files.
