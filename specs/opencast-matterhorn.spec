@@ -3,7 +3,7 @@
 
 Name:           opencast-matterhorn
 Version:        1.3
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Open Source Lecture Capture & Video Management Tool
 
 Group:          Applications/Multimedia
@@ -25,6 +25,7 @@ Requires:      mediainfo = 0.7.35
 Requires:      tesseract >= 3
 Requires:      qt_sbtl_embedder >= 0.4
 Requires:      bash
+Requires:      java-1.6.0-openjdk
 
 
 %description
@@ -93,6 +94,8 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Apr 12 2012 Lars Kiesow <lkiesow@uos.de> - 1.3-3
+- Fixed dependencies (added java)
 * Thu Mar  1 2012 Lars Kiesow <lkiesow@uos.de> - 1.3-2
 - Fixed service script
 * Thu Mar  1 2012 Lars Kiesow <lkiesow@uos.de> - 1.3-1
