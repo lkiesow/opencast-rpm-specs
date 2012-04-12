@@ -31,7 +31,7 @@ problem. On other RPM based distros such as Fedora or Mandriva you will have
 other but probably dependencies to build. But the basic steps should alwasy
 remain the same.
 
-Step 1: System Preperation
+Step 1: System Preparation
 --------------------------
 
 Commands:
@@ -87,8 +87,8 @@ Explanation:
 Step 3: Install source RPMs and build binary RPMs
 -------------------------------------------------
 
-Now we have to build the RPMs one after another. Obvious we have to start with
-those which do not depend on ones we still have to build. After we build a
+Now we have to build the RPMs one after another. Obviously we have to start
+with those which do not depend on ones we still have to build. After we build a
 package we have to check if another package we want to build depends on it. If
 that is the case we have to install the new package. Then we can move to the
 next package.
@@ -190,10 +190,7 @@ to put the repository on a FTP or HTTP server or do a SSH mount. Of cause you
 can place the repo in a local file system, too. But the other ways are easier to
 maintain when it comes to updates, etc.
 
-In the following commands the distribution of the source RPMs is totally
-optional and in many cases you do not need them.
-
-Commands:
+Commands (You may ommit everything related to the SRPMS):
   mkdir -p ~/matterhorn_repo/CentOS/6/{noarch,SRPMS,x86_64}
   cp -r ~/rpmbuild/RPMS/x86_64/* ~/matterhorn_repo/CentOS/6/x86_64 
   cp -r ~/rpmbuild/RPMS/noarch/* ~/matterhorn_repo/CentOS/6/noarch 
@@ -208,7 +205,7 @@ you can use the Apache http daemon to distribute it via the HTTP protocol.
 
 Step 5: Enable repository
 -------------------------
-Lets assume you repo is now reachable via http://example.com/matterhorn_repo.
+Lets assume your repo is now reachable via http://example.com/matterhorn_repo.
 Create the file /etc/yum.repos.d/matterhorn.repo using your favorite editor and
 enter:
 
