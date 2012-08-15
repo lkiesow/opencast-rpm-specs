@@ -2,20 +2,21 @@
 %define __os_install_post %{nil}
 
 Name:           opencast-matterhorn
-Version:        1.3
-Release:        3%{?dist}
+Version:        1.3.1
+Release:        1%{?dist}
 Summary:        Open Source Lecture Capture & Video Management Tool
 
 Group:          Applications/Multimedia
 License:        ECL 2.0, APL2 and other
 URL:            http://opencast.org/matterhorn/
-Source0:        matterhorn-1.3.tar.gz
+Source0:        matterhorn-1.3.1.tar.gz
 # TODO: Write a patch for the following files.
 # At the moment the original source file is edited, which should not be.
 # matterhorn-1.3/docs/felix/conf/config.properties
+# matterhorn-1.3/docs/felix/bin/matterhorn_init_d.sh
 Source1:        org.apache.felix.main.distribution-3.2.2.tar.gz
 Source2:        matterhorn-bin.tar.gz
-Source3:        maven-repo-mh13.tar.gz
+Source3:        maven-repo-mh131.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
     
 BuildRequires:  maven >= 3
@@ -58,7 +59,7 @@ chown -R matterhorn:matterhorn /opt/matterhorn
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/opt/matterhorn
 cp -r felix-framework-3.2.2/* $RPM_BUILD_ROOT/opt/matterhorn/
-cp -rf matterhorn-1.3/docs/felix/* $RPM_BUILD_ROOT/opt/matterhorn/
+cp -rf matterhorn-%{version}/docs/felix/* $RPM_BUILD_ROOT/opt/matterhorn/
 cp -r mvn2 $RPM_BUILD_ROOT/opt/matterhorn/
 echo '<?xml version="1.0" encoding="UTF-8"?>' > settings.xml
 echo '<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"' >> settings.xml
@@ -68,7 +69,7 @@ echo 'xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 ' \
 echo "<localRepository>$RPM_BUILD_ROOT/opt/matterhorn/mvn2/repository</localRepository>" >> settings.xml
 echo '<offline>true</offline>' >> settings.xml
 echo '</settings>' >> settings.xml
-pushd matterhorn-1.3
+pushd matterhorn-%{version}
    MAVEN_OPTS='-Xms256m -Xmx960m -XX:PermSize=64m -XX:MaxPermSize=256m' \
       mvn -o -s ../settings.xml clean install \
       -DdeployTo=$RPM_BUILD_ROOT/opt/matterhorn/matterhorn/
@@ -94,6 +95,8 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Aug 15 2012 Lars Kiesow <lkiesow@uos.de> - 1.3.1-1
+- Updated to Matterhorn 1.3.1
 * Thu Apr 12 2012 Lars Kiesow <lkiesow@uos.de> - 1.3-3
 - Fixed dependencies (added java)
 * Thu Mar  1 2012 Lars Kiesow <lkiesow@uos.de> - 1.3-2
