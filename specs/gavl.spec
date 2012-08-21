@@ -1,6 +1,6 @@
 Name:           gavl
 Version:        1.1.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A library for handling uncompressed audio and video data
 
 Group:          System Environment/Libraries
@@ -8,7 +8,7 @@ License:        GPLv3+
 URL:            http://gmerlin.sourceforge.net/
 Source0:        http://downloads.sourceforge.net/gmerlin/gavl-%{version}.tar.gz
 Patch1:         gavl-1.1.1-system_libgdither.patch
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 
 BuildRequires:  libtool
 
@@ -71,6 +71,13 @@ rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
+%if 0%{el5}
+if [ -d "$RPM_BUILD_ROOT/apiref" ]; then
+   mkdir -p "$RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/"
+   mv "$RPM_BUILD_ROOT/apiref" "$RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/"
+fi
+%endif
+
 # Prevent timestamps build difference
 touch -r include/gavl/gavl.h $RPM_BUILD_ROOT%{_includedir}/gavl/gavl_version.h
 
@@ -91,13 +98,16 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(-,root,root,-)
-%doc %{_docdir}/gavl/apiref/
+%doc %{_docdir}/gavl*
 %{_includedir}/gavl/
 %{_libdir}/*.so
 %{_libdir}/pkgconfig/gavl.pc
 
 
 %changelog
+* Thu Aug 16 2012 Lars Kiesow <lkiesow@uos.de> - 1.1.2-2
+- Some fixed for RHEL5.x
+
 * Sat May 01 2010 Nicolas Chauvet <kwizart@fedoraproject.org> - 1.1.2-1
 - Update to 1.1.2
 

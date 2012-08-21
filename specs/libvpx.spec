@@ -1,7 +1,7 @@
 Name:			libvpx
 Summary:		VP8 Video Codec SDK
 Version:		0.9.7.1
-Release:		1%{?dist}
+Release:		2%{?dist}
 License:		BSD
 Group:			System Environment/Libraries
 # sigh, non-canonical version strings.  clean up in 0.9.8 plz.
@@ -13,6 +13,7 @@ Source1:		libvpx.pc
 # Thanks to debian.
 Source2:		libvpx.ver
 URL:			http://www.webmproject.org/tools/vp8-sdk/
+BuildRoot:     %{_tmppath}/%{name}-%{version}-root
 %ifarch %{ix86} x86_64
 BuildRequires:		yasm
 %endif
@@ -64,7 +65,7 @@ and decoder.
 %global	generic_target 0
 %endif
 
-./configure --target=%{vpxtarget} --enable-pic --disable-install-srcs \
+./configure --target=%{vpxtarget} --enable-pic --disable-install-srcs --enable-install-docs \
 %if ! %{generic_target}
 --enable-shared \
 %endif
@@ -104,6 +105,7 @@ mv libNOTvpx.a libvpx.a
 mv libNOTvpx_g.a libvpx_g.a
 
 %install
+rm -rf %{buildroot}
 make DIST_DIR=%{buildroot}%{_prefix} dist
 
 # Install the pkg-config file
@@ -163,6 +165,9 @@ rm -rf %{buildroot}
 %{_bindir}/*
 
 %changelog
+* Thu Aug 16 2012 <lkiesow@uos.de> - 0.9.7.1-2
+- RHEL 5 compatibility fixes
+
 * Tue Aug 16 2011 Adam Jackson <ajax@redhat.com> 0.9.7.1-1
 - libvpx 0.9.7-p1
 

@@ -2,7 +2,7 @@
 
 Name:           xvidcore
 Version:        1.3.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        MPEG-4 Simple and Advanced Simple Profile codec
 
 Group:          System Environment/Libraries
@@ -12,7 +12,7 @@ Source0:        http://downloads.xvid.org/downloads/xvidcore-%{version}%{?pre}.t
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %ifarch %{ix86} x86_64
-BuildRequires:  nasm >= 2.0
+BuildRequires:  nasm
 %endif
 
 %description
@@ -83,6 +83,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Aug 16 2012 <lkiesow@uos.de> - 1.3.2-4
+- Rebuild for RHEL5.x
+
 * Wed Jan 04 2012 Nicolas Chauvet <kwizart@gmail.com> - 1.3.2-3
 - Rebuilt for target i686
 
