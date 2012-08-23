@@ -8,15 +8,15 @@ CentOS 5.8, 6.2 and Scientific Linux 6.2, both with a x86_64 architecture.
 Important: This repository only contains the spec files. The source files can
            be either retrieved directly from upstream or bundled with the specs
            from the source repository located at:
-			  ftp://ftp@lernfunk.de
+           ftp://ftp@lernfunk.de
 
-			  If you only want to build your own RPM repository, I highly
-			  encourage you to use the source RPMs instead of downloading all
-			  source files by yourself. If you have improvements for the specs
-			  however, it would be nice if you fork this git repository and send
-			  pull requests for the improved specs, so that I can integrate them
-			  into the source repository and everyone can benefit from your
-			  changes.
+           If you only want to build your own RPM repository, I highly
+           encourage you to use the source RPMs instead of downloading all
+           source files by yourself. If you have improvements for the specs
+           however, it would be nice if you fork this git repository and send
+           pull requests for the improved specs, so that I can integrate them
+           into the source repository and everyone can benefit from your
+           changes.
 
 
 Ready-To-Use: Binary Opencast Matterhorn RPM repository
