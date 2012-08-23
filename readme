@@ -137,6 +137,8 @@ Commands:
   rpmbuild -ba xvidcore.spec
   rpm -ivh http://lernfunk.de/matterhorn_3rd-party_repo/CentOS/6/SRPMS/a52dec-0.7.4-16.el6.src.rpm
   rpmbuild -ba a52dec.spec
+  rpm -ivh http://lernfunk.de/matterhorn_3rd-party_repo/CentOS/6/SRPMS/libmad-0.15.1b-14.el6.src.rpm
+  rpmbuild -ba libmad.spec
   su -c 'yum localinstall --nogpgcheck ../RPMS/x86_64/xvidcore-1*.rpm ../RPMS/x86_64/xvidcore-devel-*.rpm \
     ../RPMS/x86_64/a52dec-0*.rpm ../RPMS/x86_64/a52dec-devel-*.rpm'
   rpm -ivh http://lernfunk.de/matterhorn_3rd-party_repo/CentOS/6/SRPMS/gpac-0.4.6-0.13.cvs20100527.el6.3.src.rpm
@@ -165,8 +167,6 @@ Commands:
   su -c 'yum localinstall --nogpgcheck ../RPMS/x86_64/librtmp-2*.rpm ../RPMS/x86_64/librtmp-devel-2*.rpm'
   rpm -ivh http://lernfunk.de/matterhorn_3rd-party_repo/CentOS/6/SRPMS/opencore-amr-0.1.2-2.el6.src.rpm
   rpmbuild -ba opencore-amr.spec
-  rpm -ivh http://lernfunk.de/matterhorn_3rd-party_repo/CentOS/6/SRPMS/libmad-0.15.1b-14.el6.src.rpm
-  rpmbuild -ba libmad.spec
   su -c 'yum localinstall --nogpgcheck ../RPMS/x86_64/vo-aacenc-0*.rpm ../RPMS/x86_64/vo-aacenc-devel-*.rpm'
   su -c 'yum localinstall --nogpgcheck ../RPMS/x86_64/opencore-amr-0*.rpm ../RPMS/x86_64/opencore-amr-devel-0*.rpm'
   su -c 'yum localinstall --nogpgcheck ../RPMS/x86_64/faad2-2*.rpm ../RPMS/x86_64/faad2-devel-2*.rpm ../RPMS/x86_64/faad2-libs-2*.rpm'

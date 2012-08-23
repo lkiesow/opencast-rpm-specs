@@ -71,7 +71,7 @@ rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
-%if 0%{el5}
+%if 0%{?el5}
 if [ -d "$RPM_BUILD_ROOT/apiref" ]; then
    mkdir -p "$RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/"
    mv "$RPM_BUILD_ROOT/apiref" "$RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/"
