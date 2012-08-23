@@ -1,7 +1,7 @@
 Name:          ffmpeg
 Summary:       Hyper fast MPEG1/MPEG4/H263/RV and AC3/MPEG audio encoder
 Version:       0.10
-Release:       58%{?dist}
+Release:       59%{?dist}
 License:       GPLv2+
 Group:         System Environment/Libraries
 
@@ -22,8 +22,9 @@ BuildRequires: lame-devel
 BuildRequires: libdc1394-devel, libraw1394-devel
 BuildRequires: librtmp-devel >= 2.2.f
 BuildRequires: libstdc++-devel
+BuildRequires: libvorbis-devel
 %if 0%{?rhel} >= 6
-BuildRequires: libtheora-devel, libvorbis-devel
+BuildRequires: libtheora-devel
 BuildRequires: libva-devel
 %endif
 BuildRequires: libvdpau-devel
@@ -35,8 +36,8 @@ BuildRequires: openssl-devel
 %if 0%{?rhel} >= 6
 # disable dirac support for RHEL 5.x
 BuildRequires: schroedinger-devel
-%endif
 BuildRequires: speex-devel
+%endif
 BuildRequires: texi2html
 BuildRequires: vo-aacenc-devel
 BuildRequires: x264-devel
@@ -115,8 +116,8 @@ test -f version.h || echo "#define FFMPEG_VERSION \"%{evr}\"" > version.h
    --enable-libschroedinger \
    --enable-libspeex \
    --enable-libtheora \
-   --enable-libvorbis \
 %endif
+   --enable-libvorbis \
    --enable-libvpx \
    --enable-libx264 \
    --enable-libxvid \
@@ -173,6 +174,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Aug 23 2012 Lars Kiesow <lkiesow@uos.de> - 0.10-59
+- Fixed dependency and added libvorbis on el5
+
 * Fri Aug 17 2012 Lars Kiesow <lkiesow@uos.de> - 0.10-58
 - Port to RHEL 5.x (with schroedinger, speex and theora disabled)
 
