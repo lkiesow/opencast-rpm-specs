@@ -3,7 +3,7 @@
 
 Name:           opencast-matterhorn13
 Version:        1.3.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Open Source Lecture Capture & Video Management Tool
 
 Group:          Applications/Multimedia
@@ -99,6 +99,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Aug 24 2012 Lars Kiesow <lkiesow@uos.de> - 1.3.1-4
+- Fixed issue in start_matterhorn.sh
+
 * Fri Aug 24 2012 Lars Kiesow <lkiesow@uos.de> - 1.3.1-3
 - Switched to major release packages
 
