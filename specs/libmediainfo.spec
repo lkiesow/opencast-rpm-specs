@@ -1,6 +1,6 @@
 Name:          libmediainfo0
 Version:       0.7.35
-Release:       2%{?dist}
+Release:       3%{?dist}
 Summary:       Supplies technical and tag information about a video or audio file
 Group:         System Environment/Libraries
 License:       LGPLv3
@@ -17,7 +17,7 @@ BuildRequires: zlib-devel
 BuildRequires: doxygen
 Requires:      libzen0 >= 0.4.19
 
-%if 0%{?rhel} < 6
+%if 0%{?el5}
 BuildRequires: curl-devel
 %else
 BuildRequires: libcurl-devel
@@ -128,6 +128,9 @@ find $RPM_BUILD_ROOT -name '*.a' -exec rm -f {} ';'
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Fri Aug 24 2012 <lkiesow@uos.de> - 0.7.35-3
+- Fedora compatibility fixes
+
 * Thu Aug 16 2012 <lkiesow@uos.de> - 0.7.35-2
 - CentOS 5 compatibility fixes
 

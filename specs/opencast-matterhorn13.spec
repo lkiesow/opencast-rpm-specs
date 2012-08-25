@@ -1,9 +1,12 @@
 #%define _disable_jar_repacking 1
 %define __os_install_post %{nil}
 
+# TODO: Build a proper SPEC file:
+#       https://fedoraproject.org/wiki/Packaging/Java
+
 Name:           opencast-matterhorn13
 Version:        1.3.1
-Release:        4%{?dist}
+Release:        6%{?dist}
 Summary:        Open Source Lecture Capture & Video Management Tool
 
 Group:          Applications/Multimedia
@@ -16,14 +19,15 @@ Source3:        maven-repo-mh131.tar.gz
 Patch0:         matterhorn-config-%{version}.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
     
-BuildRequires:  maven >= 3
+BuildRequires: maven >= 3
+BuildRequires: java-devel >= 1:1.6.0
 Requires(pre): /usr/sbin/useradd
 Requires:      ffmpeg >= 0.9
 Requires:      mediainfo = 0.7.35
 Requires:      tesseract >= 3
 Requires:      qt_sbtl_embedder >= 0.4
 Requires:      bash
-Requires:      java-1.6.0-openjdk
+Requires:      java >= 1:1.6.0
 
 
 %description
@@ -99,6 +103,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Aug 25 2012 Lars Kiesow <lkiesow@uos.de> - 1.3.1-5
+- Fixed Java dependency issue
+
 * Fri Aug 24 2012 Lars Kiesow <lkiesow@uos.de> - 1.3.1-4
 - Fixed issue in start_matterhorn.sh
 
