@@ -1,7 +1,7 @@
 Name:          ffmpeg
 Summary:       Hyper fast MPEG1/MPEG4/H263/RV and AC3/MPEG audio encoder
 Version:       0.10
-Release:       57%{?dist}
+Release:       59%{?dist}
 License:       GPLv2+
 Group:         System Environment/Libraries
 
@@ -22,16 +22,22 @@ BuildRequires: lame-devel
 BuildRequires: libdc1394-devel, libraw1394-devel
 BuildRequires: librtmp-devel >= 2.2.f
 BuildRequires: libstdc++-devel
-BuildRequires: libtheora-devel, libvorbis-devel
+BuildRequires: libvorbis-devel
+%if 0%{?rhel} >= 6
+BuildRequires: libtheora-devel
 BuildRequires: libva-devel
+%endif
 BuildRequires: libvdpau-devel
 BuildRequires: libvpx-devel >= 0.9.6
 BuildRequires: opencore-amr-devel
 BuildRequires: opencv-devel
 BuildRequires: openjpeg-devel
 BuildRequires: openssl-devel
+%if 0%{?rhel} >= 6
+# disable dirac support for RHEL 5.x
 BuildRequires: schroedinger-devel
 BuildRequires: speex-devel
+%endif
 BuildRequires: texi2html
 BuildRequires: vo-aacenc-devel
 BuildRequires: x264-devel
@@ -99,20 +105,22 @@ test -f version.h || echo "#define FFMPEG_VERSION \"%{evr}\"" > version.h
    --enable-libopencv \
    --enable-libdc1394 \
    --enable-libdirac \
-   --enable-libvo-aacenc \  ### <<<<<<<<<<<<<<
+   --enable-libvo-aacenc \
    --enable-libgsm \
-   --enable-libmp3lame \  ### <<<<<<<<<<<<<<
+   --enable-libmp3lame \
    --enable-libopencore-amrnb \
    --enable-libopencore-amrwb \
    --enable-libopenjpeg \
    --enable-librtmp \
+%if 0%{?rhel} >= 6
    --enable-libschroedinger \
    --enable-libspeex \
    --enable-libtheora \
+%endif
    --enable-libvorbis \
    --enable-libvpx \
-   --enable-libx264 \  ### <<<<<<<<<<<<<<
-   --enable-libxvid \  ### <<<<<<<<<<<<<<
+   --enable-libx264 \
+   --enable-libxvid \
 %ifarch %ix86
    --extra-cflags="%{optflags}" \
 %else
@@ -166,6 +174,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Aug 23 2012 Lars Kiesow <lkiesow@uos.de> - 0.10-59
+- Fixed dependency and added libvorbis on el5
+
+* Fri Aug 17 2012 Lars Kiesow <lkiesow@uos.de> - 0.10-58
+- Port to RHEL 5.x (with schroedinger, speex and theora disabled)
+
 * Tue Mar  6 2012 Lars Kiesow <lkiesow@uos.de> - 0.10-57
 - Added requirements for manpages
 

@@ -1,0 +1,208 @@
+Step-By-Step: Building an Opencast Matterhorn RPM repository on CentOS 6
+==============================================================================
+
+Notice: For more Information about RPM creation have a look at the excellent
+        howto in the Fedora Wiki located at:
+        http://fedoraproject.org/wiki/How_to_create_an_RPM_package
+
+For this walkthrough a fresh installed CentOS 6.2.x86_64 system was used after
+installing the OS the only thing I did was to install the latest updates by
+running »yum update«.
+
+Step 1: System Preparation
+--------------------------
+
+# Install needed packages for RPM development:
+yum groupinstall Base 'Development Tools'
+yum install rpmdevtools.noarch rpmlint.noarch createrepo.noarch
+
+# Create new user for RPM development. It's best to have a separate user for
+# this. At least you should never create RPMs as root as one little mistake in
+# the SPEC files which would simple give you an error as non privileged user
+# could break your whole system as root.
+/usr/sbin/useradd makerpm
+passwd makerpm
+su makerpm
+
+# Create the ~/rpmbuild directory and a set of subdirectories, which you will
+# use for creating the packages.
+cd
+rpmdev-setuptree
+
+
+Step 2: Install build dependencies
+----------------------------------
+
+# Enable EPEL and Rpmforge repositories.
+yum localinstall --nogpgcheck \
+  http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-5.noarch.rpm
+
+# Install build dependencies.
+yum install dos2unix libzen0-devel zlib-devel libcurl-devel libtiff-devel \
+    nasm yasm ImageMagick SDL-devel librsvg2-devel libGLU-devel \
+    freeglut-devel freetype-devel libjpeg-devel libpng-devel \
+    js-devel libxml2-devel openssl-devel pulseaudio-libs-devel libogg-devel \
+    libvorbis-devel libtheora-devel libXt-devel libXpm-devel libXv-devel \
+    wxGTK-devel gtk+-devel gtk2-devel php-cli id3lib-devel libsysfs-devel \
+    fftw-devel opencv-devel bzip2-devel dirac-devel gsm-devel \
+    imlib2-devel lame-devel libdc1394-devel libraw1394-devel libva-devel \
+    libvdpau-devel openjpeg-devel schroedinger-devel speex-devel \
+    vo-aacenc-devel
+
+There may be some additional dependencies I have missed. If that is the case
+the rpmbuild tool while tell you exactly what is missing when you try to build
+a package so you can install it and give me a hint that something is missing in
+this howto.
+
+
+Step 3: Install source RPMs
+-------------------------------------------------
+
+The next step is to download all necessary source RPMs. You can do this
+manually or even install them via rpm over http, however I suggest using curl
+to download them all at once:
+
+cd ~/rpmbuild/SRPMS/
+rm -rf *.src.rpm
+curl 'http://lernfunk.de/matterhorn-repo/SRPMS/release/CentOS/6/filelist.py' | \
+  xargs -n1 -i curl -O "http://lernfunk.de/matterhorn-repo/SRPMS/release/CentOS/6/{}"
+rpm -ivh *.src.rpm
+
+Now all necessary spec files should be in ~/rpmbuild/SPECS and source files in
+~/rpmbuild/SOURCES. In other words: We are ready for the build process.
+
+
+Step 4: Build binary RPMs
+-------------------------------------------------
+
+Now we have to build the RPMs one after another. Obviously we have to start
+with those which do not depend on ones we still have to build. After we build a
+package we have to check if another package we want to build depends on it. If
+that is the case we have to install the new package. Then we can move to the
+next package.
+
+Following you will find a list of commands you have to execute. We use
+»rpmbuild -ba SPECFILE« to build a package. The ready to use RPM file will go
+into ~/rpmbuild/RPMS/ARCH/. At the end we install the new package using »yum
+localinstall URI« and »su -c CMD« as we need root privileges to install RPMs
+into the system.
+
+# Switch to SPEC folder.
+cd rpmbuild/SPECS
+
+# Build Quicktime subtitle embedder and dependencies
+rpmbuild -ba mp4v2.spec
+su -c 'yum localinstall --nogpgcheck \
+  ../RPMS/x86_64/mp4v2-1*.rpm ../RPMS/x86_64/mp4v2-devel-*.rpm'
+rpmbuild -ba qt_sbtl_embedder.spec
+
+
+# Build mediainfo and dependencies
+rpmbuild -ba libzen.spec
+su -c 'yum localinstall --nogpgcheck \
+  ../RPMS/x86_64/libzen-0*.rpm ../RPMS/x86_64/libzen-devel-*.rpm'
+rpmbuild -ba libmediainfo.spec
+su -c 'yum localinstall --nogpgcheck \
+  ../RPMS/x86_64/libmediainfo0-0*rpm ../RPMS/x86_64/libmediainfo0-devel*rpm'
+rpmbuild -ba mediainfo.spec
+
+
+# Build tesseract
+rpmbuild -ba tesseract.spec
+rpmbuild -ba tesseract-langpack.spec
+
+
+# Build ffmpeg and dependencies
+rpmbuild -ba vo-aacenc.spec
+rpmbuild -ba xvidcore.spec
+rpmbuild -ba a52dec.spec
+rpmbuild -ba libmad.spec
+rpmbuild -ba lame.spec
+su -c 'yum localinstall --nogpgcheck \
+  ../RPMS/x86_64/xvidcore-1*.rpm ../RPMS/x86_64/xvidcore-devel-*.rpm \
+  ../RPMS/x86_64/a52dec-0*.rpm   ../RPMS/x86_64/a52dec-devel-*.rpm \
+  ../RPMS/x86_64/lame-3*.rpm   ../RPMS/x86_64/lame-devel-*.rpm'
+rpmbuild -ba gpac.spec
+su -c 'yum localinstall --nogpgcheck \
+  ../RPMS/x86_64/gpac-0*.rpm ../RPMS/x86_64/gpac-devel-0*.rpm \
+  ../RPMS/x86_64/gpac-libs-0*.rpm'
+rpmbuild -ba x264.spec
+rpmbuild -ba libvpx.spec
+rpmbuild -ba faad2.spec
+rpmbuild -ba libgdither.spec
+su -c 'yum localinstall --nogpgcheck \
+  ../RPMS/x86_64/libgdither-0*.rpm ../RPMS/x86_64/libgdither-devel-0*.rpm'
+rpmbuild -ba gavl.spec
+su -c 'yum localinstall --nogpgcheck \
+  ../RPMS/x86_64/gavl-1*.rpm ../RPMS/x86_64/gavl-devel-1*.rpm'
+rpmbuild -ba frei0r-plugins.spec
+su -c 'yum localinstall --nogpgcheck \
+  ../RPMS/x86_64/frei0r-*-1*.rpm ../RPMS/x86_64/frei0r-*-devel-1*.rpm'
+rpmbuild -ba rtmpdump.spec
+su -c 'yum localinstall --nogpgcheck \
+  ../RPMS/x86_64/librtmp-2*.rpm ../RPMS/x86_64/librtmp-devel-2*.rpm'
+rpmbuild -ba opencore-amr.spec
+su -c 'yum localinstall --nogpgcheck \
+  ../RPMS/x86_64/vo-aacenc-0*.rpm ../RPMS/x86_64/vo-aacenc-devel-*.rpm'
+su -c 'pushd ../RPMS/x86_64; yum localinstall --nogpgcheck \
+  opencore-amr-0*.rpm  opencore-amr-devel-0*.rpm \
+  faad2-2*.rpm         faad2-devel-2*.rpm         faad2-libs-2*.rpm \
+  x264-0.*.rpm         x264-devel-0*.rpm          x264-libs-0*.rpm \
+  libvpx-0*.rpm        libvpx-devel-0*.rpm ; \
+  popd'
+rpmbuild -ba ffmpeg.spec
+
+
+# Build matterhorn and direct dependencies
+rpmbuild -ba maven.spec
+su -c 'yum install --nogpgcheck ../RPMS/x86_64/maven-3*.rpm'
+rpmbuild -ba opencast-matterhorn13.spec
+
+
+Step 4: Create repository for RPM files
+---------------------------------------
+
+The next step is to create a repository for all created RPMs. It should be
+available from all systems you want to use it for. Common ways to do this are
+to put the repository on a FTP or HTTP server or do a SSH mount. Of cause you
+can place the repo in a local file system, too. But the other ways are easier to
+maintain when it comes to updates, etc.
+
+Commands (You may ommit everything related to the SRPMS):
+mkdir -p ~/matterhorn-repo/CentOS/6/{noarch,SRPMS,x86_64}
+cp -r ~/rpmbuild/RPMS/x86_64/* ~/matterhorn_repo/CentOS/6/x86_64 
+cp -r ~/rpmbuild/RPMS/noarch/* ~/matterhorn_repo/CentOS/6/noarch 
+cp -r ~/rpmbuild/SRPMS/*       ~/matterhorn_repo/CentOS/6/SRPMS
+createrepo ~/matterhorn_repo/CentOS/6/x86_64
+createrepo ~/matterhorn_repo/CentOS/6/noarch
+
+That is it. Your repo in now finished. Put it somewhere reachable. For example
+you can use the Apache http daemon to distribute it via the HTTP protocol.
+cp -r ~/matterhorn-repo /var/www/html/
+
+
+Step 5: Enable repository
+-------------------------
+Lets assume your repo is now reachable via http://example.com/matterhorn-repo.
+Create the file /etc/yum.repos.d/matterhorn.repo using your favorite editor and
+enter:
+
+
+[matterhorn]
+name = Matterhorn CentOS $releasever Repository
+baseurl  = http://example.com/matterhorn_repo/CentOS/$releasever/$basearch
+enabled  = 1
+protect  = 0
+gpgcheck = 0
+
+[matterhorn-noarch]
+name = Matterhorn CentOS $releasever Repository noarch
+baseurl  = http://example.com/matterhorn_repo/CentOS/$releasever/noarch
+enabled  = 1
+protect  = 0
+gpgcheck = 0
+
+
+Now your repository is enabled for use with yum (and other rpm based update
+managers). You can now simply copy this file to any computer you want to use
+the repository on.

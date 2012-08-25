@@ -3,13 +3,13 @@
 Summary: A minimalistic plugin API for video effects
 Name: frei0r-plugins
 Version: 1.3
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://frei0r.dyne.org/
 Source0: ftp://ftp.dyne.org/frei0r/releases/frei0r-plugins-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: opencv-devel >= 1.0.0, gavl-devel >= 0.2.3
+BuildRequires: opencv-devel >= 2.0.0, gavl-devel >= 0.2.3
 
 %description
 Frei0r is a minimalistic plugin API for video effects.
@@ -58,8 +58,12 @@ rm -rf %{buildroot}
 %{_libdir}/pkgconfig/frei0r.pc
 
 %changelog
+* Tue Aug 21 2012 Lars Kiesow <lkiesow@uos.de> - 1.3-3
+- Fixed dependencies (OpenCV 1 was to old)
+
 * Tue Feb 14 2012 Lars Kiesow <lkiesow@uos.de> - 1.3-2
 - Fixed issue with include and pkgconfig files by building a devel package:
   "Installed (but unpackaged) file(s) found"
+
 * Mon Mar 14 2011 Axel Thimm <Axel.Thimm@ATrpms.net> - 1.3-1
 - Initial build.

@@ -1,11 +1,11 @@
 Name:          mediainfo
 Version:       0.7.35
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       Supplies technical and tag information about a video or audio file
 Group:         Applications/Multimedia
 License:       LGPLv3
 URL:           http://mediainfo.sourceforge.net/
-Source0:       %{name}-%{version}-%{release}.tar.gz
+Source0:       %{name}-%{version}.tar.gz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 
@@ -79,9 +79,13 @@ popd
 %{_bindir}/mediainfo
 
 %changelog
+* Thu Aug 16 2012 <lkiesow@uos.de> - 0.7.35-2
+- CentOS 5 compatibility fixes
+
 * Thu Feb 02 2012 <lkiesow@uos.de> - 0.7.35-1%{?dist}
 - Removed RPM warnings
 - Downgraded to v0.7.35
+
 * Tue Jan 01 2009 MediaArea.net <info@mediaarea.net> - 0.7.39-0
 - See History.txt for more info and real dates
 - Previous packages made by Toni Graffy <toni@links2linux.de>

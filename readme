@@ -1,236 +1,42 @@
 This repository contains the spec files for creating all necessary RPMs for
 running Opencast Matterhorn.
 
-The inclusion of the EPEL repository from the Fedora project and the rpmforge
-repository is necessary to build and run these files. The build process was
-tested on a system running CentOS 6.2 and Scientific Linux 6.2, both with a
-x86_64 architecture.
+The inclusion of the EPEL repository from the Fedora project is necessary to
+build and run these files. The build process was tested on a system running
+CentOS 5.8, 6.2 and Scientific Linux 6.2, both with a x86_64 architecture.
 
 Important: This repository only contains the spec files. The source files can
            be either retrieved directly from upstream or bundled with the specs
            from the source repository located at:
-           http://lernfunk.de/matterhorn_3rd-party_repo/CentOS/6/SRPMS/
+           ftp://ftp@lernfunk.de
 
            If you only want to build your own RPM repository, I highly
            encourage you to use the source RPMs instead of downloading all
            source files by yourself. If you have improvements for the specs
            however, it would be nice if you fork this git repository and send
-           me a pull request so that I can integrate them into the source
-           repository and  everyone can benefit from your changes.
+           pull requests for the improved specs, so that I can integrate them
+           into the source repository and everyone can benefit from your
+           changes.
 
+
+Ready-To-Use: Binary Opencast Matterhorn RPM repository
+=======================================================
+
+If you simply want to install Matterhorn an given system have a look at the
+Matterhorn RPM repository provided by the University of Osnabrück. It contains
+all necessary pre-compiled RPMs for an up-to-date Matterhorn installation. The
+repository can be found at:
+   http://lernfunk.de/repo
+
+The repositories arei currently available for the following operating systems:
+ - CentOS 5.x
+ - CentOS 6.x
 
 
 Step-By-Step: Building Opencast Matterhorn RPM repository
 =========================================================
 
-For this walkthrough a fresh installed CentOS 6.2.x86_64 system was used after
-installing the OS the only thing I did was to install the latest updates by
-running »yum update«. If you want to use Scientific Linux or another GNU/Linux
-distribution based on RedHat Enterprise Linux instead, it should not be a
-problem. On other RPM based distros such as Fedora or Mandriva you will have
-other but probably dependencies to build. But the basic steps should always
-remain the same.
-
-Step 1: System Preparation
---------------------------
-
-Commands:
-  yum groupinstall 'Development Tools'
-  yum install rpmdevtools.noarch rpmlint.noarch createrepo.noarch
-  /usr/sbin/useradd makerpm
-  passwd makerpm
-  su makerpm
-  cd
-  rpmdev-setuptree
-
-Explanation:
-- Install the packages from the group 'Development Tools'.
-- Install the files for RPM development.
-- Create new user for RPM development. It's best to have a separate user for
-  this. At least you should never create RPMs as root as one little mistake in
-  the SPEC files which would simple give you an error as non privileged user
-  could break your whole system as root.
-- Set a password for the new user.
-- Switch to user for RPM building.
-- Switch to the home directory.
-- Create the ~/rpmbuild directory and a set of subdirectories, which you will
-  use for creating the packages.
-
-
-Step 2: Install build dependencies
-----------------------------------
-
-Commands:
-  yum localinstall --nogpgcheck \
-    http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-5.noarch.rpm \
-    http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.2-2.el6.rf.x86_64.rpm
-  yum install dos2unix libzen0-devel zlib-devel libcurl-devel
-  yum install libtiff-devel
-  yum install nasm yasm ImageMagick SDL-devel librsvg2-devel libGLU-devel \
-    freeglut-devel freetype-devel libjpeg-devel libpng-devel libmad-devel \
-    js-devel libxml2-devel openssl-devel pulseaudio-libs-devel libogg-devel \
-    libvorbis-devel libtheora-devel libXt-devel libXpm-devel libXv-devel \
-    wxGTK-devel gtk+-devel gtk2-devel php-cli id3lib-devel libsysfs-devel \
-    fftw-devel opencv-devel gnutls-devel bzip2-devel dirac-devel gsm-devel \
-    imlib2-devel lame-devel libdc1394-devel libraw1394-devel libva-devel \
-    libvdpau-devel openjpeg-devel schroedinger-devel speex-devel \
-    vo-aacenc-devel
-
-Explanation:
-- Enable EPEL and Rpmforge repositories.
-- Install build dependencies for
-  - mediainfo
-  - tesseract
-  - ffmpeg
-
-
-Step 3: Install source RPMs and build binary RPMs
--------------------------------------------------
-
-
-WARNING: The uris of the source RPMs have changed. They are now located at
-			http://lernfunk.de/matterhorn-repo/SRPMS/. Some commands have to be
-			modified according to this change.
-
-
-Now we have to build the RPMs one after another. Obviously we have to start
-with those which do not depend on ones we still have to build. After we build a
-package we have to check if another package we want to build depends on it. If
-that is the case we have to install the new package. Then we can move to the
-next package.
-
-Following you will find a list of commands you have to execute. We use »rpm
--ivh URI« to install a source rpm. After that you will find the specific spec
-file in ~/rpmbuild/SPECS. Then we use »rpmbuild -ba SPECFILE« to build the
-package. The ready to use RPM file will go into ~/rpmbuild/RPMS/ARCH/. At the
-end we install the new package using »yum localinstall URI« and »su -c CMD« as
-we need root privileges to install RPMs into the system.
-
-Commands:
-  cd rpmbuild/SPECS
-
-# Build Quicktime subtitle embedder and dependencies
-  rpm -ivh http://lernfunk.de/matterhorn_3rd-party_repo/CentOS/6/SRPMS/mp4v2-1.9.1-2.el6.src.rpm
-  rpmbuild -ba mp4v2.spec
-  su -c 'yum localinstall ../RPMS/x86_64/mp4v2-1.9.1-2.el6.x86_64.rpm ../RPMS/x86_64/mp4v2-devel-1.9.1-2.el6.x86_64.rpm'
-  rpm -ivh http://lernfunk.de/matterhorn_3rd-party_repo/CentOS/6/SRPMS/qt_sbtl_embedder-0.4-1.el6.src.rpm
-  rpmbuild -ba qt_sbtl_embedder.spec
-
-
-# Build mediainfo and dependencies
-  rpm -ivh http://lernfunk.de/matterhorn_3rd-party_repo/CentOS/6/SRPMS/libzen-0.4.23-0.20120109.2.el6.src.rpm
-  rpmbuild -ba libzen.spec
-  su -c 'yum localinstall ../RPMS/x86_64/libzen-0.4.23-0.20120109.2.el6.x86_64.rpm ../RPMS/x86_64/libzen-devel-0.4.23-0.20120109.2.el6.x86_64.rpm'
-  rpm -ivh http://lernfunk.de/matterhorn_3rd-party_repo/CentOS/6/SRPMS/libmediainfo0-0.7.35-1.el6.src.rpm
-  rpmbuild -ba libmediainfo.spec
-  rpm -ivh http://lernfunk.de/matterhorn_3rd-party_repo/CentOS/6/SRPMS/mediainfo-0.7.35-1.el6.src.rpm
-  rpmbuild -ba mediainfo.spec
-
-
-# Build tesseract
-  rpm -ivh http://lernfunk.de/matterhorn_3rd-party_repo/CentOS/6/SRPMS/tesseract-3.00-3.el6.src.rpm
-  rpmbuild -ba tesseract.spec
-  rpm -ivh http://lernfunk.de/matterhorn_3rd-party_repo/CentOS/6/SRPMS/tesseract-langpack-3.00-2.src.rpm
-  rpmbuild -ba tesseract-langpack.spec
-
-
-# Build ffmpeg and dependencies
-  rpm -ivh http://lernfunk.de/matterhorn_3rd-party_repo/CentOS/6/SRPMS/vo-aacenc-0.1.2-2.el6.src.rpm
-  rpmbuild -ba vo-aacenc.spec
-  rpm -ivh http://lernfunk.de/matterhorn_3rd-party_repo/CentOS/6/SRPMS/xvidcore-1.3.2-3.el6.src.rpm
-  rpmbuild -ba xvidcore.spec
-  rpm -ivh http://lernfunk.de/matterhorn_3rd-party_repo/CentOS/6/SRPMS/a52dec-0.7.4-16.el6.src.rpm
-  rpmbuild -ba a52dec.spec
-  su -c 'yum localinstall ../RPMS/x86_64/xvidcore-1.3.2-3.el6.x86_64.rpm ../RPMS/x86_64/xvidcore-devel-1.3.2-3.el6.x86_64.rpm \
-    ../RPMS/x86_64/a52dec-0.7.4-16.el6.x86_64.rpm ../RPMS/x86_64/a52dec-devel-0.7.4-16.el6.x86_64.rpm'
-  rpm -ivh http://lernfunk.de/matterhorn_3rd-party_repo/CentOS/6/SRPMS/gpac-0.4.6-0.13.cvs20100527.el6.3.src.rpm
-  rpmbuild -ba gpac.spec
-  su -c 'yum localinstall ../RPMS/x86_64/gpac-0.4.6-0.13.cvs20100527.el6.3.x86_64.rpm ../RPMS/x86_64/gpac-devel-0.4.6-0.13.cvs20100527.el6.3.x86_64.rpm ../RPMS/x86_64/gpac-libs-0.4.6-0.13.cvs20100527.el6.3.x86_64.rpm'
-  rpm -ivh http://lernfunk.de/matterhorn_3rd-party_repo/CentOS/6/SRPMS/x264-0.118-19_20111111.2245.el6.src.rpm
-  rpmbuild -ba x264.spec
-  rpm -ivh http://lernfunk.de/matterhorn_3rd-party_repo/CentOS/6/SRPMS/libvpx-0.9.7.1-1.el6.src.rpm
-  rpmbuild -ba libvpx.spec
-  rpm -ivh http://lernfunk.de/matterhorn_3rd-party_repo/CentOS/6/SRPMS/faad2-2.7-2.el6.3.src.rpm
-  rpmbuild -ba faad2.spec
-  rpm -ivh http://lernfunk.de/matterhorn_3rd-party_repo/CentOS/6/SRPMS/libgdither-0.6-2.el6.src.rpm
-  rpmbuild -ba libgdither.spec
-  su -c 'yum localinstall ../RPMS/x86_64/libgdither-0.6-2.el6.x86_64.rpm ../RPMS/x86_64/libgdither-devel-0.6-2.el6.x86_64.rpm'
-  rpm -ivh http://lernfunk.de/matterhorn_3rd-party_repo/CentOS/6/SRPMS/gavl-1.1.2-1.el6.src.rpm
-  rpmbuild -ba gavl.spec
-  su -c 'yum localinstall ../RPMS/x86_64/gavl-1.1.2-1.el6.x86_64.rpm ../RPMS/x86_64/gavl-devel-1.1.2-1.el6.x86_64.rpm'
-  rpm -ivh http://lernfunk.de/matterhorn_3rd-party_repo/CentOS/6/SRPMS/frei0r-plugins-1.3-2.el6.src.rpm
-  rpmbuild frei0r-plugins.spec
-  su -c 'yum localinstall ../RPMS/x86_64/frei0r-plugins-1.3-2.el6.x86_64.rpm ../RPMS/x86_64/frei0r-plugins-devel-1.3-2.el6.x86_64.rpm'
-  rpm -ivh http://lernfunk.de/matterhorn_3rd-party_repo/CentOS/6/SRPMS/rtmpdump-2.3-3.el6.src.rpm
-  rpmbuild -ba rtmpdump.spec
-  su -c 'yum localinstall ../RPMS/x86_64/librtmp-2.3-3.el6.x86_64.rpm ../RPMS/x86_64/librtmp-devel-2.3-3.el6.x86_64.rpm'
-  rpm -ivh http://lernfunk.de/matterhorn_3rd-party_repo/CentOS/6/SRPMS/opencore-amr-0.1.2-2.el6.src.rpm
-  rpmbuild -ba opencore-amr.spec
-  rpm -ivh http://lernfunk.de/matterhorn_3rd-party_repo/CentOS/6/SRPMS/libmad-0.15.1b-14.el6.src.rpm
-  rpmbuild -ba libmad.spec
-  su -c 'yum localinstall ../RPMS/x86_64/vo-aacenc-0.1.2-2.el6.x86_64.rpm ../RPMS/x86_64/vo-aacenc-devel-0.1.2-2.el6.x86_64.rpm'
-  su -c 'yum localinstall ../RPMS/x86_64/opencore-amr-0.1.2-2.el6.x86_64.rpm ../RPMS/x86_64/opencore-amr-devel-0.1.2-2.el6.x86_64.rpm'
-  su -c 'yum localinstall ../RPMS/x86_64/faad2-2.7-2.el6.3.x86_64.rpm ../RPMS/x86_64/faad2-devel-2.7-2.el6.3.x86_64.rpm ../RPMS/x86_64/faad2-libs-2.7-2.el6.3.x86_64.rpm'
-  su -c 'yum localinstall ../RPMS/x86_64/x264-0.118-19_20111111.2245.el6.x86_64.rpm ../RPMS/x86_64/x264-devel-0.118-19_20111111.2245.el6.x86_64.rpm ../RPMS/x86_64/x264-libs-0.118-19_20111111.2245.el6.x86_64.rpm'
-  su -c 'yum localinstall ../RPMS/x86_64/libvpx-0.9.7.1-1.el6.x86_64.rpm ../RPMS/x86_64/libvpx-devel-0.9.7.1-1.el6.x86_64.rpm'
-  rpm -ivh http://lernfunk.de/matterhorn_3rd-party_repo/CentOS/6/SRPMS/ffmpeg-0.10-56.el6.src.rpm
-
-
-# Build package for rpmforge repo [optional]
-  rpm -ivh http://lernfunk.de/matterhorn_3rd-party_repo/CentOS/6/SRPMS/rpmforge-release-0.5.2-2.el6.src.rpm
-  rpmbuild -ba rpmforge-release.spec
-
-# Build matterhorn and direct dependencies
-  rpm -ivh http://lernfunk.de/matterhorn_3rd-party_repo/CentOS/6/SRPMS/maven-3.0.4-1.el6.src.rpm
-  rpmbuild -ba maven.spec
-  su -c 'yum install ../RPMS/x86_64/maven-3.0.4-1.el6.x86_64.rpm'
-  rpm -ivh http://lernfunk.de/matterhorn_3rd-party_repo/CentOS/6/SRPMS/opencast-matterhorn-1.3.1-1.el6.src.rpm
-
-
-Step 4: Create repository for RPM files
----------------------------------------
-
-The next step is to create a repository for all created RPMs. It should be
-available from all systems you want to use it for. Common ways to do this are
-to put the repository on a FTP or HTTP server or do a SSH mount. Of cause you
-can place the repo in a local file system, too. But the other ways are easier to
-maintain when it comes to updates, etc.
-
-Commands (You may ommit everything related to the SRPMS):
-  mkdir -p ~/matterhorn_repo/CentOS/6/{noarch,SRPMS,x86_64}
-  cp -r ~/rpmbuild/RPMS/x86_64/* ~/matterhorn_repo/CentOS/6/x86_64 
-  cp -r ~/rpmbuild/RPMS/noarch/* ~/matterhorn_repo/CentOS/6/noarch 
-  cp -r ~/rpmbuild/SRPMS/*       ~/matterhorn_repo/CentOS/6/SRPMS
-  createrepo ~/matterhorn_repo/CentOS/6/x86_64
-  createrepo ~/matterhorn_repo/CentOS/6/noarch
-
-That is it. Your repo in now finished. Put it somewhere reachable. For example
-you can use the Apache http daemon to distribute it via the HTTP protocol.
-  cp -r ~/matterhorn_repo /var/www/html/
-
-
-Step 5: Enable repository
--------------------------
-Lets assume your repo is now reachable via http://example.com/matterhorn_repo.
-Create the file /etc/yum.repos.d/matterhorn.repo using your favorite editor and
-enter:
-
-
-[matterhorn]
-name = Matterhorn CentOS $releasever Repository
-baseurl = http://example.com/matterhorn_repo/CentOS/$releasever/$basearch
-enabled = 1
-protect = 0
-gpgcheck = 0
-
-[matterhorn]
-name = Matterhorn CentOS $releasever Repository noarch
-baseurl = http://example.com/matterhorn_repo/CentOS/$releasever/noarch
-enabled = 1
-protect = 0
-gpgcheck = 0
-
-
-Now your repository is enabled for use with yum (and other rpm based update
-managers). You can now simply copy this file to any computer you want to use
-the repository on.
+If you want to create your own Matterhorn repository, the 'build-howtos'
+directory contains a couple of Step-By-Step walkthroughs for different systems
+which describe in detail how to create a Matterhorn RPM repository from the
+provided source RPMs.

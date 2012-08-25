@@ -1,11 +1,11 @@
 Name:          libmediainfo0
 Version:       0.7.35
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       Supplies technical and tag information about a video or audio file
 Group:         System Environment/Libraries
 License:       LGPLv3
 URL:           http://mediainfo.sourceforge.net/
-Source0:       %{name}-%{version}-%{release}.tar.gz
+Source0:       %{name}-%{version}.tar.gz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 
@@ -15,8 +15,14 @@ BuildRequires: libzen0-devel >= 0.4.19
 BuildRequires: pkgconfig
 BuildRequires: zlib-devel
 BuildRequires: doxygen
-BuildRequires: libcurl-devel
 Requires:      libzen0 >= 0.4.19
+
+%if 0%{?rhel} < 6
+BuildRequires: curl-devel
+%else
+BuildRequires: libcurl-devel
+%endif
+
 
 %global _enable_debug_package 0
 %global debug_package %{nil}
@@ -122,9 +128,13 @@ find $RPM_BUILD_ROOT -name '*.a' -exec rm -f {} ';'
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Thu Aug 16 2012 <lkiesow@uos.de> - 0.7.35-2
+- CentOS 5 compatibility fixes
+
 * Thu Feb 02 2012 <lkiesow@uos.de> - 0.7.35-1
 - Removed RPM warnings
 - Downgraded to v0.7.35
+
 * Tue Jan 01 2009 MediaArea.net <info@mediaarea.net> - 0.7.43-0
 - See History.txt for more info and real dates
 - Previous packages made by Toni Graffy <toni@links2linux.de>

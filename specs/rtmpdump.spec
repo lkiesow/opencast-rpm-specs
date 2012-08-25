@@ -1,6 +1,6 @@
 Name:		rtmpdump
 Version:	2.3
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	Toolkit for RTMP streams
 
 Group:		Applications/Internet
@@ -12,7 +12,7 @@ URL:		http://rtmpdump.mplayerhq.hu/
 Source0:	http://rtmpdump.mplayerhq.hu/download/rtmpdump-%{version}.tgz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildRequires:	gnutls-devel zlib-devel
+BuildRequires:	openssl-devel zlib-devel
 
 %description
 rtmpdump is a toolkit for RTMP streams. All forms of RTMP are supported,
@@ -41,13 +41,12 @@ contains include files needed to develop applications using librtmp.
 %setup -q
 
 %build
-# The fact that we have to add -ldl for gnutls is Fedora bug #611318
-make CRYPTO=GNUTLS SHARED=yes OPT="$RPM_OPT_FLAGS" LIB_GNUTLS="-lgnutls -lgcrypt -ldl" LIBRTMP=librtmp/librtmp.so LIBS=
+make OPT="$RPM_OPT_FLAGS" LIBRTMP=librtmp/librtmp.so LIBS=
 
 
 %install
 rm -rf $RPM_BUILD_ROOT
-make CRYPTO=GNUTLS SHARED=yes DESTDIR=$RPM_BUILD_ROOT prefix=/usr mandir=%{_mandir} libdir=%{_libdir} install
+make SHARED=yes DESTDIR=$RPM_BUILD_ROOT prefix=/usr mandir=%{_mandir} libdir=%{_libdir} install
 rm -f $RPM_BUILD_ROOT/%{_libdir}/librtmp.a
 
 %clean
@@ -81,6 +80,10 @@ rm -rf $RPM_BUILD_ROOT
 %doc ChangeLog
 
 %changelog
+* Fri Aug 17 2012 Lars Kiesow <lkiesow@uos.de> - 2.3-4
+- Rebuild for CentOS 5
+- Switched to OpenSSL due to old GnuTLS version on CentOS5
+
 * Wed Jan 04 2012 Nicolas Chauvet <kwizart@gmail.com> - 2.3-3
 - Rebuilt for target i686
 
