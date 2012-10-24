@@ -28,7 +28,10 @@ Requires:      tesseract >= 3
 Requires:      qt_sbtl_embedder >= 0.4
 Requires:      bash
 Requires:      java >= 1:1.6.0
+Requires:      %{name}-maven-repo = %{version}-%{release}
 
+%package maven-repo
+Summary:       Maven Repository for Opencast Matterhorn
 
 %description
 Matterhorn is a free, open-source platform to support the management of
@@ -40,6 +43,9 @@ This is the 1.3.x release of Matterhorn. The major releases of Matterhorn may
 be incompatible and not suited for direct update. Thus other versions are
 available as different packages. However, there is a metapackage
 opencast-matterhorn available which keeps track of the newest version.
+
+%description maven-repo
+Maven repository for Opencast Matterhorn.
 
 %prep
 %setup -q -c -a 0 -a 1 -a 2 -a 3
@@ -68,6 +74,12 @@ rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/opt/matterhorn
 cp -r felix-framework-3.2.2/* $RPM_BUILD_ROOT/opt/matterhorn/
 cp -rf matterhorn-%{version}/docs/felix/* $RPM_BUILD_ROOT/opt/matterhorn/
+pushd $RPM_BUILD_ROOT/opt/matterhorn/
+	mv DEPENDENCIES  felix.DEPENDENCIES
+	mv LICENSE       felix.LICENSE
+	mv LICENSE.kxml2 felix.LICENSE.kxml2
+	mv NOTICE        felix.NOTICE
+popd
 cp -r mvn2 $RPM_BUILD_ROOT/opt/matterhorn/
 echo '<?xml version="1.0" encoding="UTF-8"?>' > settings.xml
 echo '<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"' >> settings.xml
@@ -98,8 +110,25 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %{_bindir}/*
 /var/matterhorn
-/opt/matterhorn
+/opt/matterhorn/felix.*
+/opt/matterhorn/bin
+/opt/matterhorn/bundle
+/opt/matterhorn/conf
+/opt/matterhorn/doc
+/opt/matterhorn/etc
+/opt/matterhorn/felix-cache
+/opt/matterhorn/inbox
+/opt/matterhorn/lib
+/opt/matterhorn/load
+/opt/matterhorn/logs
 %{_initrddir}/*
+
+
+%files maven-repo
+%defattr(-,root,root,-)
+/opt/matterhorn/mvn2
+
+#/opt/matterhorn/matterhorn
 
 
 %changelog
