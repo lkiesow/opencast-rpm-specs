@@ -7,7 +7,7 @@
 
 Name:           %{gstreamer}
 Version:        0.10.36
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        GStreamer streaming media framework runtime
 
 Group:          Applications/Multimedia
@@ -55,6 +55,8 @@ BuildRequires:  netpbm-progs
 BuildRequires:  tetex-dvips
 BuildRequires:  ghostscript
 BuildRequires:  PyXML
+
+Requires:       glib2 >= %{_glib2}
 
 %description
 GStreamer is a streaming media framework, based on graphs of filters which
@@ -258,6 +260,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{_datadir}/gtk-doc/html/gstreamer-plugins-%{majorminor}
 
 %changelog
+* Tue Nov 27 2012 Lars Kiesow <lkiesow@uos.de> - 0.10.36-2
+- Fixed dependencies
+
 * Tue Feb 28 2012 Benjamin Otte <otte@redhat.com> 0.10.36-1
 - Update to 0.10.36
 
