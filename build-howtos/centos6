@@ -49,6 +49,9 @@ yum install dos2unix libzen0-devel zlib-devel libcurl-devel libtiff-devel \
     libvdpau-devel openjpeg-devel schroedinger-devel speex-devel \
     vo-aacenc-devel
 
+##EPEL Broken dependencies
+  liboil.x86_64 0:0.3.16-4.1.el6                     schroedinger.x86_64 0:1.0.8-4.el6                     schroedinger-devel.x86_64 0:1.0.8-4.el6  
+
 There may be some additional dependencies I have missed. If that is the case
 the rpmbuild tool while tell you exactly what is missing when you try to build
 a package so you can install it and give me a hint that something is missing in
