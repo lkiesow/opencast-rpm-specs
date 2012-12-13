@@ -137,6 +137,8 @@ rpmbuild -ba x264.spec
 rpmbuild -ba libvpx.spec
 rpmbuild -ba faad2.spec
 rpmbuild -ba libgdither.spec
+rpm -ivh x264-* libvpx-* faad2-* libgdither-*
+
 su -c 'yum localinstall --nogpgcheck \
   ../RPMS/x86_64/libgdither-0*.rpm ../RPMS/x86_64/libgdither-devel-0*.rpm'
 rpmbuild -ba gavl.spec
