@@ -123,10 +123,12 @@ rpmbuild -ba xvidcore.spec
 rpmbuild -ba a52dec.spec
 rpmbuild -ba libmad.spec
 rpmbuild -ba lame.spec
+rpmbuild -ba libmad.spec
 su -c 'yum localinstall --nogpgcheck \
   ../RPMS/x86_64/xvidcore-1*.rpm ../RPMS/x86_64/xvidcore-devel-*.rpm \
   ../RPMS/x86_64/a52dec-0*.rpm   ../RPMS/x86_64/a52dec-devel-*.rpm \
-  ../RPMS/x86_64/lame-3*.rpm   ../RPMS/x86_64/lame-devel-*.rpm'
+  ../RPMS/x86_64/lame-3*.rpm   ../RPMS/x86_64/lame-devel-*.rpm' \
+                 libmad*.rpm
 rpmbuild -ba gpac.spec
 su -c 'yum localinstall --nogpgcheck \
   ../RPMS/x86_64/gpac-0*.rpm ../RPMS/x86_64/gpac-devel-0*.rpm \
