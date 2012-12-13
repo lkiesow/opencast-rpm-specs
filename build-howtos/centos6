@@ -108,7 +108,7 @@ su -c 'yum localinstall --nogpgcheck \
   ../RPMS/x86_64/libzen-0*.rpm ../RPMS/x86_64/libzen-devel-*.rpm'
 rpmbuild -ba libmediainfo.spec
 su -c 'yum localinstall --nogpgcheck \
-  ../RPMS/x86_64/libmediainfo0-0*rpm ../RPMS/x86_64/libmediainfo0-devel*rpm'
+  ../RPMS/x86_64/libmediainfo0*rpm
 rpmbuild -ba mediainfo.spec
 
 
