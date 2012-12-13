@@ -37,6 +37,8 @@ Step 2: Install build dependencies
 yum localinstall --nogpgcheck \
   http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-5.noarch.rpm
 
+#Enable optional Red Hat channels in Satellite or Red Hat Network
+
 # Install build dependencies.
 yum install dos2unix libzen0-devel zlib-devel libcurl-devel libtiff-devel \
     nasm yasm ImageMagick SDL-devel librsvg2-devel libGLU-devel \
@@ -49,8 +51,8 @@ yum install dos2unix libzen0-devel zlib-devel libcurl-devel libtiff-devel \
     libvdpau-devel openjpeg-devel schroedinger-devel speex-devel \
     vo-aacenc-devel
 
-##EPEL Broken dependencies
-  liboil.x86_64 0:0.3.16-4.1.el6                     schroedinger.x86_64 0:1.0.8-4.el6                     schroedinger-devel.x86_64 0:1.0.8-4.el6  
+
+
 
 There may be some additional dependencies I have missed. If that is the case
 the rpmbuild tool while tell you exactly what is missing when you try to build
