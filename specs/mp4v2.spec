@@ -1,6 +1,6 @@
 Name:           mp4v2
 Version:        1.9.1
-Release:        3%{?dist}
+Release:        2%{?dist}
 Summary:        Library:which provides functions to read, create, and modify mp4 files
 
 Group:          System Environment/Libraries
@@ -9,7 +9,6 @@ URL:            http://code.google.com/p/mp4v2
 Source0:        http://mp4v2.googlecode.com/files/mp4v2-%{version}.tar.bz2
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
     
-%{?fedora:Conflicts: libmp4v2}
 
 %description
 The MP4v2 library provides an API to create and modify mp4 files as defined by
@@ -70,11 +69,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*.so
 
 %changelog
-* Fri Aug 24 2012 Lars Kiesow <lkiesow@uos.de> - 1.9.1-3
-- Marked conflict with libmp4v2 from Fedora repository
-
 * Fri Mar  2 2012 Lars Kiesow <lkiesow@uos.de> - 1.9.1-2
 - Corrected some minor packaging issues.
-
 * Thu Mar  1 2012 Lars Kiesow <lkiesow@uos.de> - 1.9.1-1
 - Created package
