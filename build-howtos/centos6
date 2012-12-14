@@ -37,6 +37,8 @@ Step 2: Install build dependencies
 yum localinstall --nogpgcheck \
   http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-5.noarch.rpm
 
+#Enable optional Red Hat channels in Satellite or Red Hat Network
+
 # Install build dependencies.
 yum install dos2unix libzen0-devel zlib-devel libcurl-devel libtiff-devel \
     nasm yasm ImageMagick SDL-devel librsvg2-devel libGLU-devel \
@@ -47,7 +49,10 @@ yum install dos2unix libzen0-devel zlib-devel libcurl-devel libtiff-devel \
     fftw-devel opencv-devel bzip2-devel dirac-devel gsm-devel \
     imlib2-devel lame-devel libdc1394-devel libraw1394-devel libva-devel \
     libvdpau-devel openjpeg-devel schroedinger-devel speex-devel \
-    vo-aacenc-devel
+    vo-aacenc-devel ncurses-devel
+
+
+
 
 There may be some additional dependencies I have missed. If that is the case
 the rpmbuild tool while tell you exactly what is missing when you try to build
@@ -103,7 +108,7 @@ su -c 'yum localinstall --nogpgcheck \
   ../RPMS/x86_64/libzen-0*.rpm ../RPMS/x86_64/libzen-devel-*.rpm'
 rpmbuild -ba libmediainfo.spec
 su -c 'yum localinstall --nogpgcheck \
-  ../RPMS/x86_64/libmediainfo0-0*rpm ../RPMS/x86_64/libmediainfo0-devel*rpm'
+  ../RPMS/x86_64/libmediainfo0*rpm
 rpmbuild -ba mediainfo.spec
 
 
@@ -118,10 +123,12 @@ rpmbuild -ba xvidcore.spec
 rpmbuild -ba a52dec.spec
 rpmbuild -ba libmad.spec
 rpmbuild -ba lame.spec
+rpmbuild -ba libmad.spec
 su -c 'yum localinstall --nogpgcheck \
   ../RPMS/x86_64/xvidcore-1*.rpm ../RPMS/x86_64/xvidcore-devel-*.rpm \
   ../RPMS/x86_64/a52dec-0*.rpm   ../RPMS/x86_64/a52dec-devel-*.rpm \
-  ../RPMS/x86_64/lame-3*.rpm   ../RPMS/x86_64/lame-devel-*.rpm'
+  ../RPMS/x86_64/lame-3*.rpm   ../RPMS/x86_64/lame-devel-*.rpm' \
+                 libmad*.rpm
 rpmbuild -ba gpac.spec
 su -c 'yum localinstall --nogpgcheck \
   ../RPMS/x86_64/gpac-0*.rpm ../RPMS/x86_64/gpac-devel-0*.rpm \
@@ -130,6 +137,8 @@ rpmbuild -ba x264.spec
 rpmbuild -ba libvpx.spec
 rpmbuild -ba faad2.spec
 rpmbuild -ba libgdither.spec
+rpm -ivh x264-* libvpx-* faad2-* libgdither-*
+
 su -c 'yum localinstall --nogpgcheck \
   ../RPMS/x86_64/libgdither-0*.rpm ../RPMS/x86_64/libgdither-devel-0*.rpm'
 rpmbuild -ba gavl.spec

@@ -1,6 +1,6 @@
 Name:           qt_sbtl_embedder
 Version:        0.4
-Release:        2%{?dist}
+Release:        1%{?dist}
 Summary:        QuickTime subtitle embedder
 
 Group:          Applications/Multimedia
@@ -10,7 +10,7 @@ Source0:        qt_sbtl_embedder-0.4.tar.gz
 Patch0:         qt_sbtl_embedder-0.4.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
     
-BuildRequires:  mp4v2-devel = 1.9.1
+BuildRequires:  mp4v2-devel >= 1.9.1
 
 
 %description
@@ -44,9 +44,5 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Fri Aug 24 2012 Lars Kiesow <lkiesow@uos.de> - 0.4-2
-- Rebuild for Fedora
-- The QSE needs exactly the 1.9.1 version of mp4v2 (2.0 does not work)
-
 * Thu Mar  1 2012 Lars Kiesow <lkiesow@uos.de> - 0.4-1
 - Created package
