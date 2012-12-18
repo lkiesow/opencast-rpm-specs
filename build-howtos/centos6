@@ -49,7 +49,7 @@ yum install dos2unix libzen0-devel zlib-devel libcurl-devel libtiff-devel \
     fftw-devel opencv-devel bzip2-devel dirac-devel gsm-devel \
     imlib2-devel lame-devel libdc1394-devel libraw1394-devel libva-devel \
     libvdpau-devel openjpeg-devel prelink schroedinger-devel speex-devel \
-    vo-aacenc-devel ncurses-devel desktop-file-utils
+    vo-aacenc-devel ncurses-devel desktop-file-utils texi2html
 
 
 
