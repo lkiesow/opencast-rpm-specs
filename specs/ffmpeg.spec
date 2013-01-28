@@ -12,7 +12,6 @@ BuildRoot:     %{_tmppath}/%{name}-root
 BuildRequires: SDL-devel
 BuildRequires: a52dec-devel
 BuildRequires: bzip2-devel
-BuildRequires: dirac-devel
 BuildRequires: faad2-devel
 BuildRequires: freetype-devel
 BuildRequires: frei0r-plugins-devel
@@ -34,7 +33,6 @@ BuildRequires: opencv-devel
 BuildRequires: openjpeg-devel
 BuildRequires: openssl-devel
 %if 0%{?rhel} >= 6
-# disable dirac support for RHEL 5.x
 BuildRequires: schroedinger-devel
 BuildRequires: speex-devel
 %endif
@@ -104,7 +102,6 @@ test -f version.h || echo "#define FFMPEG_VERSION \"%{evr}\"" > version.h
    --enable-frei0r \
    --enable-libopencv \
    --enable-libdc1394 \
-   --enable-libdirac \
    --enable-libvo-aacenc \
    --enable-libgsm \
    --enable-libmp3lame \
@@ -176,10 +173,6 @@ rm -rf %{buildroot}
 %changelog
 * Mon Jan 28 2013 Lars Kiesow <lkiesow@uos.de> - 1.1.1-1
 - Update to ffmpeg 1.1.1
-
-* Mon Jan 28 2013 Lars Kiesow <lkiesow@uos.de> - 1.0.1-2
-- Included new ffmpec version (done by Eugene Vilensky)
-- Reenabled dirac support
 
 * Thu Aug 23 2012 Lars Kiesow <lkiesow@uos.de> - 0.10-59
 - Fixed dependency and added libvorbis on el5

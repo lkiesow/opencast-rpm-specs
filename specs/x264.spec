@@ -1,9 +1,9 @@
 
 Summary:       A free h264/avc encoder
 Name:          x264
-Version:       0.128
+Version:       0.129
 %define        pkgversion 20130127-2245
-Release:       1_20130127-2245%{?dist}
+Release:       1_20130127.2245%{?dist}
 License:       GPLv2
 Group:         Applications/Multimedia
 URL:           http://www.videolan.org/developers/x264.html
@@ -82,12 +82,13 @@ rm -rf %{buildroot}
 %{_libdir}/libx264.so
 
 %files libs
+%defattr(-,root,root,-)
 %doc COPYING AUTHORS doc/*.txt
 %defattr(-,root,root,-)
 %{_libdir}/libx264.so.*
 
 %changelog
-* Fri Mar  2 2012 Lars Kiesow <lkiesow@uos.de> - 0.128-1_20130127-2245
+* Fri Mar  2 2012 Lars Kiesow <lkiesow@uos.de> - 0.129-1_20130127.2245
 - Updated to new version
 
 * Fri Mar  2 2012 Lars Kiesow <lkiesow@uos.de> - 0.118-19_20111111.2245
