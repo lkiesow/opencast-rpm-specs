@@ -1,7 +1,7 @@
 Name:          ffmpeg
 Summary:       Hyper fast MPEG1/MPEG4/H263/RV and AC3/MPEG audio encoder
-Version:       1.0.1
-Release:       2%{?dist}
+Version:       1.1.1
+Release:       1%{?dist}
 License:       GPLv2+
 Group:         System Environment/Libraries
 
@@ -174,6 +174,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jan 28 2013 Lars Kiesow <lkiesow@uos.de> - 1.1.1-1
+- Update to ffmpeg 1.1.1
+
 * Mon Jan 28 2013 Lars Kiesow <lkiesow@uos.de> - 1.0.1-2
 - Included new ffmpec version (done by Eugene Vilensky)
 - Reenabled dirac support
