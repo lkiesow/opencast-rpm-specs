@@ -1,6 +1,6 @@
 Name:           libzen
 Version:        0.4.23
-Release:        0.20120109.1%{?dist}
+Release:        0.20120109.2%{?dist}
 Summary:        Supplies information about a video or audio file
 
 Group:          System Environment/Libraries

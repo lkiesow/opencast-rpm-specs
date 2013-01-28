@@ -55,7 +55,6 @@ BuildRequires:  netpbm-progs
 BuildRequires:  tetex-dvips
 BuildRequires:  ghostscript
 BuildRequires:  PyXML
-
 Requires:       glib2 >= %{_glib2}
 
 %description
