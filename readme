@@ -1,6 +1,8 @@
 This repository contains the spec files for creating all necessary RPMs for
 running Opencast Matterhorn.
 
+LEO WAR HIER
+
 The inclusion of the EPEL repository from the Fedora project is necessary to
 build and run these files. The build process was tested on a system running
 CentOS 5.8, 6.2 and Scientific Linux 6.2, both with a x86_64 architecture.
