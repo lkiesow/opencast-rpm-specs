@@ -1,13 +1,13 @@
 %define         gstreamer       gstreamer
 %define         majorminor      0.10
 
-%define         _glib2                  2.22
+%define         _glib2                  2.32
 %define         _libxml2                2.4.0
 %define         _gobject-introspection  0.6.3
 
 Name:           %{gstreamer}
 Version:        0.10.36
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        GStreamer streaming media framework runtime
 
 Group:          Applications/Multimedia
@@ -140,10 +140,6 @@ make %{?_smp_mflags} ERROR_CFLAGS="" LIBTOOL="%{_bindir}/libtool"
 %install  
 rm -rf $RPM_BUILD_ROOT
 
-echo '#########################################################################################################################################################'
-echo '#########################################################################################################################################################'
-echo '#########################################################################################################################################################'
-echo '#########################################################################################################################################################'
 
 # Install doc temporarily in order to be included later by rpm
 make install DESTDIR=$RPM_BUILD_ROOT
@@ -260,6 +256,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{_datadir}/gtk-doc/html/gstreamer-plugins-%{majorminor}
 
 %changelog
+* Tue Dec 18 2012 Lars Kiesow <lkiesow@uos.de> - 0.10.36-3
+- Fixed dependencies
+
 * Tue Nov 27 2012 Lars Kiesow <lkiesow@uos.de> - 0.10.36-2
 - Fixed dependencies
 

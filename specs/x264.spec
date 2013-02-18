@@ -1,9 +1,9 @@
 
 Summary:       A free h264/avc encoder
 Name:          x264
-Version:       0.118
-%define        pkgversion 20111111-2245
-Release:       19_20111111.2245%{?dist}
+Version:       0.129
+%define        pkgversion 20130127-2245
+Release:       1_20130127.2245%{?dist}
 License:       GPLv2
 Group:         Applications/Multimedia
 URL:           http://www.videolan.org/developers/x264.html
@@ -42,7 +42,7 @@ scratch. This package contains the development files.
 %prep
 %setup -q -n %{name}-snapshot-%{pkgversion}-stable
 perl -pi -e's, -lintl,,' gtk/Makefile
-grep -rl /usr/X11R6/lib . | xargs perl -pi -e's,/usr/X11R6/lib,%{_x_libraries},'
+#grep -rl /usr/X11R6/lib . | xargs perl -pi -e's,/usr/X11R6/lib,%{_x_libraries},'
 
 %build
 %configure \
@@ -82,11 +82,15 @@ rm -rf %{buildroot}
 %{_libdir}/libx264.so
 
 %files libs
+%defattr(-,root,root,-)
 %doc COPYING AUTHORS doc/*.txt
 %defattr(-,root,root,-)
 %{_libdir}/libx264.so.*
 
 %changelog
+* Fri Mar  2 2012 Lars Kiesow <lkiesow@uos.de> - 0.129-1_20130127.2245
+- Updated to new version
+
 * Fri Mar  2 2012 Lars Kiesow <lkiesow@uos.de> - 0.118-19_20111111.2245
 - Corrected some minor packaging issues.
 

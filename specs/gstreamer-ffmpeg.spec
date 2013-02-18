@@ -1,6 +1,6 @@
 Name:           gstreamer-ffmpeg
 Version:        0.10.13
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        GStreamer FFmpeg-based plug-ins
 Group:          Applications/Multimedia
 # the ffmpeg plugin is LGPL, the postproc plugin is GPL
@@ -12,6 +12,7 @@ BuildRequires:  gstreamer-devel >= 0.10.0
 BuildRequires:  gstreamer-plugins-base-devel >= 0.10.0
 BuildRequires:  ffmpeg-devel >= 0.8.8
 BuildRequires:  orc-devel bzip2-devel
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %description
 GStreamer is a streaming media framework, based on graphs of filters which
@@ -32,17 +33,23 @@ This package provides FFmpeg-based GStreamer plug-ins.
 %build
 %configure --disable-dependency-tracking --disable-static \
   --with-package-name="gst-plugins-ffmpeg rpmfusion rpm" \
-  --with-package-origin="http://rpmfusion.org/" \
-  --with-system-ffmpeg
+  --with-package-origin="http://rpmfusion.org/"
+#  --with-system-ffmpeg
 make %{?_smp_mflags}
 
 
 %install
+rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 rm $RPM_BUILD_ROOT%{_libdir}/gstreamer-0.10/libgst*.la
 
 
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+
 %files
+%defattr(-,root,root,-)
 %doc AUTHORS COPYING ChangeLog NEWS README TODO
 %{_libdir}/gstreamer-0.10/libgstffmpeg.so
 %{_libdir}/gstreamer-0.10/libgstffmpegscale.so
@@ -50,6 +57,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/gstreamer-0.10/libgst*.la
 
 
 %changelog
+* Thu Feb 14 2013 Lars Kiesow <lkiesow@uos.de> - 0.10.13-3
+- Rebuild for new x264/FFmpeg
+
 * Tue Feb 28 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.10.13-2
 - Rebuilt for x264/FFmpeg
 

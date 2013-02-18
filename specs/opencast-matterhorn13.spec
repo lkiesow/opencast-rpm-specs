@@ -22,6 +22,8 @@ BuildRequires: maven >= 3
 BuildRequires: java-devel >= 1:1.6.0
 Requires:      %{name}-base                  = %{version}-%{release}
 Requires:      %{name}-distribution-default >= %{version}-%{release}
+# Nur für Capture Agent:
+Requires:      jv4linfo >= 2.1
 
 %package distribution-default
 Summary: Default Matterhorn distribution
