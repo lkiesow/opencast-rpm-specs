@@ -1,14 +1,18 @@
-This repository contains the spec files for creating all necessary RPMs for
-running Opencast Matterhorn.
+This repository contains the spec files to create all necessary RPMs for
+Opencast Matterhorn. This includes:
+ - Opencast Matterhorn itself (With different distributions, profiles, …)
+ - All 3rd-Party-Tools needed by Matterhorn and not included in the default
+	CentOS Scientific Linux or Fedora EPEL repositories.
 
-The inclusion of the EPEL repository from the Fedora project is necessary to
-build and run these files. The build process was tested on a system running
-CentOS 5.8, 6.2 and Scientific Linux 6.2, both with a x86_64 architecture.
+For CentOS and Scientific Linux, The inclusion of the EPEL repository from the
+Fedora project is necessary to build and run these files. The build process was
+tested on a system running CentOS 5.8, 6.2 and Scientific Linux 6.2, both with
+a x86_64 architecture.
 
 Important: This repository only contains the spec files. The source files can
            be either retrieved directly from upstream or bundled with the specs
            from the source repository located at:
-           ftp://ftp@lernfunk.de
+			  http://lernfunk.de/matterhorn-repo/SRPMS/
 
            If you only want to build your own RPM repository, I highly
            encourage you to use the source RPMs instead of downloading all
@@ -22,15 +26,17 @@ Important: This repository only contains the spec files. The source files can
 Ready-To-Use: Binary Opencast Matterhorn RPM repository
 =======================================================
 
-If you simply want to install Matterhorn an given system have a look at the
+If you only want to install Matterhorn on your system, have a look at the
 Matterhorn RPM repository provided by the University of Osnabrück. It contains
 all necessary pre-compiled RPMs for an up-to-date Matterhorn installation. The
 repository can be found at:
    http://lernfunk.de/repo
 
-The repositories arei currently available for the following operating systems:
+The repositories are currently available for the following operating systems:
  - CentOS 5.x
  - CentOS 6.x
+ - Scientific Linux 6.x
+ - Fedora Linux 17
 
 
 Step-By-Step: Building Opencast Matterhorn RPM repository
