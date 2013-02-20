@@ -7,7 +7,7 @@
 
 Name:           opencast-matterhorn14
 Version:        1.4.0
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Open Source Lecture Capture & Video Management Tool
 
 Group:          Applications/Multimedia
@@ -197,6 +197,8 @@ Requires: %{name}-module-matterhorn-workspace-api >= %{version}-%{release}
 
 %package profile-dist
 Summary: dist profile for Opencast Matterhorn %{__INTERNAL_VERSION}
+# Remote and non-remote module will not work together
+Conflicts: %{name}-profile-dist-stub
 Requires: %{name}-module-matterhorn-authorization-xacml >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-common >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-db >= %{version}-%{release}
@@ -220,6 +222,8 @@ Requires: %{name}-module-matterhorn-workspace-api >= %{version}-%{release}
 
 %package profile-dist-stub
 Summary: dist-stub profile for Opencast Matterhorn %{__INTERNAL_VERSION}
+# Remote and non-remote module will not work together
+Conflicts: %{name}-profile-dist
 Requires: %{name}-module-matterhorn-authorization-xacml >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-common >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-db >= %{version}-%{release}
@@ -317,6 +321,8 @@ Requires: %{name}-module-matterhorn-workspace-api >= %{version}-%{release}
 
 %package profile-worker
 Summary: worker profile for Opencast Matterhorn %{__INTERNAL_VERSION}
+# Remote and non-remote module will not work together
+Conflicts: %{name}-profile-worker-stub
 Requires: %{name}-module-matterhorn-authorization-xacml >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-common >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-caption-api >= %{version}-%{release}
@@ -347,6 +353,8 @@ Requires: %{name}-module-matterhorn-workspace-api >= %{version}-%{release}
 
 %package profile-worker-stub
 Summary: worker-stub profile for Opencast Matterhorn %{__INTERNAL_VERSION}
+# Remote and non-remote module will not work together
+Conflicts: %{name}-profile-worker
 Requires: %{name}-module-matterhorn-authorization-xacml >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-caption-api >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-caption-remote >= %{version}-%{release}
@@ -370,6 +378,8 @@ Requires: %{name}-module-matterhorn-workspace-api >= %{version}-%{release}
 
 %package profile-workspace
 Summary: workspace profile for Opencast Matterhorn %{__INTERNAL_VERSION}
+# Stub and non-stub profiles will not work together
+Conflicts: %{name}-profile-workspace-stub
 Requires: %{name}-module-matterhorn-common >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-json >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-working-file-repository-service-api >= %{version}-%{release}
@@ -379,6 +389,8 @@ Requires: %{name}-module-matterhorn-workspace-impl >= %{version}-%{release}
 
 %package profile-workspace-stub
 Summary: workspace-stub profile for Opencast Matterhorn %{__INTERNAL_VERSION}
+# Stub and non-stub profiles will not work together
+Conflicts: %{name}-profile-workspace
 Requires: %{name}-module-matterhorn-common >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-json >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-working-file-repository-service-api >= %{version}-%{release}
@@ -388,6 +400,8 @@ Requires: %{name}-module-matterhorn-workspace-impl >= %{version}-%{release}
 
 %package profile-serviceregistry
 Summary: serviceregistry profile for Opencast Matterhorn %{__INTERNAL_VERSION}
+# Stub and non-stub profiles will not work together
+Conflicts: %{name}-profile-serviceregistry-stub
 Requires: %{name}-module-matterhorn-common >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-db >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-json >= %{version}-%{release}
@@ -396,6 +410,8 @@ Requires: %{name}-module-matterhorn-serviceregistry >= %{version}-%{release}
 
 %package profile-serviceregistry-stub
 Summary: serviceregistry-stub profile for Opencast Matterhorn %{__INTERNAL_VERSION}
+# Stub and non-stub profiles will not work together
+Conflicts: %{name}-profile-serviceregistry
 Requires: %{name}-module-matterhorn-common >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-kernel >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-json >= %{version}-%{release}
@@ -489,6 +505,8 @@ Summary: matterhorn-analytics-impl module for Opencast Matterhorn
 
 %package module-matterhorn-distribution-service-youtube
 Requires: %{name}-base >= %{version}-%{release}
+# Remote and non-remote module will not work together
+Conflicts: %{name}-module-matterhorn-distribution-service-youtube-remote
 Summary: matterhorn-distribution-service-youtube module for Opencast Matterhorn
 
 %package module-matterhorn-engage-ui
@@ -525,6 +543,8 @@ Summary: matterhorn-workspace-api module for Opencast Matterhorn
 
 %package module-matterhorn-distribution-service-youtube-remote
 Requires: %{name}-base >= %{version}-%{release}
+# Remote and non-remote module will not work together
+Conflicts: %{name}-module-matterhorn-distribution-service-youtube
 Summary: matterhorn-distribution-service-youtube-remote module for Opencast Matterhorn
 
 %package module-matterhorn-textextractor-tesseract
@@ -569,6 +589,8 @@ Summary: matterhorn-static module for Opencast Matterhorn
 
 %package module-matterhorn-distribution-service-acl
 Requires: %{name}-base >= %{version}-%{release}
+# You cannot install remote and non-remote at the same time
+Conflicts: %{name}-module-matterhorn-distribution-service-acl-remote
 Summary: matterhorn-distribution-service-acl module for Opencast Matterhorn
 
 %package module-matterhorn-serviceregistry-remote
@@ -585,6 +607,8 @@ Summary: matterhorn-serviceregistry module for Opencast Matterhorn
 
 %package module-matterhorn-distribution-service-download-remote
 Requires: %{name}-base >= %{version}-%{release}
+# Remote and non-remote module will not work together
+Conflicts: %{name}-module-matterhorn-distribution-service-download
 Summary: matterhorn-distribution-service-download-remote module for Opencast Matterhorn
 
 %package module-matterhorn-usertracking-impl
@@ -685,6 +709,8 @@ Summary: matterhorn-dublincore module for Opencast Matterhorn
 
 %package module-matterhorn-distribution-service-acl-remote
 Requires: %{name}-base >= %{version}-%{release}
+# You cannot install remote and non-remote at the same time
+Conflicts: %{name}-module-matterhorn-distribution-service-acl
 Summary: matterhorn-distribution-service-acl-remote module for Opencast Matterhorn
 
 %package module-matterhorn-series-service-remote
@@ -705,6 +731,8 @@ Summary: matterhorn-series-service-impl module for Opencast Matterhorn
 
 %package module-matterhorn-distribution-service-download
 Requires: %{name}-base >= %{version}-%{release}
+# Remote and non-remote module will not work together
+Conflicts: %{name}-module-matterhorn-distribution-service-download-remote
 Summary: matterhorn-distribution-service-download module for Opencast Matterhorn
 
 %package module-matterhorn-mediapackage-ui
@@ -733,6 +761,8 @@ Summary: matterhorn-security-openid module for Opencast Matterhorn
 
 %package module-matterhorn-distribution-service-streaming
 Requires: %{name}-base >= %{version}-%{release}
+# Remote and non-remote module will not work together
+Conflicts: %{name}-module-matterhorn-distribution-service-streaming-remote
 Summary: matterhorn-distribution-service-streaming module for Opencast Matterhorn
 
 %package module-matterhorn-caption-api
@@ -765,6 +795,8 @@ Summary: matterhorn-metadata-api module for Opencast Matterhorn
 
 %package module-matterhorn-distribution-service-streaming-remote
 Requires: %{name}-base >= %{version}-%{release}
+# Remote and non-remote module will not work together
+Conflicts: %{name}-module-matterhorn-distribution-service-streaming
 Summary: matterhorn-distribution-service-streaming-remote module for Opencast Matterhorn
 
 %package module-matterhorn-common
@@ -1814,19 +1846,22 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Thu Feb 14 2013 Lars Kiesow <lkiesow@uos.de> - 1.4.1-5
+* Tue Feb 19 2013 Lars Kiesow <lkiesow@uos.de> - 1.4-6
+- Marked some module conflicts inside of Matterhorn
+
+* Thu Feb 14 2013 Lars Kiesow <lkiesow@uos.de> - 1.4-5
 - Fixed build dependency issue of capture agent
 - Added more distribution packages
 - Fixed pre/post/postun tags for base
 
-* Thu Feb 14 2013 Lars Kiesow <lkiesow@uos.de> - 1.4.1-4
+* Thu Feb 14 2013 Lars Kiesow <lkiesow@uos.de> - 1.4-4
 - Fixed dependency issue of capture agent
 
-* Tue Feb 12 2013 Lars Kiesow <lkiesow@uos.de> - 1.4.1-3
+* Tue Feb 12 2013 Lars Kiesow <lkiesow@uos.de> - 1.4-3
 - Fixed required dependency version and missing distribution-default package
 
 * Fri Feb  8 2013 Lars Kiesow <lkiesow@uos.de> - 1.4.1-2
 - Modifications for el6
 
-* Thu Jan 31 2013 Christian Greweling <cgreweling@uos.de> - 1.4-1-1
+* Thu Jan 31 2013 Christian Greweling <cgreweling@uos.de> - 1.4-1
 - Created SPEC for 1.4 (Based on SPEC for 1.3.1)
