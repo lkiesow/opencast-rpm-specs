@@ -35,41 +35,22 @@ Step 2: Install build dependencies
 
 # Enable EPEL and Rpmforge repositories.
 yum localinstall --nogpgcheck \
-  http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-5.noarch.rpm
+  http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm
 
-# Install build dependencies.
-yum install dos2unix libzen0-devel zlib-devel libcurl-devel libtiff-devel \
-    nasm yasm ImageMagick SDL-devel librsvg2-devel libGLU-devel \
-    freeglut-devel freetype-devel libjpeg-devel libpng-devel \
-    js-devel libxml2-devel openssl-devel pulseaudio-libs-devel libogg-devel \
-    libvorbis-devel libtheora-devel libXt-devel libXpm-devel libXv-devel \
-    wxGTK-devel gtk+-devel gtk2-devel php-cli id3lib-devel libsysfs-devel \
-    fftw-devel opencv-devel bzip2-devel dirac-devel gsm-devel \
-    imlib2-devel lame-devel libdc1394-devel libraw1394-devel libva-devel \
-    libvdpau-devel openjpeg-devel schroedinger-devel speex-devel \
-    vo-aacenc-devel
-
-There may be some additional dependencies I have missed. If that is the case
-the rpmbuild tool while tell you exactly what is missing when you try to build
-a package so you can install it and give me a hint that something is missing in
-this howto.
-
-
-Step 3: Install source RPMs
+Step 3: Get source RPMs
 -------------------------------------------------
 
 The next step is to download all necessary source RPMs. You can do this
-manually or even install them via rpm over http, however I suggest using curl
-to download them all at once:
+manually or even install them via rpm over http, however I suggest using the
+download script yu can find in the SRPMS folder.
 
-cd ~/rpmbuild/SRPMS/
-rm -rf *.src.rpm
-curl 'http://lernfunk.de/matterhorn-repo/SRPMS/release/CentOS/6/filelist.py' | \
-  xargs -n1 -i curl -O "http://lernfunk.de/matterhorn-repo/SRPMS/release/CentOS/6/{}"
-rpm -ivh *.src.rpm
+ * One way:
+	%> cd SRPMS/
+	%> ./download-srpms.sh
 
-Now all necessary spec files should be in ~/rpmbuild/SPECS and source files in
-~/rpmbuild/SOURCES. In other words: We are ready for the build process.
+ * Another way:
+	- Go to http://lernfunk.de/matterhorn-repo/SRPMS/ 
+	- Download what you need.
 
 
 Step 4: Build binary RPMs
@@ -81,92 +62,48 @@ package we have to check if another package we want to build depends on it. If
 that is the case we have to install the new package. Then we can move to the
 next package.
 
-Following you will find a list of commands you have to execute. We use
-»rpmbuild -ba SPECFILE« to build a package. The ready to use RPM file will go
-into ~/rpmbuild/RPMS/ARCH/. At the end we install the new package using »yum
-localinstall URI« and »su -c CMD« as we need root privileges to install RPMs
-into the system.
+Following you will find a list of commands you have to execute. We will use
+»yum-builddep <SPECFILE>« to install the build dependencies and »rpmbuild -ba
+<SPECFILE>« to build a package. The ready to use RPM file will go into
+~/rpmbuild/RPMS/<ARCH>/. At the end we install the new package using »yum
+localinstall <PACKAGE>.rpm«.
 
-# Switch to SPEC folder.
+
+# EXAMPLE: Build Quicktime subtitle embedder and dependencies:
+
+# Switch to SPEC folder:
 cd rpmbuild/SPECS
 
-# Build Quicktime subtitle embedder and dependencies
+# Install build dependencies for mp4v2:
+yum-builddep mp4v2.spec
+# Build RPMs for mp4v2:
 rpmbuild -ba mp4v2.spec
-su -c 'yum localinstall --nogpgcheck \
-  ../RPMS/x86_64/mp4v2-1*.rpm ../RPMS/x86_64/mp4v2-devel-*.rpm'
+
+# Install build dependencies for qt_sbtl_embedder:
+su -c 'yum localinstall \
+  ~/rpmbuild/RPMS/x86_64/mp4v2-1*.rpm \
+  ~/rpmbuild/RPMS/x86_64/mp4v2-devel-*.rpm'
+yum-builddep qt_sbtl_embedder.spec
+# Build RPMs for qt_sbtl_embedder:
 rpmbuild -ba qt_sbtl_embedder.spec
 
 
-# Build mediainfo and dependencies
-rpmbuild -ba libzen.spec
-su -c 'yum localinstall --nogpgcheck \
-  ../RPMS/x86_64/libzen-0*.rpm ../RPMS/x86_64/libzen-devel-*.rpm'
-rpmbuild -ba libmediainfo.spec
-su -c 'yum localinstall --nogpgcheck \
-  ../RPMS/x86_64/libmediainfo0-0*rpm ../RPMS/x86_64/libmediainfo0-devel*rpm'
-rpmbuild -ba mediainfo.spec
+If we would have tried to build the qt_sbtl_embedder package before we had
+build and installed mp4v2 yum-builddep would have complained that mp4v2 is not
+installed but could also not be found in the activated repositories. So we had
+to build it first.
 
-
-# Build tesseract
-rpmbuild -ba tesseract.spec
-rpmbuild -ba tesseract-langpack.spec
-
-
-# Build ffmpeg and dependencies
-rpmbuild -ba vo-aacenc.spec
-rpmbuild -ba xvidcore.spec
-rpmbuild -ba a52dec.spec
-rpmbuild -ba libmad.spec
-rpmbuild -ba lame.spec
-su -c 'yum localinstall --nogpgcheck \
-  ../RPMS/x86_64/xvidcore-1*.rpm ../RPMS/x86_64/xvidcore-devel-*.rpm \
-  ../RPMS/x86_64/a52dec-0*.rpm   ../RPMS/x86_64/a52dec-devel-*.rpm \
-  ../RPMS/x86_64/lame-3*.rpm   ../RPMS/x86_64/lame-devel-*.rpm'
-rpmbuild -ba gpac.spec
-su -c 'yum localinstall --nogpgcheck \
-  ../RPMS/x86_64/gpac-0*.rpm ../RPMS/x86_64/gpac-devel-0*.rpm \
-  ../RPMS/x86_64/gpac-libs-0*.rpm'
-rpmbuild -ba x264.spec
-rpmbuild -ba libvpx.spec
-rpmbuild -ba faad2.spec
-rpmbuild -ba libgdither.spec
-su -c 'yum localinstall --nogpgcheck \
-  ../RPMS/x86_64/libgdither-0*.rpm ../RPMS/x86_64/libgdither-devel-0*.rpm'
-rpmbuild -ba gavl.spec
-su -c 'yum localinstall --nogpgcheck \
-  ../RPMS/x86_64/gavl-1*.rpm ../RPMS/x86_64/gavl-devel-1*.rpm'
-rpmbuild -ba frei0r-plugins.spec
-su -c 'yum localinstall --nogpgcheck \
-  ../RPMS/x86_64/frei0r-*-1*.rpm ../RPMS/x86_64/frei0r-*-devel-1*.rpm'
-rpmbuild -ba rtmpdump.spec
-su -c 'yum localinstall --nogpgcheck \
-  ../RPMS/x86_64/librtmp-2*.rpm ../RPMS/x86_64/librtmp-devel-2*.rpm'
-rpmbuild -ba opencore-amr.spec
-su -c 'yum localinstall --nogpgcheck \
-  ../RPMS/x86_64/vo-aacenc-0*.rpm ../RPMS/x86_64/vo-aacenc-devel-*.rpm'
-su -c 'pushd ../RPMS/x86_64; yum localinstall --nogpgcheck \
-  opencore-amr-0*.rpm  opencore-amr-devel-0*.rpm \
-  faad2-2*.rpm         faad2-devel-2*.rpm         faad2-libs-2*.rpm \
-  x264-0.*.rpm         x264-devel-0*.rpm          x264-libs-0*.rpm \
-  libvpx-0*.rpm        libvpx-devel-0*.rpm ; \
-  popd'
-rpmbuild -ba ffmpeg.spec
-
-
-# Build matterhorn and direct dependencies
-rpmbuild -ba maven.spec
-su -c 'yum install --nogpgcheck ../RPMS/x86_64/maven-3*.rpm'
-rpmbuild -ba opencast-matterhorn13.spec
+Now you have to continue with this process until all packages are build.
 
 
 Step 4: Create repository for RPM files
 ---------------------------------------
 
-The next step is to create a repository for all created RPMs. It should be
-available from all systems you want to use it for. Common ways to do this are
-to put the repository on a FTP or HTTP server or do a SSH mount. Of cause you
-can place the repo in a local file system, too. But the other ways are easier to
-maintain when it comes to updates, etc.
+The next step is to generate a repository for all created RPMs. It should be
+put in a place which is available from all systems you want to use it for.
+Common ways to do this are to put the repository on a FTP or HTTP server or do
+a SSH mount. Of cause you can place the repo in a local file system, too. But
+the other ways are easier to maintain when it comes to updates, etc.
 
 Commands (You may ommit everything related to the SRPMS):
 mkdir -p ~/matterhorn-repo/CentOS/6/{noarch,SRPMS,x86_64}
@@ -183,8 +120,8 @@ cp -r ~/matterhorn-repo /var/www/html/
 
 Step 5: Enable repository
 -------------------------
-Lets assume your repo is now reachable via http://example.com/matterhorn-repo.
-Create the file /etc/yum.repos.d/matterhorn.repo using your favorite editor and
+Lets assume your repo is now reachable via »http://example.com/matterhorn-repo«.
+Create the file »/etc/yum.repos.d/matterhorn.repo« using your favorite editor and
 enter:
 
 
@@ -202,6 +139,11 @@ enabled  = 1
 protect  = 0
 gpgcheck = 0
 
+
+NOTICE: While on CentOS $releasever will be the major version only (i.e. 6) on
+		  Scientific Linux in will contain the minor version, too (i.e. 6.3).
+		  Thus you should either rename your repository accordingly or create
+		  symbolic links (»ln -s 6 6.3«). I use the latter.
 
 Now your repository is enabled for use with yum (and other rpm based update
 managers). You can now simply copy this file to any computer you want to use
