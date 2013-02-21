@@ -7,7 +7,7 @@
 
 Name:           opencast-matterhorn14
 Version:        1.4.0
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Open Source Lecture Capture & Video Management Tool
 
 Group:          Applications/Multimedia
@@ -28,6 +28,12 @@ Requires:      %{name}-distribution-default >= %{version}-%{release}
 %package base
 Summary: Base package for Opencast Matterhorn 
 Requires(pre): /usr/sbin/useradd
+Requires(post): chkconfig
+Requires(preun): chkconfig
+# This is for /sbin/service
+Requires(preun): initscripts
+Requires(postun): initscripts
+
 Requires:      ffmpeg >= 0.9
 Requires:      mediainfo = 0.7.35
 Requires:      tesseract >= 3
@@ -1753,18 +1759,31 @@ popd
 
 %pre base
 # Create matterhorn user.
-/usr/sbin/useradd -M -r -d /var/matterhorn 
+/usr/sbin/useradd -M -r -d /var/matterhorn \
    -c "Opencast Matterhorn" matterhorn > /dev/null 2>&1 || :
 
 %post base
 # Set owner of matterhorn content dir
 chown -R matterhorn:matterhorn /var/matterhorn
 chown -R matterhorn:matterhorn /var/log/matterhorn
+# This adds the proper /etc/rc*.d links for the script
+/sbin/chkconfig --add matterhorn
+
+%preun base
+# If this is really uninstall and not upgrade
+if [ $1 -eq 0 ] ; then
+   /sbin/service matterhorn stop >/dev/null 2>&1
+   /sbin/chkconfig --del matterhorn
+   /usr/sbin/userdel matterhorn
+fi
 
 %postun base
-# Set owner of matterhorn content dir
-/usr/sbin/userdel matterhorn
-
+if [ "$1" -ge "1" ] ; then
+   # WARNING: This should be a condrestart instead of a restart.
+   #          but matterhorn restart at the moment behaves like
+   #          condrestart should.
+   /sbin/service matterhorn restart > /dev/null 2>&1 || :
+fi
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -1794,8 +1813,8 @@ mkdir -p ${RPM_BUILD_ROOT}/var/log/matterhorn
 rm -rf  ${RPM_BUILD_ROOT}/opt/matterhorn/logs
 ln -s /var/log/matterhorn ${RPM_BUILD_ROOT}/opt/matterhorn/logs
 ln -s /var/matterhorn/work ${RPM_BUILD_ROOT}/opt/matterhorn/work
-mkdir -p ${RPM_BUILD_ROOT}%{_initrddir}
-cp -rf matterhorn-%{version}/docs/scripts/init/matterhorn_init_d.sh $RPM_BUILD_ROOT%{_initrddir}/matterhorn
+mkdir -p ${RPM_BUILD_ROOT}%{_initddir}
+cp -rf matterhorn-%{version}/docs/scripts/init/matterhorn_init_d.sh $RPM_BUILD_ROOT%{_initddir}/matterhorn
 
 
 
@@ -1846,6 +1865,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Feb 21 2013 Lars Kiesow <lkiesow@uos.de> - 1.4-8
+- Really fixed useradd command
+- Fixed some SysV-Init script related stuff
+
 * Thu Feb 21 2013 Lars Kiesow <lkiesow@uos.de> - 1.4-7
 - Fixed useradd command
 
