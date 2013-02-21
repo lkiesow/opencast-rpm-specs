@@ -7,7 +7,7 @@
 
 Name:           opencast-matterhorn14
 Version:        1.4.0
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Open Source Lecture Capture & Video Management Tool
 
 Group:          Applications/Multimedia
@@ -1753,7 +1753,7 @@ popd
 
 %pre base
 # Create matterhorn user.
-/usr/sbin/useradd -M -r
+/usr/sbin/useradd -M -r -d /var/matterhorn 
    -c "Opencast Matterhorn" matterhorn > /dev/null 2>&1 || :
 
 %post base
@@ -1846,6 +1846,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Feb 21 2013 Lars Kiesow <lkiesow@uos.de> - 1.4-7
+- Fixed useradd command
+
 * Tue Feb 19 2013 Lars Kiesow <lkiesow@uos.de> - 1.4-6
 - Marked some module conflicts inside of Matterhorn
 
