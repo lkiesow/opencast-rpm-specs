@@ -2,7 +2,7 @@
 
 echo
 echo 'Select the operating system you want to download the source RPMs for:'
-select os in 'CentOS/Scientific Linux 5' 'CentOS/Scientific Linux 6' 'Fedora 17' 'cancel'
+select os in 'CentOS/Scientific Linux 5' 'CentOS/Scientific Linux 6' 'Fedora 17' 'Fedora 18' 'cancel'
 do
 	if [ "$os" = 'cancel' ]
 	then
@@ -19,6 +19,10 @@ do
 	then
 		os='Fedora/17'
 		break
+	elif [ "$os" = 'Fedora 18' ]
+	then
+		os='Fedora/18'
+		break
 	fi
 done
 
@@ -26,7 +30,7 @@ echo
 echo 'Select release or testing version (developers should choose testing):'
 select release in 'testing' 'release' 'cancel'
 do
-	if [ "$os" = 'cancel' ]
+	if [ "$release" = 'cancel' ]
 	then
 		exit
 	else
