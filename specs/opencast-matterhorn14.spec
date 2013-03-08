@@ -7,7 +7,7 @@
 
 Name:           opencast-matterhorn14
 Version:        1.4.0
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Open Source Lecture Capture & Video Management Tool
 
 Group:          Applications/Multimedia
@@ -915,20 +915,49 @@ Basic elements of each Opencast Matterhorn distribution.
 %description distribution-default
 Default distribution of Opencast Matterhorn components.
 
+This is the default package containing all three main profiles (Admin, Worker,
+Engage). This installation is only recommended if you dont have many videos
+that you want to ingest and you don't expect many viewers. This perfect for
+first test and to get an impression of Matterhorn as it works out of the box
+and does not need much configuration.
+
+
 %description distribution-capture-agent
 Capture-Agent distribution of Opencast Matterhorn components.
+
+This package will install the Matterhorn reference Capture Agent with remote
+service registry.
+
 
 %description distribution-admin
 Admin distribution of Opencast Matterhorn components.
 
+On this server the Administrative services are hosted etc. You usually have at
+least three servers on which you run matterhorn if you select this package.
+
+
 %description distribution-worker
 Worker distribution of Opencast Matterhorn components.
+
+This is the worker package that contains the modules that create the most CPU
+load (encoding, OCR, etc). So it is recommended to deploy this on a more
+powerful machine.
 
 %description distribution-engage
 Engage distribution of Opencast Matterhorn components.
 
+This is the package for the Matterhorn Engage Modules which are the front-end
+to the viewer of your videos. It is always highly recommended to keep these
+separated from the rest of your system.
+
+
 %description distribution-admin-worker
 Combined Adminand Worker distribution of Opencast Matterhorn components.
+
+This package is targeted at medium sized installations, where you want to
+seperate the "backend" server that the admin accesses from the "frontend"
+server that the viewers use.
+
 
 %description profile-admin
 admin profile for Opencast Matterhorn
@@ -1771,18 +1800,18 @@ chown -R matterhorn:matterhorn /var/log/matterhorn
 
 %preun base
 # If this is really uninstall and not upgrade
-if [ $1 -eq 0 ] ; then
+if [ $1 -eq 0 ]; then
    /sbin/service matterhorn stop >/dev/null 2>&1
    /sbin/chkconfig --del matterhorn
    /usr/sbin/userdel matterhorn
 fi
 
 %postun base
-if [ "$1" -ge "1" ] ; then
+if [ "$1" -ge "1" ]; then
    # WARNING: This should be a condrestart instead of a restart.
    #          but matterhorn restart at the moment behaves like
    #          condrestart should.
-   /sbin/service matterhorn restart > /dev/null 2>&1 || :
+   /sbin/service matterhorn restart > /dev/null 2>&1 || :
 fi
 
 %install
@@ -1865,6 +1894,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Mar  8 2013 Lars Kiesow <lkiesow@uos.de> - 1.4-9
+- Added distribution descriptions.
+
 * Thu Feb 21 2013 Lars Kiesow <lkiesow@uos.de> - 1.4-8
 - Really fixed useradd command
 - Fixed some SysV-Init script related stuff
