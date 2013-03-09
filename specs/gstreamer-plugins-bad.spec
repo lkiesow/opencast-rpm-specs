@@ -111,7 +111,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %changelog
 * Sat Mar  9 2013 Lars Kiesow <lkiesow@uos.de> - 0.10.23-2
-- Dep to bad-nonfree
+- Minor fixes for RHEL
 
 * Thu Jul 12 2012 Hans de Goede <j.w.r.degoede@gmail.com> - 0.10.23-1
 - New upstream release 0.10.23 (rf#2377)
