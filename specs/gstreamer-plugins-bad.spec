@@ -15,11 +15,12 @@
 Summary: GStreamer streaming media framework "bad" plug-ins
 Name: gstreamer-plugins-bad
 Version: 0.10.23
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: LGPLv2+
 Group: Applications/Multimedia
 URL: http://gstreamer.freedesktop.org/
 Source: http://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-%{version}.tar.bz2
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires: %{gstreamer} >= %{gst_minver}
 # Drag in the free plugins which are in Fedora now, for upgrade path
 Requires: gstreamer-plugins-bad-free >= %{version}
@@ -71,6 +72,7 @@ done
 
 
 %install
+rm -rf $RPM_BUILD_ROOT
 for i in %{gstdirs} %{extdirs}; do
     pushd $i
     make install V=2 DESTDIR=$RPM_BUILD_ROOT
@@ -103,7 +105,14 @@ rm %{buildroot}%{_libdir}/gstreamer-%{majorminor}/*.la
 %{_libdir}/gstreamer-%{majorminor}/libgstxvid.so
 
 
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+
 %changelog
+* Sat Mar  9 2013 Lars Kiesow <lkiesow@uos.de> - 0.10.23-2
+- Dep to bad-nonfree
+
 * Thu Jul 12 2012 Hans de Goede <j.w.r.degoede@gmail.com> - 0.10.23-1
 - New upstream release 0.10.23 (rf#2377)
 
