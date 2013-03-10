@@ -7,7 +7,7 @@
 
 Name:           opencast-matterhorn14
 Version:        1.4.0
-Release:        9%{?dist}
+Release:        11%{?dist}
 Summary:        Open Source Lecture Capture & Video Management Tool
 
 Group:          Applications/Multimedia
@@ -468,14 +468,6 @@ Requires: %{name}-module-matterhorn-security-openid >= %{version}-%{release}
 
 %package profile-capture
 Summary: capture profile for Opencast Matterhorn %{__INTERNAL_VERSION}
-BuildRequires: gstreamer
-BuildRequires: gstreamer-plugins-base
-BuildRequires: gstreamer-plugins-good
-BuildRequires: gstreamer-plugins-ugly
-BuildRequires: gstreamer-plugins-bad
-BuildRequires: gstreamer-ffmpeg
-Requires: jv4linfo >= 0.2.1
-Requires: v4l-utils
 Requires: %{name}-module-matterhorn-common >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-json >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-kernel >= %{version}-%{release}
@@ -882,6 +874,22 @@ Requires: %{name}-base >= %{version}-%{release}
 Summary: matterhorn-security-ldap module for Opencast Matterhorn
 
 %package module-matterhorn-capture-agent-impl
+BuildRequires: gstreamer
+BuildRequires: gstreamer-plugins-base
+BuildRequires: gstreamer-plugins-good
+BuildRequires: gstreamer-plugins-bad
+BuildRequires: gstreamer-plugins-bad-nonfree
+BuildRequires: gstreamer-plugins-ugly
+BuildRequires: gstreamer-ffmpeg
+Requires: gstreamer
+Requires: gstreamer-plugins-base
+Requires: gstreamer-plugins-good
+Requires: gstreamer-plugins-bad
+Requires: gstreamer-plugins-bad-nonfree
+Requires: gstreamer-plugins-ugly
+Requires: gstreamer-ffmpeg
+Requires: jv4linfo >= 0.2.1
+Requires: v4l-utils
 Requires: %{name}-base >= %{version}-%{release}
 Summary: matterhorn-capture-agent-impl module for Opencast Matterhorn
 
@@ -1894,6 +1902,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Mar 10 2013 Lars Kiesow <lkiesow@uos.de> - 1.4-11
+- Moved Gstreamer CA dependencies to module
+
+* Sun Mar 10 2013 Lars Kiesow <lkiesow@uos.de> - 1.4-10
+- Fixed dependency issue for Capture-Agent
+
 * Fri Mar  8 2013 Lars Kiesow <lkiesow@uos.de> - 1.4-9
 - Added distribution descriptions.
 
