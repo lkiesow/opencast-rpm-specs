@@ -7,7 +7,7 @@
 
 Name:           opencast-matterhorn14
 Version:        1.4.0
-Release:        11%{?dist}
+Release:        14%{?dist}
 Summary:        Open Source Lecture Capture & Video Management Tool
 
 Group:          Applications/Multimedia
@@ -1720,7 +1720,7 @@ Summary: matterhorn-annotation-impl module for Opencast Matterhorn
 
 %files module-matterhorn-runtime-dependencies
 %defattr(-,root,root,-)
-/opt/matterhorn/lib/ext/*.jar
+/opt/matterhorn/lib/ext
 
 %files module-matterhorn-search-service-feeds
 %defattr(-,root,root,-)
@@ -1826,6 +1826,7 @@ fi
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/opt/matterhorn
 cp -rf matterhorn-%{version}/bin $RPM_BUILD_ROOT/opt/matterhorn/
+rm $RPM_BUILD_ROOT/opt/matterhorn/bin/start_matterhorn.bat
 cp -rf matterhorn-%{version}/etc $RPM_BUILD_ROOT/opt/matterhorn/
 cp -rf matterhorn-%{version}/lib $RPM_BUILD_ROOT/opt/matterhorn/
 echo '<?xml version="1.0" encoding="UTF-8"?>' > settings.xml
@@ -1847,6 +1848,10 @@ install -m 0755 matterhorn $RPM_BUILD_ROOT%{_bindir}
 mkdir -p ${RPM_BUILD_ROOT}/var/matterhorn/work
 mkdir -p ${RPM_BUILD_ROOT}/var/matterhorn/storage
 mkdir -p ${RPM_BUILD_ROOT}/var/log/matterhorn
+mkdir -p ${RPM_BUILD_ROOT}%{_sysconfdir}/matterhorn
+mv ${RPM_BUILD_ROOT}/opt/matterhorn/etc/* ${RPM_BUILD_ROOT}%{_sysconfdir}/matterhorn/
+rmdir ${RPM_BUILD_ROOT}/opt/matterhorn/etc/
+ln -s %{_sysconfdir}/matterhorn/ ${RPM_BUILD_ROOT}/opt/matterhorn/etc
 rm -rf  ${RPM_BUILD_ROOT}/opt/matterhorn/logs
 ln -s /var/log/matterhorn ${RPM_BUILD_ROOT}/opt/matterhorn/logs
 ln -s /var/matterhorn/work ${RPM_BUILD_ROOT}/opt/matterhorn/work
@@ -1890,18 +1895,33 @@ rm -rf $RPM_BUILD_ROOT
 
 %files base
 %defattr(-,root,root,-)
+%config(noreplace) %{_sysconfdir}/matterhorn/
+# TODO: This should not be a configuration file:
+%config(noreplace) %{_initrddir}/*
 %{_bindir}/*
+%dir /opt/matterhorn
+%dir /opt/matterhorn/lib
+%dir /opt/matterhorn/lib/matterhorn
+/opt/matterhorn/lib/felix
 /opt/matterhorn/bin
 /opt/matterhorn/etc
-/opt/matterhorn/lib/felix
-%{_initrddir}/*
-/var/matterhorn
-/var/log/matterhorn
-/opt/matterhorn/work
 /opt/matterhorn/logs
+/opt/matterhorn/work
+/var/matterhorn
+%dir /var/log/matterhorn
 
 
 %changelog
+* Mon Mar 11 2013 Lars Kiesow <lkiesow@uos.de> - 1.4-14
+- Fixed bug in files section for base package (modules were assigned to base)
+
+* Mon Mar 11 2013 Lars Kiesow <lkiesow@uos.de> - 1.4-13
+- Fixed unowned directory issue
+- Removed Windows scripts
+
+* Mon Mar 11 2013 Lars Kiesow <lkiesow@uos.de> - 1.4-12
+- Fixed configuration files (noreplace)
+
 * Sun Mar 10 2013 Lars Kiesow <lkiesow@uos.de> - 1.4-11
 - Moved Gstreamer CA dependencies to module
 
