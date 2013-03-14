@@ -7,7 +7,7 @@
 
 Name:           opencast-matterhorn14
 Version:        1.4.0
-Release:        15.rc7%{?dist}
+Release:        16.rc7%{?dist}
 Summary:        Open Source Lecture Capture & Video Management Tool
 
 Group:          Applications/Multimedia
@@ -1853,10 +1853,20 @@ mv ${RPM_BUILD_ROOT}/opt/matterhorn/etc/* ${RPM_BUILD_ROOT}%{_sysconfdir}/matter
 rmdir ${RPM_BUILD_ROOT}/opt/matterhorn/etc/
 ln -s %{_sysconfdir}/matterhorn/ ${RPM_BUILD_ROOT}/opt/matterhorn/etc
 rm -rf  ${RPM_BUILD_ROOT}/opt/matterhorn/logs
-ln -s /var/log/matterhorn ${RPM_BUILD_ROOT}/opt/matterhorn/logs
+ln -s /var/log/matterhorn  ${RPM_BUILD_ROOT}/opt/matterhorn/logs
 ln -s /var/matterhorn/work ${RPM_BUILD_ROOT}/opt/matterhorn/work
+
+# Install SysV-init script
 mkdir -p ${RPM_BUILD_ROOT}%{_initddir}
-cp -rf matterhorn-%{version}/docs/scripts/init/matterhorn_init_d.sh $RPM_BUILD_ROOT%{_initddir}/matterhorn
+cp -rf matterhorn-%{version}/docs/scripts/init/matterhorn_init_d.sh \
+      $RPM_BUILD_ROOT%{_initddir}/matterhorn
+
+# Add documentation
+mkdir -p ${RPM_BUILD_ROOT}/opt/matterhorn/docs/scripts/ddl/
+mkdir -p ${RPM_BUILD_ROOT}/opt/matterhorn/docs/licenses/
+cp matterhorn-%{version}/docs/licenses.txt  ${RPM_BUILD_ROOT}/opt/matterhorn/docs/
+cp matterhorn-%{version}/docs/licenses/*    ${RPM_BUILD_ROOT}/opt/matterhorn/docs/licenses/
+cp matterhorn-%{version}/docs/scripts/ddl/* ${RPM_BUILD_ROOT}/opt/matterhorn/docs/scripts/ddl/
 
 
 
@@ -1895,6 +1905,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files base
 %defattr(-,root,root,-)
+%doc /opt/matterhorn/docs
 %config(noreplace) %{_sysconfdir}/matterhorn/
 # TODO: This should not be a configuration file:
 %config(noreplace) %{_initrddir}/*
@@ -1912,6 +1923,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Mar 14 2013 Lars Kiesow <lkiesow@uos.de> - 1.4-16-rc7
+- Added documentation (licenses, ddl scripts, etc.)
+
 * Wed Mar 13 2013 Lars Kiesow <lkiesow@uos.de> - 1.4-15.rc7
 - Update from 1.4-rc6 to 1.4-rc7
 
