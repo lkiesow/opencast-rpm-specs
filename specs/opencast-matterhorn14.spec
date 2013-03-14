@@ -1,19 +1,19 @@
 %define __os_install_post %{nil}
 
-%define __INTERNAL_VERSION 1.4-SNAPSHOT
+%define __INTERNAL_VERSION 1.4-rc7
 
 # TODO: Build a proper SPEC file:
 #       https://fedoraproject.org/wiki/Packaging/Java
 
 Name:           opencast-matterhorn14
 Version:        1.4.0
-Release:        14%{?dist}
+Release:        15.rc7%{?dist}
 Summary:        Open Source Lecture Capture & Video Management Tool
 
 Group:          Applications/Multimedia
 License:        ECL 2.0, APL2 and other
 URL:            http://opencast.org/matterhorn/
-Source0:        matterhorn-repo-%{version}.tar.gz
+Source0:        matterhorn-%{version}.tar.gz
 Source1:        matterhorn-bin-%{version}.tar.gz
 Source2:        maven-repo-matterhorn-%{version}.tar.gz
 Patch0:         matterhorn-config-%{version}.patch
@@ -1912,6 +1912,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Mar 13 2013 Lars Kiesow <lkiesow@uos.de> - 1.4-15.rc7
+- Update from 1.4-rc6 to 1.4-rc7
+
 * Mon Mar 11 2013 Lars Kiesow <lkiesow@uos.de> - 1.4-14
 - Fixed bug in files section for base package (modules were assigned to base)
 
