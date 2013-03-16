@@ -1,17 +1,14 @@
 Name:     opencast-matterhorn14-module-matterhorn-workflowoperation-mediapackagepost
-Version:	 1.1
-Release:	 1%{?dist}
-Summary:	 Mediapackage POST workflow operation for Opencast Matterhorn
+Version:  1.1
+Release:  2%{?dist}
+Summary:  Mediapackage POST workflow operation for Opencast Matterhorn
 
-#Group:		
-License:   ECL
-URL:       http://virtuos.uni-osnabrueck.de
-Source0:	  %{name}-%{version}.tar.gz
+License:   ECL 2.0
+URL:       http://www.virtuos.uni-osnabrueck.de
+Source0:   %{name}-%{version}.tar.gz
 BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
-%global _enable_debug_package 0
-%global debug_package %{nil}
-%global __os_install_post /usr/lib/rpm/brp-compress %{nil}
+BuildArch: noarch
 
 Requires: opencast-matterhorn14-base
 
@@ -31,7 +28,7 @@ Matterhorn madiapackage as HTTP POST request to a specified URL.
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/opt/matterhorn/lib/matterhorn
 cp matterhorn-workflowoperation-mediapackagepost-1.1.jar \
-	%{buildroot}/opt/matterhorn/lib/matterhorn
+   %{buildroot}/opt/matterhorn/lib/matterhorn
 mkdir -p %{buildroot}/opt/matterhorn/docs/
 cp -r module-docs/ %{buildroot}/opt/matterhorn/docs/
 
@@ -48,5 +45,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Mar 16 2013 Lars Kiesow <lkiesow@uos.de> - 1.1-2
+- Fixed architecture
+- Fixed license
+
 * Sat Mar 16 2013 Lars Kiesow <lkiesow@uos.de> - 1.1-1
 - Initial package
