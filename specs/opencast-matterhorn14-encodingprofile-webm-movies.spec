@@ -1,6 +1,6 @@
 Name:     opencast-matterhorn14-encodingprofile-webm-movies
 Version:  1.0
-Release:  1%{?dist}
+Release:  2%{?dist}
 Summary:  High Quality WebM encoding profile for Opencast Matterhorn
 
 License:   ECL 2.0
@@ -40,5 +40,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Mar 16 2013 Lars Kiesow <lkiesow@uos.de> - 1.0-2
+- Changes ffmpeg options
+
 * Sat Mar 16 2013 Lars Kiesow <lkiesow@uos.de> - 1.0-1
 - Initial package
