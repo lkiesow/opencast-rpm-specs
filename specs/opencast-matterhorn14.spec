@@ -7,16 +7,17 @@
 
 Name:           opencast-matterhorn14
 Version:        1.4.0
-Release:        16.rc7%{?dist}
+Release:        20.rc7%{?dist}
 Summary:        Open Source Lecture Capture & Video Management Tool
 
 Group:          Applications/Multimedia
 License:        ECL 2.0, APL2 and other
 URL:            http://opencast.org/matterhorn/
 Source0:        matterhorn-%{version}.tar.gz
-Source1:        matterhorn-bin-%{version}.tar.gz
+Source1:        matterhorn-%{version}-startup-scripts.tar.gz
 Source2:        maven-repo-matterhorn-%{version}.tar.gz
-Patch0:         matterhorn-config-%{version}.patch
+Source3:        matterhorn-%{version}-workflowoperation-mediapackagepost.tar.gz
+Patch0:         matterhorn-config-%{version}-1.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires: maven >= 3
@@ -24,6 +25,7 @@ BuildRequires: java-devel >= 1:1.6.0
 Requires:      %{name}-base                  = %{version}-%{release}
 Requires:      %{name}-distribution-default >= %{version}-%{release}
 
+BuildArch: noarch
 
 %package base
 Summary: Base package for Opencast Matterhorn 
@@ -1783,8 +1785,28 @@ Summary: matterhorn-annotation-impl module for Opencast Matterhorn
 /opt/matterhorn/lib/matterhorn/matterhorn-annotation-impl-%{__INTERNAL_VERSION}.jar
 
 
+# Aditional modules
+
+
+%package module-matterhorn-workflowoperation-mediapackagepost
+Requires: %{name}-base >= %{version}-%{release}
+Summary: Mediapackage POST workflow operation for Opencast Matterhorn
+
+%description module-matterhorn-workflowoperation-mediapackagepost
+This Opencast Matterhorn module contains a workflow operation which will send a
+Matterhorn madiapackage as HTTP POST request to a specified URL.
+
+%files module-matterhorn-workflowoperation-mediapackagepost
+%defattr(-,root,root,-)
+%doc /opt/matterhorn/docs/module-docs/workflowoperation-mediapackagepost-example.xml
+/opt/matterhorn/lib/matterhorn/matterhorn-workflowoperation-mediapackagepost-*
+
+
+
+
+
 %prep
-%setup -q -c -a 0 -a 1 -a 2 
+%setup -q -c -a 0 -a 1 -a 2 -a 3
 pushd matterhorn-%{version}
 %patch0 -p1
 popd
@@ -1816,10 +1838,7 @@ fi
 
 %postun base
 if [ "$1" -ge "1" ]; then
-   # WARNING: This should be a condrestart instead of a restart.
-   #          but matterhorn restart at the moment behaves like
-   #          condrestart should.
-   /sbin/service matterhorn restart > /dev/null 2>&1 || :
+   /sbin/service matterhorn condrestart > /dev/null 2>&1 || :
 fi
 
 %install
@@ -1843,30 +1862,50 @@ pushd matterhorn-%{version}
          admin,analytics,export-admin,export-worker,export-all-in-one,ingest,dist,dist-stub,engage,engage-standalone,engage-stub,worker,worker-stub,workspace,workspace-stub,serviceregistry,serviceregistry-stub,oaipmh,directory-db,directory-ldap,directory-cas,directory-openid,test-load,capture \
          -DdeployTo=$RPM_BUILD_ROOT/opt/matterhorn/
 popd
-mkdir -p ${RPM_BUILD_ROOT}%{_bindir}
-install -m 0755 matterhorn $RPM_BUILD_ROOT%{_bindir}
-mkdir -p ${RPM_BUILD_ROOT}/var/matterhorn/work
-mkdir -p ${RPM_BUILD_ROOT}/var/matterhorn/storage
-mkdir -p ${RPM_BUILD_ROOT}/var/log/matterhorn
+#
+# Build additional modules:
+pushd matterhorn-%{version}/modules/matterhorn-workflowoperation-mediapackagepost/
+   MAVEN_OPTS='-Xms256m -Xmx960m -XX:PermSize=64m -XX:MaxPermSize=256m' \
+      mvn -o -s ../../../settings.xml clean install \
+         -DdeployTo=$RPM_BUILD_ROOT/opt/matterhorn/
+popd
+#
+# Copy other stuff
+mkdir -m 755 -p ${RPM_BUILD_ROOT}/var/matterhorn/work
+mkdir -m 755 -p ${RPM_BUILD_ROOT}/var/matterhorn/storage
+mkdir -m 775 -p ${RPM_BUILD_ROOT}/var/matterhorn/inbox
+mkdir -m 750 -p ${RPM_BUILD_ROOT}/var/log/matterhorn
 mkdir -p ${RPM_BUILD_ROOT}%{_sysconfdir}/matterhorn
 mv ${RPM_BUILD_ROOT}/opt/matterhorn/etc/* ${RPM_BUILD_ROOT}%{_sysconfdir}/matterhorn/
-rmdir ${RPM_BUILD_ROOT}/opt/matterhorn/etc/
-ln -s %{_sysconfdir}/matterhorn/ ${RPM_BUILD_ROOT}/opt/matterhorn/etc
+
+rm -rf ${RPM_BUILD_ROOT}/opt/matterhorn/etc/
 rm -rf  ${RPM_BUILD_ROOT}/opt/matterhorn/logs
-ln -s /var/log/matterhorn  ${RPM_BUILD_ROOT}/opt/matterhorn/logs
-ln -s /var/matterhorn/work ${RPM_BUILD_ROOT}/opt/matterhorn/work
+
+ln -s %{_sysconfdir}/matterhorn/ ${RPM_BUILD_ROOT}/opt/matterhorn/etc
+ln -s /var/log/matterhorn   ${RPM_BUILD_ROOT}/opt/matterhorn/logs
+ln -s /var/matterhorn/work  ${RPM_BUILD_ROOT}/opt/matterhorn/work
+ln -s /var/matterhorn/inbox ${RPM_BUILD_ROOT}/opt/matterhorn/inbox
+
+# Install binaries
+mkdir -p ${RPM_BUILD_ROOT}%{_sbindir}
+install -m 0755 matterhorn-1.4.0-startup-scripts/usr/sbin/matterhorn \
+      $RPM_BUILD_ROOT%{_sbindir}
+install -m 644 matterhorn-1.4.0-startup-scripts/etc/matterhorn/service.conf \
+      ${RPM_BUILD_ROOT}%{_sysconfdir}/matterhorn/
 
 # Install SysV-init script
 mkdir -p ${RPM_BUILD_ROOT}%{_initddir}
-cp -rf matterhorn-%{version}/docs/scripts/init/matterhorn_init_d.sh \
+cp matterhorn-1.4.0-startup-scripts/etc/init.d/matterhorn \
       $RPM_BUILD_ROOT%{_initddir}/matterhorn
 
 # Add documentation
 mkdir -p ${RPM_BUILD_ROOT}/opt/matterhorn/docs/scripts/ddl/
 mkdir -p ${RPM_BUILD_ROOT}/opt/matterhorn/docs/licenses/
+mkdir -p ${RPM_BUILD_ROOT}/opt/matterhorn/docs/module-docs/
 cp matterhorn-%{version}/docs/licenses.txt  ${RPM_BUILD_ROOT}/opt/matterhorn/docs/
 cp matterhorn-%{version}/docs/licenses/*    ${RPM_BUILD_ROOT}/opt/matterhorn/docs/licenses/
 cp matterhorn-%{version}/docs/scripts/ddl/* ${RPM_BUILD_ROOT}/opt/matterhorn/docs/scripts/ddl/
+cp matterhorn-%{version}/docs/module-docs/* ${RPM_BUILD_ROOT}/opt/matterhorn/docs/module-docs/
 
 
 
@@ -1907,9 +1946,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %doc /opt/matterhorn/docs
 %config(noreplace) %{_sysconfdir}/matterhorn/
-# TODO: This should not be a configuration file:
-%config(noreplace) %{_initrddir}/*
-%{_bindir}/*
+%{_initrddir}/*
+%{_sbindir}/*
 %dir /opt/matterhorn
 %dir /opt/matterhorn/lib
 %dir /opt/matterhorn/lib/matterhorn
@@ -1918,11 +1956,25 @@ rm -rf $RPM_BUILD_ROOT
 /opt/matterhorn/etc
 /opt/matterhorn/logs
 /opt/matterhorn/work
+/opt/matterhorn/inbox
 /var/matterhorn
 %dir /var/log/matterhorn
 
 
 %changelog
+* Tue Apr  2 2013 Lars Kiesow <lkiesow@uos.de> - 1.4-20-rc7
+- Another fix for workflowoperationhandler-mediapackagepost
+
+* Tue Apr  2 2013 Lars Kiesow <lkiesow@uos.de> - 1.4-19-rc7
+- Fixed SysVInit script
+
+* Tue Apr  2 2013 Lars Kiesow <lkiesow@uos.de> - 1.4-18-rc7
+- New start and sysvinit scripts
+- Fix for workflowoperationhandler-mediapackagepost
+
+* Thu Mar 28 2013 Lars Kiesow <lkiesow@uos.de> - 1.4-17-rc7
+- Added custom module "workflowoperation-mediapackagepost"
+
 * Thu Mar 14 2013 Lars Kiesow <lkiesow@uos.de> - 1.4-16-rc7
 - Added documentation (licenses, ddl scripts, etc.)
 
