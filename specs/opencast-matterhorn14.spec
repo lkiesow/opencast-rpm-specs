@@ -7,7 +7,7 @@
 
 Name:           opencast-matterhorn14
 Version:        1.4.0
-Release:        20.rc7%{?dist}
+Release:        21.rc7%{?dist}
 Summary:        Open Source Lecture Capture & Video Management Tool
 
 Group:          Applications/Multimedia
@@ -1962,6 +1962,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Apr  5 2013 Lars Kiesow <lkiesow@uos.de> - 1.4-21-rc7
+- Updated workflowoperationhandler-mediapackagepost to git.4361b7b69d
+
 * Tue Apr  2 2013 Lars Kiesow <lkiesow@uos.de> - 1.4-20-rc7
 - Another fix for workflowoperationhandler-mediapackagepost
 
