@@ -7,7 +7,7 @@
 
 Name:           opencast-matterhorn14
 Version:        1.4.0
-Release:        21.rc7%{?dist}
+Release:        22.rc7%{?dist}
 Summary:        Open Source Lecture Capture & Video Management Tool
 
 Group:          Applications/Multimedia
@@ -17,7 +17,7 @@ Source0:        matterhorn-%{version}.tar.gz
 Source1:        matterhorn-%{version}-startup-scripts.tar.gz
 Source2:        maven-repo-matterhorn-%{version}.tar.gz
 Source3:        matterhorn-%{version}-workflowoperation-mediapackagepost.tar.gz
-Patch0:         matterhorn-config-%{version}-1.patch
+Patch0:         matterhorn-config-%{version}.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires: maven >= 3
@@ -1962,6 +1962,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Apr  7 2013 Lars Kiesow <lkiesow@uos.de> - 1.4.0-22.rc7
+- Fixed executable path in configuration
+
 * Fri Apr  5 2013 Lars Kiesow <lkiesow@uos.de> - 1.4-21-rc7
 - Updated workflowoperationhandler-mediapackagepost to git.4361b7b69d
 
