@@ -1,13 +1,13 @@
 %define __os_install_post %{nil}
 
-%define __INTERNAL_VERSION 1.4-rc7
+%define __INTERNAL_VERSION 1.4-rc8
 
 # TODO: Build a proper SPEC file:
 #       https://fedoraproject.org/wiki/Packaging/Java
 
 Name:           opencast-matterhorn14
 Version:        1.4.0
-Release:        22.rc7%{?dist}
+Release:        24.rc8%{?dist}
 Summary:        Open Source Lecture Capture & Video Management Tool
 
 Group:          Applications/Multimedia
@@ -121,6 +121,7 @@ Requires: %{name}-module-matterhorn-mediapackage-ui >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-metadata-api >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-metadata >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-mpeg7 >= %{version}-%{release}
+Requires: %{name}-module-matterhorn-publication-service-api >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-runtime-dependencies >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-runtime-info-ui >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-scheduler-api >= %{version}-%{release}
@@ -214,12 +215,13 @@ Requires: %{name}-module-matterhorn-distribution-service-acl >= %{version}-%{rel
 Requires: %{name}-module-matterhorn-distribution-service-api >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-distribution-service-download >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-distribution-service-streaming >= %{version}-%{release}
-Requires: %{name}-module-matterhorn-distribution-service-youtube >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-dublincore >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-json >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-kernel >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-metadata-api >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-mpeg7 >= %{version}-%{release}
+Requires: %{name}-module-matterhorn-publication-service-api >= %{version}-%{release}
+Requires: %{name}-module-matterhorn-publication-service-youtube >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-runtime-dependencies >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-runtime-info-ui >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-static >= %{version}-%{release}
@@ -239,12 +241,13 @@ Requires: %{name}-module-matterhorn-distribution-service-acl-remote >= %{version
 Requires: %{name}-module-matterhorn-distribution-service-api >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-distribution-service-download-remote >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-distribution-service-streaming-remote >= %{version}-%{release}
-Requires: %{name}-module-matterhorn-distribution-service-youtube-remote >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-dublincore >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-json >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-kernel >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-metadata-api >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-mpeg7 >= %{version}-%{release}
+Requires: %{name}-module-matterhorn-publication-service-api >= %{version}-%{release}
+Requires: %{name}-module-matterhorn-publication-service-youtube-remote >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-runtime-dependencies >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-runtime-info-ui >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-webconsole >= %{version}-%{release}
@@ -314,13 +317,14 @@ Requires: %{name}-module-matterhorn-db >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-distribution-service-api >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-distribution-service-download-remote >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-distribution-service-streaming-remote >= %{version}-%{release}
-Requires: %{name}-module-matterhorn-distribution-service-youtube-remote >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-dublincore >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-json >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-kernel >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-lti >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-metadata-api >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-mpeg7 >= %{version}-%{release}
+Requires: %{name}-module-matterhorn-publication-service-api >= %{version}-%{release}
+Requires: %{name}-module-matterhorn-publication-service-youtube-remote >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-runtime-dependencies >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-search-service-api >= %{version}-%{release}
 Requires: %{name}-module-matterhorn-search-service-remote >= %{version}-%{release}
@@ -503,12 +507,6 @@ Summary: matterhorn-videosegmenter-api module for Opencast Matterhorn
 Requires: %{name}-base >= %{version}-%{release}
 Summary: matterhorn-analytics-impl module for Opencast Matterhorn
 
-%package module-matterhorn-distribution-service-youtube
-Requires: %{name}-base >= %{version}-%{release}
-# Remote and non-remote module will not work together
-Conflicts: %{name}-module-matterhorn-distribution-service-youtube-remote
-Summary: matterhorn-distribution-service-youtube module for Opencast Matterhorn
-
 %package module-matterhorn-engage-ui
 Requires: %{name}-base >= %{version}-%{release}
 Summary: matterhorn-engage-ui module for Opencast Matterhorn
@@ -541,12 +539,6 @@ Summary: matterhorn-episode-service-impl module for Opencast Matterhorn
 Requires: %{name}-base >= %{version}-%{release}
 Summary: matterhorn-workspace-api module for Opencast Matterhorn
 
-%package module-matterhorn-distribution-service-youtube-remote
-Requires: %{name}-base >= %{version}-%{release}
-# Remote and non-remote module will not work together
-Conflicts: %{name}-module-matterhorn-distribution-service-youtube
-Summary: matterhorn-distribution-service-youtube-remote module for Opencast Matterhorn
-
 %package module-matterhorn-textextractor-tesseract
 Requires: %{name}-base >= %{version}-%{release}
 Summary: matterhorn-textextractor-tesseract module for Opencast Matterhorn
@@ -562,6 +554,24 @@ Summary: matterhorn-dictionary-api module for Opencast Matterhorn
 %package module-matterhorn-mpeg7
 Requires: %{name}-base >= %{version}-%{release}
 Summary: matterhorn-mpeg7 module for Opencast Matterhorn
+
+%package module-matterhorn-publication-service-api
+Requires: %{name}-base >= %{version}-%{release}
+Summary: matterhorn-publication-service-api module for Opencast Matterhorn
+
+%package module-matterhorn-publication-service-youtube
+Requires: %{name}-base >= %{version}-%{release}
+# Remote and non-remote module will not work together
+Conflicts: %{name}-module-matterhorn-publication-service-youtube-remote
+Obsoletes: %{name}-module-matterhorn-distribution-service-youtube <= %{version}-%{release}
+Summary: matterhorn-publication-service-youtube module for Opencast Matterhorn
+
+%package module-matterhorn-publication-service-youtube-remote
+Requires: %{name}-base >= %{version}-%{release}
+# Remote and non-remote module will not work together
+Conflicts: %{name}-module-matterhorn-publication-service-youtube
+Obsoletes: %{name}-module-matterhorn-distribution-service-youtube-remote <= %{version}-%{release}
+Summary: matterhorn-publication-service-youtube-remote module for Opencast Matterhorn
 
 %package module-matterhorn-search-service-remote
 Requires: %{name}-base >= %{version}-%{release}
@@ -1050,9 +1060,6 @@ Summary: matterhorn-videosegmenter-api module for Opencast Matterhorn
 %description module-matterhorn-analytics-impl
 Summary: matterhorn-analytics-impl module for Opencast Matterhorn
 
-%description module-matterhorn-distribution-service-youtube
-Summary: matterhorn-distribution-service-youtube module for Opencast Matterhorn
-
 %description module-matterhorn-engage-ui
 Summary: matterhorn-engage-ui module for Opencast Matterhorn
 
@@ -1077,9 +1084,6 @@ Summary: matterhorn-episode-service-impl module for Opencast Matterhorn
 %description module-matterhorn-workspace-api
 Summary: matterhorn-workspace-api module for Opencast Matterhorn
 
-%description module-matterhorn-distribution-service-youtube-remote
-Summary: matterhorn-distribution-service-youtube-remote module for Opencast Matterhorn
-
 %description module-matterhorn-textextractor-tesseract
 Summary: matterhorn-textextractor-tesseract module for Opencast Matterhorn
 
@@ -1091,6 +1095,15 @@ Summary: matterhorn-dictionary-api module for Opencast Matterhorn
 
 %description module-matterhorn-mpeg7
 Summary: matterhorn-mpeg7 module for Opencast Matterhorn
+
+%description module-matterhorn-publication-service-api
+Summary: matterhorn-publication-service-api module for Opencast Matterhorn
+
+%description module-matterhorn-publication-service-youtube
+Summary: matterhorn-publication-service-youtube module for Opencast Matterhorn
+
+%description module-matterhorn-publication-service-youtube-remote
+Summary: matterhorn-publication-service-youtube-remote module for Opencast Matterhorn
 
 %description module-matterhorn-search-service-remote
 Summary: matterhorn-search-service-remote module for Opencast Matterhorn
@@ -1412,10 +1425,6 @@ Summary: matterhorn-annotation-impl module for Opencast Matterhorn
 %defattr(-,root,root,-)
 /opt/matterhorn/lib/matterhorn/matterhorn-analytics-impl-%{__INTERNAL_VERSION}.jar
 
-%files module-matterhorn-distribution-service-youtube
-%defattr(-,root,root,-)
-/opt/matterhorn/lib/matterhorn/matterhorn-distribution-service-youtube-%{__INTERNAL_VERSION}.jar
-
 %files module-matterhorn-engage-ui
 %defattr(-,root,root,-)
 /opt/matterhorn/lib/matterhorn/matterhorn-engage-ui-%{__INTERNAL_VERSION}.jar
@@ -1448,10 +1457,6 @@ Summary: matterhorn-annotation-impl module for Opencast Matterhorn
 %defattr(-,root,root,-)
 /opt/matterhorn/lib/matterhorn/matterhorn-workspace-api-%{__INTERNAL_VERSION}.jar
 
-%files module-matterhorn-distribution-service-youtube-remote
-%defattr(-,root,root,-)
-/opt/matterhorn/lib/matterhorn/matterhorn-distribution-service-youtube-remote-%{__INTERNAL_VERSION}.jar
-
 %files module-matterhorn-textextractor-tesseract
 %defattr(-,root,root,-)
 /opt/matterhorn/lib/matterhorn/matterhorn-textextractor-tesseract-%{__INTERNAL_VERSION}.jar
@@ -1467,6 +1472,18 @@ Summary: matterhorn-annotation-impl module for Opencast Matterhorn
 %files module-matterhorn-mpeg7
 %defattr(-,root,root,-)
 /opt/matterhorn/lib/matterhorn/matterhorn-mpeg7-%{__INTERNAL_VERSION}.jar
+
+%files module-matterhorn-publication-service-api
+%defattr(-,root,root,-)
+/opt/matterhorn/lib/matterhorn/matterhorn-publication-service-api-%{__INTERNAL_VERSION}.jar
+
+%files module-matterhorn-publication-service-youtube
+%defattr(-,root,root,-)
+/opt/matterhorn/lib/matterhorn/matterhorn-publication-service-youtube-%{__INTERNAL_VERSION}.jar
+
+%files module-matterhorn-publication-service-youtube-remote
+%defattr(-,root,root,-)
+/opt/matterhorn/lib/matterhorn/matterhorn-publication-service-youtube-remote-%{__INTERNAL_VERSION}.jar
 
 %files module-matterhorn-search-service-remote
 %defattr(-,root,root,-)
@@ -1962,6 +1979,13 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Apr 20 2013 Lars Kiesow <lkiesow@uos.de> - 1.4.0-24.rc8
+- Fix for renaming of ...-distribution-service-youtube
+
+* Fri Apr 19 2013 Lars Kiesow <lkiesow@uos.de> - 1.4.0-23.rc7
+- Update to 1.4.0-rc8
+- Inclusion of new startup scripts
+
 * Sun Apr  7 2013 Lars Kiesow <lkiesow@uos.de> - 1.4.0-22.rc7
 - Fixed executable path in configuration
 
