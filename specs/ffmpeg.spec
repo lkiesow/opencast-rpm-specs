@@ -1,8 +1,8 @@
 Name:          ffmpeg
 Summary:       Hyper fast MPEG1/MPEG4/H263/RV and AC3/MPEG audio encoder
-Version:       1.1.1
-Release:       1%{?dist}
-License:       GPLv2+
+Version:       1.1.4
+Release:       3%{?dist}
+License:       GPLv3+
 Group:         System Environment/Libraries
 
 Source:        http://ffmpeg.org/releases/%{name}-%{version}.tar.bz2
@@ -14,7 +14,6 @@ BuildRequires: a52dec-devel
 BuildRequires: bzip2-devel
 BuildRequires: faad2-devel
 BuildRequires: freetype-devel
-BuildRequires: frei0r-plugins-devel
 BuildRequires: gsm-devel
 BuildRequires: imlib2-devel
 BuildRequires: lame-devel
@@ -22,9 +21,18 @@ BuildRequires: libdc1394-devel, libraw1394-devel
 BuildRequires: librtmp-devel >= 2.2.f
 BuildRequires: libstdc++-devel
 BuildRequires: libvorbis-devel
-%if 0%{?rhel} >= 6
+%if 0%{?rhel}%{?fedora} >= 6
 BuildRequires: libtheora-devel
 BuildRequires: libva-devel
+BuildRequires: schroedinger-devel
+BuildRequires: speex-devel
+BuildRequires: libass-devel
+BuildRequires: opus-devel
+BuildRequires: pulseaudio-libs-devel
+BuildRequires: libv4l-devel
+BuildRequires: openal-soft-devel
+#License incompatible with x264
+#BuildRequires: faac-devel
 %endif
 BuildRequires: libvdpau-devel
 BuildRequires: libvpx-devel >= 0.9.6
@@ -33,8 +41,14 @@ BuildRequires: opencv-devel
 BuildRequires: openjpeg-devel
 BuildRequires: openssl-devel
 %if 0%{?rhel} >= 6
-BuildRequires: schroedinger-devel
-BuildRequires: speex-devel
+BuildRequires: frei0r-plugins-devel
+#License incompatible with x264
+#BuildRequires: fdk-aac-devel
+%endif
+%if 0%{?fedora}
+BuildRequires: celt-devel
+BuildRequires: frei0r-devel
+BuildRequires: libcdio-devel
 %endif
 BuildRequires: texi2html
 BuildRequires: vo-aacenc-devel
@@ -109,10 +123,24 @@ test -f version.h || echo "#define FFMPEG_VERSION \"%{evr}\"" > version.h
    --enable-libopencore-amrwb \
    --enable-libopenjpeg \
    --enable-librtmp \
-%if 0%{?rhel} >= 6
+%if 0%{?fedora}
+   --enable-libcdio \
+   --enable-libcelt \
+%endif
+%if 0%{?rhel}%{?fedora} >= 6
    --enable-libschroedinger \
    --enable-libspeex \
    --enable-libtheora \
+   --enable-bzlib \
+   --enable-libass \
+   --enable-libdc1394 \
+   --enable-libfreetype \
+   --enable-openal \
+   --enable-libopus \
+   --enable-libpulse \
+   --enable-libv4l2 \
+   --disable-debug \
+   --enable-nonfree \
 %endif
    --enable-libvorbis \
    --enable-libvpx \
@@ -123,8 +151,10 @@ test -f version.h || echo "#define FFMPEG_VERSION \"%{evr}\"" > version.h
 %else
    --extra-cflags="%{optflags} -fPIC" \
 %endif
-   --disable-stripping \
-   %{!?with_v4l:--disable-demuxer=v4l --disable-demuxer=v4l2 --disable-indev=v4l --disable-indev=v4l2}
+%if 0%{?rhel} < 6
+   %{!?with_v4l:--disable-demuxer=v4l --disable-demuxer=v4l2 --disable-indev=v4l --disable-indev=v4l2} \
+%endif
+   --disable-stripping
 make
 # remove some zero-length files, ...
 pushd doc
@@ -171,6 +201,14 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Apr 29 2013 Lars Kiesow <lkiesow@uos.de> - 1.1.4-3
+- Update to version 1.1.4
+- Enabled fdk-aacenc
+
+* Sun Apr 28 2013 Lars Kiesow <lkiesow@uos.de> - 1.1.1-2
+- Enabled more build opetion
+- Updated libvpx
+
 * Mon Jan 28 2013 Lars Kiesow <lkiesow@uos.de> - 1.1.1-1
 - Update to ffmpeg 1.1.1
 

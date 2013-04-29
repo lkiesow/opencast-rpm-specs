@@ -1,19 +1,26 @@
+%global majorver 1
+%global minorver 2
+%global tinyver  0
+
 Name:			libvpx
 Summary:		VP8 Video Codec SDK
-Version:		0.9.7.1
-Release:		2%{?dist}
+Version:		%{majorver}.%{minorver}.%{tinyver}
+%global soversion	%{version}
+Release:		1%{?dist}
 License:		BSD
 Group:			System Environment/Libraries
-# sigh, non-canonical version strings.  clean up in 0.9.8 plz.
-#Source0:		http://webm.googlecode.com/files/%{name}-v%{version}.tar.bz2
-Source0:		http://webm.googlecode.com/files/%{name}-v0.9.7-p1.tar.bz2
-# Probably this should be dropped now that upstream ships a vpx.pc;
-# not for F16 though
-Source1:		libvpx.pc
+# Google forgot to make a 1.2.0 tarball, so I made one from the git tag.
+# git clone https://code.google.com/p/webm.libvpx/ libvpx
+# cd libvpx
+# git checkout v1.2.0
+# rm -rf .git*
+# cd ..
+# mv libvpx libvpx-v1.2.0
+# tar xvfj libvpx-v1.2.0.tar.bz2 libvpx-v1.2.0
+Source0:		http://webm.googlecode.com/files/%{name}-v%{version}.tar.bz2
 # Thanks to debian.
 Source2:		libvpx.ver
 URL:			http://www.webmproject.org/tools/vp8-sdk/
-BuildRoot:     %{_tmppath}/%{name}-%{version}-root
 %ifarch %{ix86} x86_64
 BuildRequires:		yasm
 %endif
@@ -27,7 +34,7 @@ deployed on millions of computers and devices worldwide.
 %package devel
 Summary:		Development files for libvpx
 Group:			Development/Libraries
-Requires:		%{name} = %{version}-%{release}
+Requires:		%{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 Development libraries and headers for developing software against 
@@ -36,15 +43,14 @@ libvpx.
 %package utils
 Summary:		VP8 utilities and tools
 Group:			Development/Tools
-Requires:		%{name} = %{version}-%{release}
+Requires:		%{name}%{?_isa} = %{version}-%{release}
 
 %description utils
 A selection of utilities and tools for VP8, including a sample encoder
 and decoder.
 
 %prep
-#setup -q -n %{name}-v%{version}
-%setup -q -n %{name}-v0.9.7-p1
+%setup -q -n %{name}-v%{version}
 
 %build
 %ifarch %{ix86}
@@ -65,7 +71,7 @@ and decoder.
 %global	generic_target 0
 %endif
 
-./configure --target=%{vpxtarget} --enable-pic --disable-install-srcs --enable-install-docs \
+./configure --target=%{vpxtarget} --enable-pic --disable-install-srcs \
 %if ! %{generic_target}
 --enable-shared \
 %endif
@@ -84,8 +90,7 @@ mkdir tmp
 cd tmp
 ar x ../libvpx_g.a
 cd ..
-# gcc -fPIC -shared -pthread -lm -Wl,--no-undefined -Wl,-soname,libvpx.so.0 -Wl,--version-script,%{SOURCE2} -Wl,-z,noexecstack -o libvpx.so.%{version} tmp/*.o
-gcc -fPIC -shared -pthread -lm -Wl,--no-undefined -Wl,-soname,libvpx.so.0 -Wl,--version-script,%{SOURCE2} -Wl,-z,noexecstack -o libvpx.so.0.9.7 tmp/*.o
+gcc -fPIC -shared -pthread -lm -Wl,--no-undefined -Wl,-soname,libvpx.so.%{majorver} -Wl,--version-script,%{SOURCE2} -Wl,-z,noexecstack -o libvpx.so.%{soversion} tmp/*.o
 rm -rf tmp
 %endif
 
@@ -94,10 +99,9 @@ mv libvpx.a libNOTvpx.a
 mv libvpx_g.a libNOTvpx_g.a
 
 # We need to do this so the examples can link against it.
-# ln -sf libvpx.so.%{version} libvpx.so
-ln -sf libvpx.so.0.9.7 libvpx.so
+ln -sf libvpx.so.%{soversion} libvpx.so
 
-make %{?_smp_mflags} verbose=true target=examples
+make %{?_smp_mflags} verbose=true target=examples CONFIG_SHARED=1
 make %{?_smp_mflags} verbose=true target=docs
 
 # Put them back so the install doesn't fail
@@ -105,26 +109,17 @@ mv libNOTvpx.a libvpx.a
 mv libNOTvpx_g.a libvpx_g.a
 
 %install
-rm -rf %{buildroot}
 make DIST_DIR=%{buildroot}%{_prefix} dist
-
-# Install the pkg-config file
-mkdir -p %{buildroot}%{_libdir}/pkgconfig/
-install -m0644 %{SOURCE1} %{buildroot}%{_libdir}/pkgconfig/
-# Fill in the variables
-sed -i "s|@PREFIX@|%{_prefix}|g" %{buildroot}%{_libdir}/pkgconfig/libvpx.pc
-sed -i "s|@LIBDIR@|%{_libdir}|g" %{buildroot}%{_libdir}/pkgconfig/libvpx.pc
-sed -i "s|@INCLUDEDIR@|%{_includedir}|g" %{buildroot}%{_libdir}/pkgconfig/libvpx.pc
 
 # Simpler to label the dir as %doc.
 mv %{buildroot}/usr/docs doc/
 
 %if %{generic_target}
-install -p libvpx.so.%{version} %{buildroot}%{_libdir}
+install -p libvpx.so.%{soversion} %{buildroot}%{_libdir}
 pushd %{buildroot}%{_libdir}
-ln -sf libvpx.so.%{version} libvpx.so
-ln -sf libvpx.so.%{version} libvpx.so.0
-ln -sf libvpx.so.%{version} libvpx.so.0.9
+ln -sf libvpx.so.%{soversion} libvpx.so
+ln -sf libvpx.so.%{soversion} libvpx.so.%{majorver}
+ln -sf libvpx.so.%{soversion} libvpx.so.%{majorver}.%{minorver}
 popd
 %endif
 
@@ -140,33 +135,54 @@ mv usr/bin/twopass_encoder usr/bin/vp8_twopass_encoder
 chmod 755 usr/bin/*
 popd
 
-%clean
-rm -rf %{buildroot}
-
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
 
 %files
-%defattr(-,root,root,-)
 %doc AUTHORS CHANGELOG LICENSE README
 %{_libdir}/libvpx.so.*
 
 %files devel
-%defattr(-,root,root,-)
 # These are SDK docs, not really useful to an end-user.
 %doc docs/html/
 %{_includedir}/vpx/
-%{_libdir}/pkgconfig/libvpx.pc
 %{_libdir}/pkgconfig/vpx.pc
 %{_libdir}/libvpx.so
 
 %files utils
-%defattr(-,root,root,-)
 %{_bindir}/*
 
 %changelog
-* Thu Aug 16 2012 <lkiesow@uos.de> - 0.9.7.1-2
-- RHEL 5 compatibility fixes
+* Thu Feb 28 2013 Tom Callaway <spot@fedoraproject.org> - 1.2.0-1
+- update to 1.2.0
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue May 29 2012 Tom Callaway <spot@fedoraproject.org> - 1.1.0-1
+- update to 1.1.0
+
+* Tue May 29 2012 Tom Callaway <spot@fedoraproject.org> - 1.0.0-3
+- fix vpx.pc file to include -lm (bz825754)
+
+* Fri May 11 2012 Tom Callaway <spot@fedoraproject.org> - 1.0.0-2
+- use included vpx.pc file (drop local libvpx.pc)
+- apply upstream fix to vpx.pc file (bz 814177)
+
+* Mon Jan 30 2012 Tom Callaway <spot@fedoraproject.org> - 1.0.0-1
+- update to 1.0.0
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.7.1-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Mon Oct 10 2011 Dan Horák <dan[at]danny.cz> - 0.9.7.1-3
+- use macro instead of hard-coded version
+
+* Mon Sep 12 2011 Dan Horák <dan[at]danny.cz> - 0.9.7.1-2
+- fix build on generic targets
 
 * Tue Aug 16 2011 Adam Jackson <ajax@redhat.com> 0.9.7.1-1
 - libvpx 0.9.7-p1

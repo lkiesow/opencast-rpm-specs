@@ -7,7 +7,7 @@
 
 Name:           opencast-matterhorn14
 Version:        1.4.0
-Release:        24.rc8%{?dist}
+Release:        25.rc8%{?dist}
 Summary:        Open Source Lecture Capture & Video Management Tool
 
 Group:          Applications/Multimedia
@@ -1851,6 +1851,7 @@ if [ $1 -eq 0 ]; then
    /sbin/service matterhorn stop >/dev/null 2>&1
    /sbin/chkconfig --del matterhorn
    /usr/sbin/userdel matterhorn
+   /usr/sbin/groupdel matterhorn
 fi
 
 %postun base
@@ -1979,6 +1980,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Apr 29 2013 Lars Kiesow <lkiesow@uos.de> - 1.4.0-25.rc8
+- Fixed groupdel for post uninstall of base
+
 * Sat Apr 20 2013 Lars Kiesow <lkiesow@uos.de> - 1.4.0-24.rc8
 - Fix for renaming of ...-distribution-service-youtube
 

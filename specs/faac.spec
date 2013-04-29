@@ -1,7 +1,7 @@
 Summary: Freeware Advanced Audio Coder
 Name: faac
 Version: 1.28
-Release: 7%{?dist}
+Release: 8%{?dist}
 License: LGPL
 Group: Applications/Multimedia
 URL: http://www.audiocoding.com/
@@ -57,7 +57,6 @@ make
 rm -rf %{buildroot}
 make install DESTDIR=%{buildroot}
 rm $RPM_BUILD_ROOT%{_libdir}/libfaac.la
-rm $RPM_BUILD_ROOT%{_libdir}/libfaac.so
 
 %clean
 rm -rf %{buildroot}
@@ -72,12 +71,16 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %{_includedir}/faac.h
 %{_includedir}/faaccfg.h
+%{_libdir}/libfaac.so
 
 %files libs
 %defattr(-,root,root,-)
 %{_libdir}/libfaac.*
 
 %changelog
+* Sun Apr 28 2013 Lars Kiesow <lkiesow@uos.de> - 1.28-8
+- Included libfaac.so in devel
+
 * Mon Oct 22 2012 Lars Kiesow <lkiesow@uos.de - 1.28-7
 - Port for Matterhorn repo
 

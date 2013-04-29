@@ -4,17 +4,12 @@
 %define gst_minver   0.10.36
 %define gstpb_minver %{gst_minver}
 
-# Turn of extras package on RHEL.
-%if ! 0%{?rhel}
-%bcond_without extras
-%else
 %bcond_with extras
-%endif
 
 Summary: GStreamer streaming media framework "bad" plug-ins
 Name: gstreamer-plugins-bad-free
 Version: 0.10.23
-Release: 8%{?dist}
+Release: 13%{?dist}
 # The freeze and nfs plugins are LGPLv2 (only)
 License: LGPLv2+ and LGPLv2
 Group: Applications/Multimedia
@@ -24,6 +19,7 @@ URL: http://gstreamer.freedesktop.org/
 # modified with gst-p-bad-cleanup.sh from SOURCE1
 Source: gst-plugins-bad-free-%{version}.tar.xz
 Source1: gst-p-bad-cleanup.sh
+Source2: plugin-voamrwbenc.xml.tar.gz
 # Based on upstream 04909e2c50e68
 Patch0: vp8enc-bitrate-fix.patch
 # https://bugzilla.gnome.org/show_bug.cgi?id=677698 / rhbz#797188
@@ -65,6 +61,7 @@ BuildRequires: orc-devel
 Buildrequires: wavpack-devel
 BuildRequires: chrpath
 BuildRequires: opus-devel
+BuildRequires: soundtouch-devel
 
 %if %{with extras}
 BuildRequires: celt-devel
@@ -160,7 +157,7 @@ aren't tested well enough, or the code is not of good enough quality.
 
 
 %prep
-%setup -q -n gst-plugins-bad-%{version}
+%setup -q -n gst-plugins-bad-%{version} -a 2
 %patch0 -p1 -b .vp8enc_bitrate
 %patch1 -p1
 %patch2 -p1
@@ -168,7 +165,7 @@ aren't tested well enough, or the code is not of good enough quality.
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
-sed -i 's/opencv <= 2.2.0/opencv <= 2.4.0/g' configure
+sed -i 's/opencv <= 2.3.1/opencv <= 2.4.3/g' configure
 
 
 %build
@@ -179,7 +176,8 @@ sed -i 's/opencv <= 2.2.0/opencv <= 2.4.0/g' configure
     --enable-debug --disable-static --enable-gtk-doc --enable-experimental \
     --disable-divx --disable-dts --disable-faac --disable-faad --disable-nas \
     --disable-mimic --disable-libmms --disable-mpeg2enc --disable-mplex \
-    --disable-neon --disable-openal --disable-rtmp --disable-xvid
+    --disable-neon --disable-openal --disable-rtmp --disable-xvid \
+	 --disable-voamrwbenc
 make %{?_smp_mflags}
 
 
@@ -298,8 +296,34 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_libdir}/gstreamer-%{majorminor}/libresindvd.so
 %{_libdir}/gstreamer-%{majorminor}/libgstrsvg.so
 %{_libdir}/gstreamer-%{majorminor}/libgstsndfile.so
+%{_libdir}/gstreamer-%{majorminor}/libgstsoundtouch.so
 %{_libdir}/gstreamer-%{majorminor}/libgstvp8.so
 %{_libdir}/gstreamer-%{majorminor}/libgstopus.so
+
+/usr/include/gstreamer-0.10/gst/vdpau/gstvdp.h
+/usr/include/gstreamer-0.10/gst/vdpau/gstvdpbuffer.h
+/usr/include/gstreamer-0.10/gst/vdpau/gstvdpbufferpool.h
+/usr/include/gstreamer-0.10/gst/vdpau/gstvdpdecoder.h
+/usr/include/gstreamer-0.10/gst/vdpau/gstvdpdevice.h
+/usr/include/gstreamer-0.10/gst/vdpau/gstvdpoutputbuffer.h
+/usr/include/gstreamer-0.10/gst/vdpau/gstvdpoutputbufferpool.h
+/usr/include/gstreamer-0.10/gst/vdpau/gstvdpoutputsrcpad.h
+/usr/include/gstreamer-0.10/gst/vdpau/gstvdputils.h
+/usr/include/gstreamer-0.10/gst/vdpau/gstvdpvideobuffer.h
+/usr/include/gstreamer-0.10/gst/vdpau/gstvdpvideobufferpool.h
+/usr/include/gstreamer-0.10/gst/vdpau/gstvdpvideosrcpad.h
+/usr/lib64/gstreamer-0.10/libgstassrender.so
+/usr/lib64/gstreamer-0.10/libgstcelt.so
+/usr/lib64/gstreamer-0.10/libgstdc1394.so
+/usr/lib64/gstreamer-0.10/libgstopencv.so
+/usr/lib64/gstreamer-0.10/libgstschro.so
+/usr/lib64/gstreamer-0.10/libgstsdl.so
+/usr/lib64/gstreamer-0.10/libgstvdpau.so
+/usr/lib64/gstreamer-0.10/libgstvoaacenc.so
+/usr/lib64/libgstvdp-0.10.so
+/usr/lib64/libgstvdp-0.10.so.23
+/usr/lib64/libgstvdp-0.10.so.23.0.0
+
 
 #debugging plugin
 %{_libdir}/gstreamer-%{majorminor}/libgstdebugutilsbad.so
@@ -325,7 +349,6 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_libdir}/gstreamer-%{majorminor}/libgstopencv.so
 %{_libdir}/gstreamer-%{majorminor}/libgstschro.so
 %{_libdir}/gstreamer-%{majorminor}/libgstsdl.so
-%{_libdir}/gstreamer-%{majorminor}/libgstsoundtouch.so
 %{_libdir}/gstreamer-%{majorminor}/libgstteletextdec.so
 %{_libdir}/gstreamer-%{majorminor}/libgsttimidity.so
 %{_libdir}/gstreamer-%{majorminor}/libgsttrm.so
@@ -367,8 +390,25 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 
 
 %changelog
-* Wed Sep 12 2012 Fabian Deutsch <fabiand@fedoraproject.org> - 0.10.23-8
+* Sat Dec 08 2012 Kalev Lember <kalevlember@gmail.com> - 0.10.23-13
+- Fix the opencv sed magic for opencv 2.4.3
+
+* Fri Nov 30 2012 Tom Callaway <spot@fedoraproject.org> - 0.10.23-12
+- rebuild for opencv
+
+* Wed Sep 12 2012 Fabian Deutsch <fabiand@fedoraproject.org> - 0.10.23-11
 - Add opus plugin
+
+* Fri Aug 03 2012 Adam Jackson <ajax@redhat.com> 0.10.23-10
+- Fix the opencv sed magic to hit a pattern that actually exists
+- Rebuild for new opencv
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.10.23-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Jun 28 2012 Bastien Nocera <bnocera@redhat.com> 0.10.23-8
+- Move the soundtouch plugin to the main package (as Totem 3.5 will
+  depend on it)
 
 * Mon Jun 18 2012 Hans de Goede <hdegoede@redhat.com> - 0.10.23-7
 - Cherry pick 2 patches from upstream fixing cheese crashing (rhbz#820959)
