@@ -1,13 +1,16 @@
 %define __os_install_post %{nil}
 
-%define __INTERNAL_VERSION 1.4-rc8
+%global  matterhorn_user          matterhorn
+%global  matterhorn_group         %{matterhorn_user}
+
+%define __INTERNAL_VERSION 1.4-rc9
 
 # TODO: Build a proper SPEC file:
 #       https://fedoraproject.org/wiki/Packaging/Java
 
 Name:           opencast-matterhorn14
 Version:        1.4.0
-Release:        25.rc8%{?dist}
+Release:        27.rc9%{?dist}
 Summary:        Open Source Lecture Capture & Video Management Tool
 
 Group:          Applications/Multimedia
@@ -1835,7 +1838,9 @@ popd
 
 %pre base
 # Create matterhorn user.
-/usr/sbin/useradd -M -r -d /var/matterhorn \
+getent group matterhorn > /dev/null || groupadd -r matterhorn
+getent passwd matterhorn > /dev/null || \
+	/usr/sbin/useradd -M -r -d /var/matterhorn -g matterhorn \
    -c "Opencast Matterhorn" matterhorn > /dev/null 2>&1 || :
 
 %post base
@@ -1850,8 +1855,6 @@ chown -R matterhorn:matterhorn /var/log/matterhorn
 if [ $1 -eq 0 ]; then
    /sbin/service matterhorn stop >/dev/null 2>&1
    /sbin/chkconfig --del matterhorn
-   /usr/sbin/userdel matterhorn
-   /usr/sbin/groupdel matterhorn
 fi
 
 %postun base
@@ -1980,6 +1983,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue May 14 2013 Lars Kiesow <lkiesow@uos.de> - 1.4.0-27.rc9
+- Fixed issue with useradd
+
+* Tue May 14 2013 Lars Kiesow <lkiesow@uos.de> - 1.4.0-26.rc9
+- Update to Matterhorn 1.4.0-rc9
+
 * Mon Apr 29 2013 Lars Kiesow <lkiesow@uos.de> - 1.4.0-25.rc8
 - Fixed groupdel for post uninstall of base
 
