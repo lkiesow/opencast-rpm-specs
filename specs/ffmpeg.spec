@@ -1,7 +1,7 @@
 Name:          ffmpeg
 Summary:       Hyper fast MPEG1/MPEG4/H263/RV and AC3/MPEG audio encoder
-Version:       1.1.4
-Release:       3%{?dist}
+Version:       1.2.1
+Release:       1%{?dist}
 License:       GPLv3+
 Group:         System Environment/Libraries
 
@@ -140,7 +140,6 @@ test -f version.h || echo "#define FFMPEG_VERSION \"%{evr}\"" > version.h
    --enable-libpulse \
    --enable-libv4l2 \
    --disable-debug \
-   --enable-nonfree \
 %endif
    --enable-libvorbis \
    --enable-libvpx \
@@ -154,7 +153,10 @@ test -f version.h || echo "#define FFMPEG_VERSION \"%{evr}\"" > version.h
 %if 0%{?rhel} < 6
    %{!?with_v4l:--disable-demuxer=v4l --disable-demuxer=v4l2 --disable-indev=v4l --disable-indev=v4l2} \
 %endif
-   --disable-stripping
+   --disable-stripping 
+#   --enable-nonfree \
+#   --enable-libfdk-aac \
+#   --enable-libfaac
 make
 # remove some zero-length files, ...
 pushd doc
@@ -201,6 +203,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun May 19 2013 Lars Kiesow <lkiesow@uos.de> - 1.2.1-1
+- Update to version 1.2.1
+
 * Mon Apr 29 2013 Lars Kiesow <lkiesow@uos.de> - 1.1.4-3
 - Update to version 1.1.4
 - Enabled fdk-aacenc
