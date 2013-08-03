@@ -3,25 +3,31 @@
 %global  matterhorn_user          matterhorn
 %global  matterhorn_group         %{matterhorn_user}
 
-%define __INTERNAL_VERSION 1.4.0
+%define __INTERNAL_VERSION 1.4.1-rc1
 
 # TODO: Build a proper SPEC file:
 #       https://fedoraproject.org/wiki/Packaging/Java
 
 Name:           opencast-matterhorn14
-Version:        1.4.0
-Release:        30%{?dist}
+Version:        1.4.1
+Release:        0.1.rc1%{?dist}
 Summary:        Open Source Lecture Capture & Video Management Tool
 
 Group:          Applications/Multimedia
 License:        ECL 2.0
 URL:            http://opencast.org/matterhorn/
-Source0:        matterhorn-%{version}.tar.gz
-Source1:        matterhorn-%{version}-startup-scripts.tar.gz
-Source2:        maven-repo-matterhorn-%{version}.tar.gz
-Source3:        matterhorn-%{version}-workflowoperation-mediapackagepost.tar.gz
+Source0:        matterhorn-%{__INTERNAL_VERSION}.tar.gz
+Source10:       usr-sbin-matterhorn
+Source11:       etc-init.d-matterhorn
+Source12:       etc-matterhorn-service.conf
+Source2:        maven-repo-matterhorn-%{__INTERNAL_VERSION}.tar.gz
+Source3:        matterhorn-%{__INTERNAL_VERSION}-workflowoperation-mediapackagepost.tar.gz
 Source4:        matterhorn.logrotate
-Patch0:         matterhorn-config-%{version}.patch
+Source5:        matterhorn.8.gz
+Source6:        audio-1.0.mp3
+Source7:        camera-1.0.mpg
+Source8:        screen-1.0.mpg
+Patch0:         matterhorn-config-%{__INTERNAL_VERSION}.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires: maven >= 3
@@ -40,10 +46,6 @@ Requires(preun): chkconfig
 Requires(preun): initscripts
 Requires(postun): initscripts
 
-Requires:      ffmpeg >= 0.9
-Requires:      mediainfo = 0.7.35
-Requires:      tesseract >= 3
-Requires:      qt_sbtl_embedder >= 0.4
 Requires:      bash
 Requires:      java >= 1:1.6.0
 
@@ -545,6 +547,7 @@ Summary: Matterhorn-workspace-api module for Opencast Matterhorn
 
 %package module-matterhorn-textextractor-tesseract
 Requires: %{name}-base >= %{version}-%{release}
+Requires: tesseract >= 3
 Summary: Matterhorn-textextractor-tesseract module for Opencast Matterhorn
 
 %package module-matterhorn-episode-service-api
@@ -597,6 +600,8 @@ Summary: Matterhorn-composer-service-remote module for Opencast Matterhorn
 
 %package module-matterhorn-composer-ffmpeg
 Requires: %{name}-base >= %{version}-%{release}
+Requires: qt_sbtl_embedder >= 0.4
+Requires: ffmpeg >= 0.9
 Summary: Matterhorn-composer-ffmpeg module for Opencast Matterhorn
 
 %package module-matterhorn-static-mod
@@ -821,6 +826,8 @@ Summary: Matterhorn-common module for Opencast Matterhorn
 
 %package module-matterhorn-gstreamer-service-impl
 Requires: %{name}-base >= %{version}-%{release}
+Requires: gstreamer
+Requires: gstreamer-plugins-base
 Summary: Matterhorn-gstreamer-service-impl module for Opencast Matterhorn
 
 %package module-matterhorn-dataloader
@@ -853,6 +860,7 @@ Summary: Matterhorn-search-service-feeds module for Opencast Matterhorn
 
 %package module-matterhorn-inspection-service-impl
 Requires: %{name}-base >= %{version}-%{release}
+Requires:     mediainfo = 0.7.35
 Summary: Matterhorn-inspection-service-impl module for Opencast Matterhorn
 
 %package module-matterhorn-conductor
@@ -1831,8 +1839,8 @@ Matterhorn Media-package as HTTP POST request to a specified URL.
 
 
 %prep
-%setup -q -c -a 0 -a 1 -a 2 -a 3
-pushd matterhorn-%{version}
+%setup -q -c -a 0 -a 2 -a 3
+pushd matterhorn-%{__INTERNAL_VERSION}
 %patch0 -p1
 popd
 
@@ -1870,23 +1878,23 @@ fi
 %install
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/matterhorn
-cp -rf matterhorn-%{version}/bin $RPM_BUILD_ROOT%{_datadir}/matterhorn/
+cp -rf matterhorn-%{__INTERNAL_VERSION}/bin $RPM_BUILD_ROOT%{_datadir}/matterhorn/
 
 # Remove unnecessary scripts
 rm $RPM_BUILD_ROOT%{_datadir}/matterhorn/bin/start_matterhorn.bat
 rm $RPM_BUILD_ROOT%{_datadir}/matterhorn/bin/start_matterhorn.sh
 rm $RPM_BUILD_ROOT%{_datadir}/matterhorn/bin/shutdown_matterhorn.sh
-cp -rf matterhorn-%{version}/etc $RPM_BUILD_ROOT%{_datadir}/matterhorn/
-cp -rf matterhorn-%{version}/lib $RPM_BUILD_ROOT%{_datadir}/matterhorn/
+cp -rf matterhorn-%{__INTERNAL_VERSION}/etc $RPM_BUILD_ROOT%{_datadir}/matterhorn/
+cp -rf matterhorn-%{__INTERNAL_VERSION}/lib $RPM_BUILD_ROOT%{_datadir}/matterhorn/
 echo '<?xml version="1.0" encoding="UTF-8"?>' > settings.xml
 echo '<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"' >> settings.xml
 echo 'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"' >> settings.xml
 echo 'xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 ' \
    'http://maven.apache.org/xsd/settings-1.0.0.xsd">' >> settings.xml
-echo "<localRepository>`pwd`/mvn2/repository</localRepository>" >> settings.xml
+echo "<localRepository>`pwd`/mvn2</localRepository>" >> settings.xml
 echo '<offline>true</offline>' >> settings.xml
 echo '</settings>' >> settings.xml
-pushd matterhorn-%{version}
+pushd matterhorn-%{__INTERNAL_VERSION}
    MAVEN_OPTS='-Xms256m -Xmx960m -XX:PermSize=64m -XX:MaxPermSize=256m' \
       mvn -o -s ../settings.xml clean install -P \
          admin,analytics,export-admin,export-worker,export-all-in-one,ingest,dist,dist-stub,engage,engage-standalone,engage-stub,worker,worker-stub,workspace,workspace-stub,serviceregistry,serviceregistry-stub,oaipmh,directory-db,directory-ldap,directory-cas,directory-openid,test-load,capture \
@@ -1894,7 +1902,7 @@ pushd matterhorn-%{version}
 popd
 #
 # Build additional modules:
-pushd matterhorn-%{version}/modules/matterhorn-workflowoperation-mediapackagepost/
+pushd matterhorn-%{__INTERNAL_VERSION}/modules/matterhorn-workflowoperation-mediapackagepost/
    MAVEN_OPTS='-Xms256m -Xmx960m -XX:PermSize=64m -XX:MaxPermSize=256m' \
       mvn -o -s ../../../settings.xml clean install \
          -DdeployTo=$RPM_BUILD_ROOT%{_datadir}/matterhorn/
@@ -1903,7 +1911,6 @@ popd
 # Copy other stuff
 mkdir -m 755 -p ${RPM_BUILD_ROOT}/srv/matterhorn/inbox
 mkdir -m 755 -p ${RPM_BUILD_ROOT}%{_localstatedir}/log/matterhorn
-mkdir -m 755 -p ${RPM_BUILD_ROOT}/srv/matterhorn/samples
 mkdir -p ${RPM_BUILD_ROOT}%{_sysconfdir}/matterhorn
 mv ${RPM_BUILD_ROOT}%{_datadir}/matterhorn/etc/* ${RPM_BUILD_ROOT}%{_sysconfdir}/matterhorn/
 
@@ -1917,23 +1924,21 @@ ln -s /srv/matterhorn/inbox            ${RPM_BUILD_ROOT}%{_datadir}/matterhorn/i
 ln -s /usr/sbin/matterhorn             ${RPM_BUILD_ROOT}%{_datadir}/matterhorn/bin/matterhorn
 
 # Install samples
-install -m 644 mvn2/repository/org/opencastproject/samples/audio/1.0/audio-1.0.mp3 \
-   ${RPM_BUILD_ROOT}/srv/matterhorn/samples
-install -m 644 mvn2/repository/org/opencastproject/samples/camera/1.0/camera-1.0.mpg \
-   ${RPM_BUILD_ROOT}/srv/matterhorn/samples
-install -m 644 mvn2/repository/org/opencastproject/samples/screen/1.0/screen-1.0.mpg \
-   ${RPM_BUILD_ROOT}/srv/matterhorn/samples
+install -p -D -m 0644 %{SOURCE6} \
+   ${RPM_BUILD_ROOT}/srv/matterhorn/samples/audio-1.0.mp3
+install -p -D -m 0644 %{SOURCE7} \
+   ${RPM_BUILD_ROOT}/srv/matterhorn/samples/camera-1.0.mpg
+install -p -D -m 0644 %{SOURCE8} \
+   ${RPM_BUILD_ROOT}/srv/matterhorn/samples/screen-1.0.mpg
 
 # Install binaries
-mkdir -p ${RPM_BUILD_ROOT}%{_sbindir}
-install -m 0755 matterhorn-1.4.0-startup-scripts/usr/sbin/matterhorn \
-      $RPM_BUILD_ROOT%{_sbindir}
-install -m 644 matterhorn-1.4.0-startup-scripts/opt/matterhorn/etc/service.conf \
-      ${RPM_BUILD_ROOT}%{_sysconfdir}/matterhorn/
+install -p -D -m 0755 %{SOURCE10} \
+      $RPM_BUILD_ROOT%{_sbindir}/matterhorn
+install -p -D -m 0644 %{SOURCE12} \
+      ${RPM_BUILD_ROOT}%{_sysconfdir}/matterhorn/service.conf
 
 # Install SysV-init script
-mkdir -p ${RPM_BUILD_ROOT}%{_initddir}
-cp matterhorn-1.4.0-startup-scripts/etc/init.d/matterhorn \
+install -p -D -m 0755 %{SOURCE11} \
       $RPM_BUILD_ROOT%{_initddir}/matterhorn
 
 # Install logrotate configuration
@@ -1944,10 +1949,13 @@ install -p -D -m 0644 %{SOURCE4} \
 mkdir -p ${RPM_BUILD_ROOT}%{_datadir}/matterhorn/docs/scripts/ddl/
 mkdir -p ${RPM_BUILD_ROOT}%{_datadir}/matterhorn/docs/licenses/
 mkdir -p ${RPM_BUILD_ROOT}%{_datadir}/matterhorn/docs/module-docs/
-cp matterhorn-%{version}/docs/licenses.txt  ${RPM_BUILD_ROOT}%{_datadir}/matterhorn/docs/
-cp matterhorn-%{version}/docs/licenses/*    ${RPM_BUILD_ROOT}%{_datadir}/matterhorn/docs/licenses/
-cp matterhorn-%{version}/docs/scripts/ddl/* ${RPM_BUILD_ROOT}%{_datadir}/matterhorn/docs/scripts/ddl/
-cp matterhorn-%{version}/docs/module-docs/* ${RPM_BUILD_ROOT}%{_datadir}/matterhorn/docs/module-docs/
+cp matterhorn-%{__INTERNAL_VERSION}/docs/licenses.txt  ${RPM_BUILD_ROOT}%{_datadir}/matterhorn/docs/
+cp matterhorn-%{__INTERNAL_VERSION}/docs/licenses/*    ${RPM_BUILD_ROOT}%{_datadir}/matterhorn/docs/licenses/
+cp matterhorn-%{__INTERNAL_VERSION}/docs/scripts/ddl/* ${RPM_BUILD_ROOT}%{_datadir}/matterhorn/docs/scripts/ddl/
+cp matterhorn-%{__INTERNAL_VERSION}/docs/module-docs/* ${RPM_BUILD_ROOT}%{_datadir}/matterhorn/docs/module-docs/
+
+# Install manpage
+install -p -D -m 0644 %{SOURCE5} %{buildroot}%{_mandir}/man8/matterhorn.8.gz
 
 
 
@@ -2003,9 +2011,19 @@ rm -rf $RPM_BUILD_ROOT
 %dir /srv/matterhorn
 %dir /srv/matterhorn/inbox
 %dir %{_localstatedir}/log/matterhorn
+%{_mandir}/man8/matterhorn.8.gz
 
 
 %changelog
+* Sat Aug  3 2013 Lars Kiesow <lkiesow@uos.de> - 1.4.1-0.1.rc1
+- Update to MH 1.4.1-rc1
+- Moved dependencies to modules
+
+* Sat Jul 13 2013 Lars Kiesow <lkiesow@uos.de> - 1.4.0-31
+- Added manpage
+- Fixed logrotate configuration (log4j)
+- Fixed encoding profile for OCR
+
 * Tue Jun  4 2013 Lars Kiesow <lkiesow@uos.de> - 1.4.0-30
 - Update to 1.4.0 final release
 
