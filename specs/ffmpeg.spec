@@ -1,6 +1,6 @@
 Name:          ffmpeg
 Summary:       Hyper fast MPEG1/MPEG4/H263/RV and AC3/MPEG audio encoder
-Version:       1.2.1
+Version:       2.0
 Release:       1%{?dist}
 License:       GPLv3+
 Group:         System Environment/Libraries
@@ -153,9 +153,14 @@ test -f version.h || echo "#define FFMPEG_VERSION \"%{evr}\"" > version.h
 %if 0%{?rhel} < 6
    %{!?with_v4l:--disable-demuxer=v4l --disable-demuxer=v4l2 --disable-indev=v4l --disable-indev=v4l2} \
 %endif
-   --disable-stripping 
+   --disable-stripping
+
+# Problems with OpenCL libs/headers
+#	--enable-opencl
+
+# Problems with license (lib*aac license is GPL incompatible)
+#   --extra-libs="-lstdc++" --enable-libfdk-aac
 #   --enable-nonfree \
-#   --enable-libfdk-aac \
 #   --enable-libfaac
 make
 # remove some zero-length files, ...
@@ -192,6 +197,7 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %doc COPYING* CREDITS README MAINTAINERS LICENSE RELEASE doc/
 %{_libdir}/*.so.*
+%{_mandir}/man3/*
 
 
 %files devel
@@ -203,6 +209,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jul 13 2013 Lars Kiesow <lkiesow@uos.de> - 2.0-1
+- Update to version 2.0
+
 * Sun May 19 2013 Lars Kiesow <lkiesow@uos.de> - 1.2.1-1
 - Update to version 1.2.1
 
