@@ -10,7 +10,7 @@
 
 Name:           opencast-matterhorn14
 Version:        1.4.1
-Release:        0.1.rc1%{?dist}
+Release:        0.2.rc1%{?dist}
 Summary:        Open Source Lecture Capture & Video Management Tool
 
 Group:          Applications/Multimedia
@@ -600,7 +600,11 @@ Summary: Matterhorn-composer-service-remote module for Opencast Matterhorn
 
 %package module-matterhorn-composer-ffmpeg
 Requires: %{name}-base >= %{version}-%{release}
+# We omit the qt_sbtl_embedder dependency on Fedora as it causes some problems
+# there. It should not be a problem as it is barely used in Matterhorn
+%if 0%{?rhel}
 Requires: qt_sbtl_embedder >= 0.4
+%endif
 Requires: ffmpeg >= 0.9
 Summary: Matterhorn-composer-ffmpeg module for Opencast Matterhorn
 
@@ -1895,7 +1899,7 @@ echo "<localRepository>`pwd`/mvn2</localRepository>" >> settings.xml
 echo '<offline>true</offline>' >> settings.xml
 echo '</settings>' >> settings.xml
 pushd matterhorn-%{__INTERNAL_VERSION}
-   MAVEN_OPTS='-Xms256m -Xmx960m -XX:PermSize=64m -XX:MaxPermSize=256m' \
+   MAVEN_OPTS='-Xms512m -Xmx960m -XX:PermSize=128m -XX:MaxPermSize=512m' \
       mvn -o -s ../settings.xml clean install -P \
          admin,analytics,export-admin,export-worker,export-all-in-one,ingest,dist,dist-stub,engage,engage-standalone,engage-stub,worker,worker-stub,workspace,workspace-stub,serviceregistry,serviceregistry-stub,oaipmh,directory-db,directory-ldap,directory-cas,directory-openid,test-load,capture \
          -DdeployTo=$RPM_BUILD_ROOT%{_datadir}/matterhorn/
@@ -2015,6 +2019,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Aug  8 2013 Lars Kiesow <lkiesow@uos.de> - 1.4.1-0.2.rc1
+- Excluded qt_sbtl_embedder on Fedora systems
+
 * Sat Aug  3 2013 Lars Kiesow <lkiesow@uos.de> - 1.4.1-0.1.rc1
 - Update to MH 1.4.1-rc1
 - Moved dependencies to modules
