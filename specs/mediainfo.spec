@@ -1,26 +1,22 @@
 Name:          mediainfo
 Version:       0.7.35
-Release:       2%{?dist}
+Release:       3%{?dist}
 Summary:       Supplies technical and tag information about a video or audio file
 Group:         Applications/Multimedia
 License:       LGPLv3
 URL:           http://mediainfo.sourceforge.net/
-Source0:       %{name}-%{version}.tar.gz
+Source0:       http://downloads.sourceforge.net/project/%{name}/binary/%{name}/%{version}/MediaInfo_CLI_%{version}_GNU_FromSource.tar.bz2
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 
 BuildRequires: dos2unix
 BuildRequires: gcc-c++
-BuildRequires: libmediainfo0-devel
-BuildRequires: libzen0-devel >= 0.4.17
 BuildRequires: pkgconfig
 BuildRequires: zlib-devel
-Requires:      libmediainfo0 >= 0.7.35
-Requires:      libzen0 >= 0.4.17
 
-%global _enable_debug_package 0
-%global debug_package %{nil}
-%global __os_install_post /usr/lib/rpm/brp-compress %{nil}
+#%global _enable_debug_package 0
+#%global debug_package %{nil}
+#%global __os_install_post /usr/lib/rpm/brp-compress %{nil}
 
 %description
 MediaInfo CLI (Command Line Interface).
@@ -46,26 +42,36 @@ What format (container) does MediaInfo support?
 
 
 %prep
-%setup -q -n mediainfo-%{version}
-dos2unix     *.html *.txt Release/*.txt
-%__chmod 644 *.html *.txt Release/*.txt
+%setup -q -n MediaInfo_CLI_GNU_FromSource
+pushd MediaInfo
+	dos2unix     *.html *.txt Release/*.txt
+	%__chmod 644 *.html *.txt Release/*.txt
+popd
+
 
 %build
-export CFLAGS="$RPM_OPT_FLAGS"
-export CXXFLAGS="$RPM_OPT_FLAGS"
-
+# build ZenLib
+pushd ZenLib/Project/GNU/Library
+   ./configure --enable-static
+	sed -i '1i#include <stddef.h>' ../../../Source/ZenLib/Thread.h
+   %__make
+popd
+# build LIB
+pushd MediaInfoLib/Project/GNU/Library/
+   ./configure --enable-static
+   %__make
+popd
 # build CLI
-pushd Project/GNU/CLI
-   %configure
-
+pushd MediaInfo/Project/GNU/CLI/
+   ./configure --enable-staticlibs
    %__make
 popd
 
 
 %install
 rm -rf $RPM_BUILD_ROOT
-pushd Project/GNU/CLI
-   %__make install-strip DESTDIR=%{buildroot}
+pushd MediaInfo/Project/GNU/CLI/
+	install -p -D -m 0755 mediainfo $RPM_BUILD_ROOT%{_bindir}/mediainfo
 popd
 
 
@@ -74,11 +80,14 @@ popd
 
 %files
 %defattr(-,root,root,-)
-%doc Release/ReadMe_CLI_Linux.txt
-%doc License.html History_CLI.txt
+%doc MediaInfo/Release/ReadMe_CLI_Linux.txt
+%doc MediaInfo/License.html MediaInfo/History_CLI.txt
 %{_bindir}/mediainfo
 
 %changelog
+* Wed Sep 18 2013 Lars Kiesow <lkiesow@uos.de> - 0.7.35-3
+- Fix for system libzen
+
 * Thu Aug 16 2012 <lkiesow@uos.de> - 0.7.35-2
 - CentOS 5 compatibility fixes
 
