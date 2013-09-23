@@ -3,14 +3,11 @@
 %global  matterhorn_user          matterhorn
 %global  matterhorn_group         %{matterhorn_user}
 
-%define __INTERNAL_VERSION 1.4.1-rc2
-
-# TODO: Build a proper SPEC file:
-#       https://fedoraproject.org/wiki/Packaging/Java
+%define __INTERNAL_VERSION 1.4.1-rc3
 
 Name:           opencast-matterhorn14
 Version:        1.4.1
-Release:        0.3.rc2%{?dist}
+Release:        0.6.rc3%{?dist}
 Summary:        Open Source Lecture Capture & Video Management Tool
 
 Group:          Applications/Multimedia
@@ -79,13 +76,26 @@ Requires: mysql-server >= 5
 Summary: Worker Matterhorn distribution
 Requires: %{name}-profile-serviceregistry   = %{version}-%{release}
 Requires: %{name}-profile-workspace         = %{version}-%{release}
+Requires: %{name}-profile-worker            = %{version}-%{release}
+
+%package distribution-worker-standalone
+Summary: Worker Matterhorn distribution
+Requires: %{name}-profile-serviceregistry   = %{version}-%{release}
+Requires: %{name}-profile-workspace         = %{version}-%{release}
 Requires: %{name}-profile-worker-standalone = %{version}-%{release}
 
 %package distribution-engage
 Summary: Engage Matterhorn distribution
-Requires: %{name}-profile-engage-standalone = %{version}-%{release}
+Requires: %{name}-profile-engage            = %{version}-%{release}
 Requires: %{name}-profile-serviceregistry   = %{version}-%{release}
 Requires: %{name}-profile-dist              = %{version}-%{release}
+Requires: %{name}-profile-workspace         = %{version}-%{release}
+
+%package distribution-engage-standalone
+Summary: Engage Matterhorn distribution
+Requires: %{name}-profile-engage-standalone = %{version}-%{release}
+Requires: %{name}-profile-serviceregistry   = %{version}-%{release}
+Requires: %{name}-profile-dist-nss          = %{version}-%{release}
 Requires: %{name}-profile-workspace         = %{version}-%{release}
 
 %package distribution-admin-worker
@@ -241,6 +251,7 @@ Requires: %{name}-module-matterhorn-workspace-impl = %{version}-%{release}
 Summary: Dist profile for Opencast Matterhorn %{__INTERNAL_VERSION}
 # Remote and non-remote module will not work together
 Conflicts: %{name}-profile-dist-stub
+Conflicts: %{name}-profile-dist-nss
 Requires: %{name}-module-matterhorn-authorization-xacml = %{version}-%{release}
 Requires: %{name}-module-matterhorn-common = %{version}-%{release}
 Requires: %{name}-module-matterhorn-db = %{version}-%{release}
@@ -265,10 +276,40 @@ Requires: %{name}-module-matterhorn-webconsole = %{version}-%{release}
 Requires: %{name}-module-matterhorn-workflow-service-api = %{version}-%{release}
 Requires: %{name}-module-matterhorn-workspace-api = %{version}-%{release}
 
+%package profile-dist-nss
+Summary: Dist profile without series service for Opencast Matterhorn %{__INTERNAL_VERSION}
+# Remote and non-remote module will not work together
+Conflicts: %{name}-profile-dist-stub
+Conflicts: %{name}-profile-dist
+Requires: %{name}-module-matterhorn-authorization-xacml = %{version}-%{release}
+Requires: %{name}-module-matterhorn-common = %{version}-%{release}
+Requires: %{name}-module-matterhorn-db = %{version}-%{release}
+Requires: %{name}-module-matterhorn-distribution-service-acl = %{version}-%{release}
+Requires: %{name}-module-matterhorn-distribution-service-api = %{version}-%{release}
+Requires: %{name}-module-matterhorn-distribution-service-download = %{version}-%{release}
+Requires: %{name}-module-matterhorn-distribution-service-streaming = %{version}-%{release}
+Requires: %{name}-module-matterhorn-dublincore = %{version}-%{release}
+Requires: %{name}-module-matterhorn-json = %{version}-%{release}
+Requires: %{name}-module-matterhorn-kernel = %{version}-%{release}
+Requires: %{name}-module-matterhorn-metadata-api = %{version}-%{release}
+Requires: %{name}-module-matterhorn-mpeg7 = %{version}-%{release}
+Requires: %{name}-module-matterhorn-publication-service-api = %{version}-%{release}
+Requires: %{name}-module-matterhorn-publication-service-youtube = %{version}-%{release}
+Requires: %{name}-module-matterhorn-runtime-dependencies = %{version}-%{release}
+Requires: %{name}-module-matterhorn-runtime-info-ui = %{version}-%{release}
+Requires: %{name}-module-matterhorn-series-service-api = %{version}-%{release}
+#Requires: %{name}-module-matterhorn-series-service-impl = %{version}-%{release}
+Requires: %{name}-module-matterhorn-static-mod = %{version}-%{release}
+Requires: %{name}-module-matterhorn-userdirectory-jpa = %{version}-%{release}
+Requires: %{name}-module-matterhorn-webconsole = %{version}-%{release}
+Requires: %{name}-module-matterhorn-workflow-service-api = %{version}-%{release}
+Requires: %{name}-module-matterhorn-workspace-api = %{version}-%{release}
+
 %package profile-dist-stub
 Summary: Dist-stub profile for Opencast Matterhorn %{__INTERNAL_VERSION}
 # Remote and non-remote module will not work together
 Conflicts: %{name}-profile-dist
+Conflicts: %{name}-profile-dist-nss
 Requires: %{name}-module-matterhorn-authorization-xacml = %{version}-%{release}
 Requires: %{name}-module-matterhorn-common = %{version}-%{release}
 Requires: %{name}-module-matterhorn-db = %{version}-%{release}
@@ -1056,6 +1097,15 @@ This is the worker package that contains the modules that create the most CPU
 load (encoding, OCR, etc). So it is recommended to deploy this on a more
 powerful machine.
 
+
+%description distribution-worker-standalone
+Worker standalone distribution of Opencast Matterhorn components.
+
+This is the worker package that contains the modules that create the most CPU
+load (encoding, OCR, etc). So it is recommended to deploy this on a more
+powerful machine.
+
+
 %description distribution-engage
 Engage distribution of Opencast Matterhorn components.
 
@@ -1063,6 +1113,15 @@ This is the package for the Matterhorn Engage Modules which are the front-end
 to the viewer of your videos. It is always highly recommended to keep these
 separated from the rest of your system.
 
+%description distribution-engage-standalone
+Engage standalone distribution of Opencast Matterhorn components.
+
+This is the package for the Matterhorn Engage Modules which are the front-end
+to the viewer of your videos. It is always highly recommended to keep these
+separated from the rest of your system.
+
+In contrast to the distribution-engage this is for use without shared network
+storage.
 
 %description distribution-admin-worker
 Combined Admin and Worker distribution of Opencast Matterhorn components.
@@ -1095,6 +1154,10 @@ Ingest-standalone profile for Opencast Matterhorn
 
 %description profile-dist
 dist profile for Opencast Matterhorn
+
+%description profile-dist-nss
+dist profile without series-service-imple module for engage-standalone
+distribution of Opencast Matterhorn
 
 %description profile-dist-stub
 dist-stub profile for Opencast Matterhorn
@@ -1473,6 +1536,9 @@ Matterhorn-workflow-service-remote module for Opencast Matterhorn
 # Nothing to do
 
 %files profile-dist
+# Nothing to do
+
+%files profile-dist-nss
 # Nothing to do
 
 %files profile-dist-stub
@@ -2008,7 +2074,7 @@ pushd matterhorn-%{__INTERNAL_VERSION}
 # cat pom.xml | grep '<profile>' -A1 | grep '<id>' | cut -d'>' -f2 | \
 #     cut -d'<' -f1 | sort | xargs printf '%s,'
 # Though we leave out test-performance as that one gives us troubles
-   MAVEN_OPTS='-Xms256m -Xmx960m -XX:PermSize=64m -XX:MaxPermSize=256m' \
+   MAVEN_OPTS='-Xms256m -Xmx960m -XX:PermSize=128m -XX:MaxPermSize=512m' \
       mvn -o -s ../settings.xml clean install -P \
 			admin,analytics,capture,directory-cas,directory-db,directory-ldap,directory-openid,dist,dist-stub,engage,engage-standalone,engage-stub,export-admin,export-all-in-one,export-worker,ingest,ingest-standalone,oaipmh,serviceregistry,serviceregistry-stub,test,test-load,worker,worker-standalone,worker-stub,workspace,workspace-stub \
          -DdeployTo=$RPM_BUILD_ROOT%{_datadir}/matterhorn/
@@ -2096,9 +2162,15 @@ rm -rf $RPM_BUILD_ROOT
 
 %files distribution-worker
 %defattr(-,root,root,-)
+
+%files distribution-worker-standalone
+%defattr(-,root,root,-)
 # No files here
 
 %files distribution-engage
+%defattr(-,root,root,-)
+
+%files distribution-engage-standalone
 %defattr(-,root,root,-)
 # No files here
 
@@ -2129,6 +2201,15 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Sep 20 2013 Lars Kiesow <lkiesow@uos.de> - 1.4.1-0.6.rc3
+- Some minor fixes for Fedora
+
+* Wed Sep 18 2013 Lars Kiesow <lkiesow@uos.de> - 1.4.1-0.5.rc3
+- Update to 1.4.1-rc3
+
+* Thu Sep  5 2013 Lars Kiesow <lkiesow@uos.de> - 1.4.1-0.4.rc2
+- Fixed some distributions (standalone vs. shared storage distributions)
+
 * Tue Aug 27 2013 Lars Kiesow <lkiesow@uos.de> - 1.4.1-0.3.rc2
 - Enabled missing modules
 
