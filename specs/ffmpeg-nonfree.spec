@@ -1,13 +1,17 @@
-Name:          ffmpeg
+%define srcname ffmpeg
+Name:          %{srcname}-nonfree
 Summary:       Hyper fast MPEG1/MPEG4/H263/RV and AC3/MPEG audio encoder
 Version:       2.0.2
 Release:       1%{?dist}
 License:       GPLv3+
 Group:         System Environment/Libraries
 
-Source:        http://ffmpeg.org/releases/%{name}-%{version}.tar.bz2
+Source:        http://ffmpeg.org/releases/%{srcname}-%{version}.tar.bz2
 URL:           http://ffmpeg.sourceforge.net/
 BuildRoot:     %{_tmppath}/%{name}-root
+
+Provides:      ffmpeg = %{version}-%{release}
+Obsoletes:     ffmpeg <= %{version}-%{release}
 
 BuildRequires: SDL-devel
 BuildRequires: a52dec-devel
@@ -32,7 +36,7 @@ BuildRequires: pulseaudio-libs-devel
 BuildRequires: libv4l-devel
 BuildRequires: openal-soft-devel
 #License incompatible with x264
-#BuildRequires: faac-devel
+BuildRequires: faac-devel
 %endif
 BuildRequires: libvdpau-devel
 BuildRequires: libvpx-devel >= 0.9.6
@@ -43,7 +47,7 @@ BuildRequires: openssl-devel
 %if 0%{?rhel} >= 6
 BuildRequires: frei0r-plugins-devel
 #License incompatible with x264
-#BuildRequires: fdk-aac-devel
+BuildRequires: fdk-aac-devel
 %endif
 %if 0%{?fedora}
 BuildRequires: celt-devel
@@ -63,11 +67,17 @@ Requires:      %{name}-libs = %{version}-%{release}
 Summary:        Library for ffmpeg
 Group:          System Environment/Libraries
 
+Provides:      ffmpeg-libs = %{version}-%{release}
+Obsoletes:     ffmpeg-libs <= %{version}-%{release}
+
 
 %package devel
 Summary:        Development files for %{name}
 Group:          Development/Libraries
 Requires:       %{name}-libs = %{version}-%{release}
+
+Provides:      ffmpeg-devel = %{version}-%{release}
+Obsoletes:     ffmpeg-devel <= %{version}-%{release}
 
 
 %description
@@ -96,7 +106,7 @@ This package contains the libraries for ffmpeg
 
 
 %prep
-%setup -q
+%setup -q -n %{srcname}-%{version}
 test -f version.h || echo "#define FFMPEG_VERSION \"%{evr}\"" > version.h
 
 %build
@@ -153,15 +163,15 @@ test -f version.h || echo "#define FFMPEG_VERSION \"%{evr}\"" > version.h
 %if 0%{?rhel} < 6
    %{!?with_v4l:--disable-demuxer=v4l --disable-demuxer=v4l2 --disable-indev=v4l --disable-indev=v4l2} \
 %endif
-   --disable-stripping
+   --disable-stripping \
+   --extra-libs="-lstdc++" --enable-libfdk-aac \
+   --enable-nonfree \
+   --enable-libfaac
 
 # Problems with OpenCL libs/headers
 #	--enable-opencl
 
 # Problems with license (lib*aac license is GPL incompatible)
-#   --extra-libs="-lstdc++" --enable-libfdk-aac
-#   --enable-nonfree \
-#   --enable-libfaac
 make
 # remove some zero-length files, ...
 pushd doc
@@ -210,7 +220,7 @@ rm -rf %{buildroot}
 
 %changelog
 * Sat Oct 12 2013 Lars Kiesow <lkiesow@uos.de> - 2.0.2-1
-- Update to FFMpeg 2.0.2
+- Update to FFmpeg 2.0.2
 
 * Tue Sep 24 2013 Lars Kiesow <lkiesow@uos.de> - 2.0.1-1
 - Update to FFmpeg 2.0.1
