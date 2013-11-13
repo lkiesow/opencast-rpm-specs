@@ -1,6 +1,6 @@
 Name:          ffmpeg
 Summary:       Hyper fast MPEG1/MPEG4/H263/RV and AC3/MPEG audio encoder
-Version:       2.0.2
+Version:       2.1
 Release:       1%{?dist}
 License:       GPLv3+
 Group:         System Environment/Libraries
@@ -175,6 +175,7 @@ rm -rf %{buildroot}
 make install DESTDIR=%{buildroot} incdir=%{buildroot}%{_includedir}/ffmpeg
 # Remove from the included docs
 rm -f doc/Makefile
+rm -f %{buildroot}/usr/share/doc/ffmpeg/*.html
 
 
 %clean
@@ -209,8 +210,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Oct 31 2013 Lars Kiesow <lkiesow@uos.de> - 2.1-1
+- Update to FFmpeg 2.1
+
 * Sat Oct 12 2013 Lars Kiesow <lkiesow@uos.de> - 2.0.2-1
-- Update to FFMpeg 2.0.2
+- Update to FFmpeg 2.0.2
 
 * Tue Sep 24 2013 Lars Kiesow <lkiesow@uos.de> - 2.0.1-1
 - Update to FFmpeg 2.0.1
