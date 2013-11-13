@@ -3,22 +3,22 @@
 %global  matterhorn_user          matterhorn
 %global  matterhorn_group         %{matterhorn_user}
 
-%define __INTERNAL_VERSION 1.4.1-rc5
+%define __INTERNAL_VERSION 1.4.1-rc6
 
 Name:           opencast-matterhorn14
 Version:        1.4.1
-Release:        0.9.rc5%{?dist}
+Release:        0.10.rc6%{?dist}
 Summary:        Open Source Lecture Capture & Video Management Tool
 
 Group:          Applications/Multimedia
 License:        ECL 2.0
 URL:            http://opencast.org/matterhorn/
-Source0:        matterhorn-%{__INTERNAL_VERSION}.tar.gz
+Source0:        https://github.com/lkiesow/opencast-matterhorn/archive/%{__INTERNAL_VERSION}.tar.gz
 Source10:       usr-sbin-matterhorn
 Source11:       etc-init.d-matterhorn
 Source12:       etc-matterhorn-service.conf
 Source2:        maven-repo-matterhorn-%{__INTERNAL_VERSION}.tar.gz
-Source3:        matterhorn-%{__INTERNAL_VERSION}-workflowoperation-mediapackagepost.tar.gz
+Source3:        opencast-matterhorn-%{__INTERNAL_VERSION}-workflowoperation-mediapackagepost.tar.gz
 Source4:        matterhorn.logrotate
 Source5:        matterhorn.8.gz
 Source6:        audio-1.0.mp3
@@ -2015,7 +2015,7 @@ Matterhorn Media-package as HTTP POST request to a specified URL.
 
 %prep
 %setup -q -c -a 0 -a 2 -a 3
-pushd matterhorn-%{__INTERNAL_VERSION}
+pushd opencast-matterhorn-%{__INTERNAL_VERSION}
 %patch0 -p1
 popd
 
@@ -2053,14 +2053,14 @@ fi
 %install
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/matterhorn
-cp -rf matterhorn-%{__INTERNAL_VERSION}/bin $RPM_BUILD_ROOT%{_datadir}/matterhorn/
+cp -rf opencast-matterhorn-%{__INTERNAL_VERSION}/bin $RPM_BUILD_ROOT%{_datadir}/matterhorn/
 
 # Remove unnecessary scripts
 rm $RPM_BUILD_ROOT%{_datadir}/matterhorn/bin/start_matterhorn.bat
 rm $RPM_BUILD_ROOT%{_datadir}/matterhorn/bin/start_matterhorn.sh
 rm $RPM_BUILD_ROOT%{_datadir}/matterhorn/bin/shutdown_matterhorn.sh
-cp -rf matterhorn-%{__INTERNAL_VERSION}/etc $RPM_BUILD_ROOT%{_datadir}/matterhorn/
-cp -rf matterhorn-%{__INTERNAL_VERSION}/lib $RPM_BUILD_ROOT%{_datadir}/matterhorn/
+cp -rf opencast-matterhorn-%{__INTERNAL_VERSION}/etc $RPM_BUILD_ROOT%{_datadir}/matterhorn/
+cp -rf opencast-matterhorn-%{__INTERNAL_VERSION}/lib $RPM_BUILD_ROOT%{_datadir}/matterhorn/
 echo '<?xml version="1.0" encoding="UTF-8"?>' > settings.xml
 echo '<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"' >> settings.xml
 echo 'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"' >> settings.xml
@@ -2069,7 +2069,7 @@ echo 'xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 ' \
 echo "<localRepository>`pwd`/mvn2</localRepository>" >> settings.xml
 echo '<offline>true</offline>' >> settings.xml
 echo '</settings>' >> settings.xml
-pushd matterhorn-%{__INTERNAL_VERSION}
+pushd opencast-matterhorn-%{__INTERNAL_VERSION}
 # Generate a list of all profiles with:
 # cat pom.xml | grep '<profile>' -A1 | grep '<id>' | cut -d'>' -f2 | \
 #     cut -d'<' -f1 | sort | xargs printf '%s,'
@@ -2082,7 +2082,7 @@ pushd matterhorn-%{__INTERNAL_VERSION}
 popd
 #
 # Build additional modules:
-pushd matterhorn-%{__INTERNAL_VERSION}/modules/matterhorn-workflowoperation-mediapackagepost/
+pushd opencast-matterhorn-%{__INTERNAL_VERSION}/modules/matterhorn-workflowoperation-mediapackagepost/
    MAVEN_OPTS='-Xms256m -Xmx960m -XX:PermSize=64m -XX:MaxPermSize=256m' \
       mvn -o -s ../../../settings.xml clean install \
          -DdeployTo=$RPM_BUILD_ROOT%{_datadir}/matterhorn/
@@ -2129,10 +2129,11 @@ install -p -D -m 0644 %{SOURCE4} \
 mkdir -p ${RPM_BUILD_ROOT}%{_datadir}/matterhorn/docs/scripts/ddl/
 mkdir -p ${RPM_BUILD_ROOT}%{_datadir}/matterhorn/docs/licenses/
 mkdir -p ${RPM_BUILD_ROOT}%{_datadir}/matterhorn/docs/module-docs/
-cp matterhorn-%{__INTERNAL_VERSION}/docs/licenses.txt  ${RPM_BUILD_ROOT}%{_datadir}/matterhorn/docs/
-cp matterhorn-%{__INTERNAL_VERSION}/docs/licenses/*    ${RPM_BUILD_ROOT}%{_datadir}/matterhorn/docs/licenses/
-cp matterhorn-%{__INTERNAL_VERSION}/docs/scripts/ddl/* ${RPM_BUILD_ROOT}%{_datadir}/matterhorn/docs/scripts/ddl/
-cp matterhorn-%{__INTERNAL_VERSION}/docs/module-docs/* ${RPM_BUILD_ROOT}%{_datadir}/matterhorn/docs/module-docs/
+cp opencast-matterhorn-%{__INTERNAL_VERSION}/docs/licenses.txt  ${RPM_BUILD_ROOT}%{_datadir}/matterhorn/docs/
+cp opencast-matterhorn-%{__INTERNAL_VERSION}/docs/licenses/*    ${RPM_BUILD_ROOT}%{_datadir}/matterhorn/docs/licenses/
+cp opencast-matterhorn-%{__INTERNAL_VERSION}/docs/scripts/ddl/* ${RPM_BUILD_ROOT}%{_datadir}/matterhorn/docs/scripts/ddl/
+cp opencast-matterhorn-%{__INTERNAL_VERSION}/docs/module-docs/* ${RPM_BUILD_ROOT}%{_datadir}/matterhorn/docs/module-docs/
+cp -r opencast-matterhorn-%{__INTERNAL_VERSION}/docs/upgrade/   ${RPM_BUILD_ROOT}%{_datadir}/matterhorn/docs/
 
 # Install manpage
 install -p -D -m 0644 %{SOURCE5} %{buildroot}%{_mandir}/man8/matterhorn.8.gz
@@ -2201,6 +2202,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 11 2013 Lars Kiesow <lkiesow@uos.de> - 1.4.1-0.10.rc6
+- Update to 1.4.1-rc6
+
 * Sun Oct 13 2013 Lars Kiesow <lkiesow@uos.de> - 1.4.1-0.9.rc5
 - Fixed build issue
 
