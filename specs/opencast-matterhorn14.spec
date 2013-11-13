@@ -3,11 +3,11 @@
 %global  matterhorn_user          matterhorn
 %global  matterhorn_group         %{matterhorn_user}
 
-%define __INTERNAL_VERSION 1.4.1-rc6
+%define __INTERNAL_VERSION 1.4.1-rc7
 
 Name:           opencast-matterhorn14
 Version:        1.4.1
-Release:        0.10.rc6%{?dist}
+Release:        0.11.rc7%{?dist}
 Summary:        Open Source Lecture Capture & Video Management Tool
 
 Group:          Applications/Multimedia
@@ -2202,6 +2202,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Nov 13 2013 Lars Kiesow <lkiesow@uos.de> - 1.4.1-0.11.rc7
+- Update to 1.4.1-rc7
+
 * Mon Nov 11 2013 Lars Kiesow <lkiesow@uos.de> - 1.4.1-0.10.rc6
 - Update to 1.4.1-rc6
 
