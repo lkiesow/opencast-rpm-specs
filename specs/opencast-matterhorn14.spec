@@ -3,11 +3,11 @@
 %global  matterhorn_user          matterhorn
 %global  matterhorn_group         %{matterhorn_user}
 
-%define __INTERNAL_VERSION 1.4.1-rc7
+%define __INTERNAL_VERSION 1.4.1
 
 Name:           opencast-matterhorn14
 Version:        1.4.1
-Release:        0.11.rc7%{?dist}
+Release:        1%{?dist}
 Summary:        Open Source Lecture Capture & Video Management Tool
 
 Group:          Applications/Multimedia
@@ -76,26 +76,13 @@ Requires: mysql-server >= 5
 Summary: Worker Matterhorn distribution
 Requires: %{name}-profile-serviceregistry   = %{version}-%{release}
 Requires: %{name}-profile-workspace         = %{version}-%{release}
-Requires: %{name}-profile-worker            = %{version}-%{release}
-
-%package distribution-worker-standalone
-Summary: Worker Matterhorn distribution
-Requires: %{name}-profile-serviceregistry   = %{version}-%{release}
-Requires: %{name}-profile-workspace         = %{version}-%{release}
 Requires: %{name}-profile-worker-standalone = %{version}-%{release}
 
 %package distribution-engage
 Summary: Engage Matterhorn distribution
-Requires: %{name}-profile-engage            = %{version}-%{release}
-Requires: %{name}-profile-serviceregistry   = %{version}-%{release}
-Requires: %{name}-profile-dist              = %{version}-%{release}
-Requires: %{name}-profile-workspace         = %{version}-%{release}
-
-%package distribution-engage-standalone
-Summary: Engage Matterhorn distribution
 Requires: %{name}-profile-engage-standalone = %{version}-%{release}
 Requires: %{name}-profile-serviceregistry   = %{version}-%{release}
-Requires: %{name}-profile-dist-nss          = %{version}-%{release}
+Requires: %{name}-profile-dist-standalone   = %{version}-%{release}
 Requires: %{name}-profile-workspace         = %{version}-%{release}
 
 %package distribution-admin-worker
@@ -251,7 +238,7 @@ Requires: %{name}-module-matterhorn-workspace-impl = %{version}-%{release}
 Summary: Dist profile for Opencast Matterhorn %{__INTERNAL_VERSION}
 # Remote and non-remote module will not work together
 Conflicts: %{name}-profile-dist-stub
-Conflicts: %{name}-profile-dist-nss
+Conflicts: %{name}-profile-dist-standalone
 Requires: %{name}-module-matterhorn-authorization-xacml = %{version}-%{release}
 Requires: %{name}-module-matterhorn-common = %{version}-%{release}
 Requires: %{name}-module-matterhorn-db = %{version}-%{release}
@@ -276,7 +263,7 @@ Requires: %{name}-module-matterhorn-webconsole = %{version}-%{release}
 Requires: %{name}-module-matterhorn-workflow-service-api = %{version}-%{release}
 Requires: %{name}-module-matterhorn-workspace-api = %{version}-%{release}
 
-%package profile-dist-nss
+%package profile-dist-standalone
 Summary: Dist profile without series service for Opencast Matterhorn %{__INTERNAL_VERSION}
 # Remote and non-remote module will not work together
 Conflicts: %{name}-profile-dist-stub
@@ -298,7 +285,7 @@ Requires: %{name}-module-matterhorn-publication-service-youtube = %{version}-%{r
 Requires: %{name}-module-matterhorn-runtime-dependencies = %{version}-%{release}
 Requires: %{name}-module-matterhorn-runtime-info-ui = %{version}-%{release}
 Requires: %{name}-module-matterhorn-series-service-api = %{version}-%{release}
-#Requires: %{name}-module-matterhorn-series-service-impl = %{version}-%{release}
+Requires: %{name}-module-matterhorn-series-service-remote = %{version}-%{release}
 Requires: %{name}-module-matterhorn-static-mod = %{version}-%{release}
 Requires: %{name}-module-matterhorn-userdirectory-jpa = %{version}-%{release}
 Requires: %{name}-module-matterhorn-webconsole = %{version}-%{release}
@@ -309,7 +296,7 @@ Requires: %{name}-module-matterhorn-workspace-api = %{version}-%{release}
 Summary: Dist-stub profile for Opencast Matterhorn %{__INTERNAL_VERSION}
 # Remote and non-remote module will not work together
 Conflicts: %{name}-profile-dist
-Conflicts: %{name}-profile-dist-nss
+Conflicts: %{name}-profile-dist-standalone
 Requires: %{name}-module-matterhorn-authorization-xacml = %{version}-%{release}
 Requires: %{name}-module-matterhorn-common = %{version}-%{release}
 Requires: %{name}-module-matterhorn-db = %{version}-%{release}
@@ -1098,14 +1085,6 @@ load (encoding, OCR, etc). So it is recommended to deploy this on a more
 powerful machine.
 
 
-%description distribution-worker-standalone
-Worker standalone distribution of Opencast Matterhorn components.
-
-This is the worker package that contains the modules that create the most CPU
-load (encoding, OCR, etc). So it is recommended to deploy this on a more
-powerful machine.
-
-
 %description distribution-engage
 Engage distribution of Opencast Matterhorn components.
 
@@ -1113,15 +1092,6 @@ This is the package for the Matterhorn Engage Modules which are the front-end
 to the viewer of your videos. It is always highly recommended to keep these
 separated from the rest of your system.
 
-%description distribution-engage-standalone
-Engage standalone distribution of Opencast Matterhorn components.
-
-This is the package for the Matterhorn Engage Modules which are the front-end
-to the viewer of your videos. It is always highly recommended to keep these
-separated from the rest of your system.
-
-In contrast to the distribution-engage this is for use without shared network
-storage.
 
 %description distribution-admin-worker
 Combined Admin and Worker distribution of Opencast Matterhorn components.
@@ -1155,7 +1125,7 @@ Ingest-standalone profile for Opencast Matterhorn
 %description profile-dist
 dist profile for Opencast Matterhorn
 
-%description profile-dist-nss
+%description profile-dist-standalone
 dist profile without series-service-imple module for engage-standalone
 distribution of Opencast Matterhorn
 
@@ -1538,7 +1508,7 @@ Matterhorn-workflow-service-remote module for Opencast Matterhorn
 %files profile-dist
 # Nothing to do
 
-%files profile-dist-nss
+%files profile-dist-standalone
 # Nothing to do
 
 %files profile-dist-stub
@@ -2164,16 +2134,8 @@ rm -rf $RPM_BUILD_ROOT
 %files distribution-worker
 %defattr(-,root,root,-)
 
-%files distribution-worker-standalone
-%defattr(-,root,root,-)
-# No files here
-
 %files distribution-engage
 %defattr(-,root,root,-)
-
-%files distribution-engage-standalone
-%defattr(-,root,root,-)
-# No files here
 
 %files distribution-admin-worker
 %defattr(-,root,root,-)
@@ -2202,6 +2164,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Nov 24 2013 Lars Kiesow <lkiesow@uos.de> - 1.4.1-1
+- Update to 1.4.1
+
 * Wed Nov 13 2013 Lars Kiesow <lkiesow@uos.de> - 1.4.1-0.11.rc7
 - Update to 1.4.1-rc7
 
