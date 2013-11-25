@@ -1,7 +1,7 @@
 %define srcname ffmpeg
 Name:          %{srcname}-nonfree
 Summary:       Hyper fast MPEG1/MPEG4/H263/RV and AC3/MPEG audio encoder
-Version:       2.1
+Version:       2.1.1
 Release:       1%{?dist}
 License:       GPLv3+
 Group:         System Environment/Libraries
@@ -35,6 +35,7 @@ BuildRequires: opus-devel
 BuildRequires: pulseaudio-libs-devel
 BuildRequires: libv4l-devel
 BuildRequires: openal-soft-devel
+BuildRequires: soxr-devel
 #License incompatible with x264
 BuildRequires: faac-devel
 %endif
@@ -133,6 +134,7 @@ test -f version.h || echo "#define FFMPEG_VERSION \"%{evr}\"" > version.h
    --enable-libopencore-amrwb \
    --enable-libopenjpeg \
    --enable-librtmp \
+	--enable-libsoxr \
 %if 0%{?fedora}
    --enable-libcdio \
    --enable-libcelt \
@@ -160,7 +162,7 @@ test -f version.h || echo "#define FFMPEG_VERSION \"%{evr}\"" > version.h
 %else
    --extra-cflags="%{optflags} -fPIC" \
 %endif
-%if 0%{?rhel} < 6
+%if 0%{?rhel}%{?fedora} < 6
    %{!?with_v4l:--disable-demuxer=v4l --disable-demuxer=v4l2 --disable-indev=v4l --disable-indev=v4l2} \
 %endif
    --disable-stripping \
@@ -220,6 +222,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Nov 21 2013 Lars Kiesow <lkiesow@uos.de> - 2.1.1-1
+- Update to FFmpeg 2.1.1
+
 * Thu Oct 31 2013 Lars Kiesow <lkiesow@uos.de> - 2.1-1
 - Update to FFmpeg 2.1
 
