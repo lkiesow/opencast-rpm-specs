@@ -11,11 +11,14 @@
 Summary: GStreamer streaming media framework "ugly" plug-ins
 Name: gstreamer-plugins-ugly
 Version: 0.10.19
-Release: 1%{?dist}
+Release: 4%{?dist}
 License: LGPLv2+
 Group: Applications/Multimedia
 URL: http://gstreamer.freedesktop.org/
 Source: http://gstreamer.freedesktop.org/src/gst-plugins-ugly/gst-plugins-ugly-%{version}.tar.bz2
+
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+
 Requires: %{gstreamer} >= %{gst_minver}
 BuildRequires: %{gstreamer}-devel >= %{gst_minver}
 BuildRequires: %{gstreamer}-plugins-base-devel >= %{gstpb_minver}
@@ -31,11 +34,11 @@ BuildRequires: libid3tag-devel >= 0.15.0
 BuildRequires: libmad-devel >= 0.15.0
 BuildRequires: mpeg2dec-devel >= 0.4.0
 BuildRequires: orc-devel >= 0.4.5
-BuildRequires: libcdio-devel >= 0.82
 BuildRequires: twolame-devel
 BuildRequires: x264-devel >= 0.0.0-0.28
 BuildRequires: opencore-amr-devel
 BuildRequires: PyXML
+BuildRequires: libmpeg2_0
 
 Provides: gstreamer-sid = %{version}-%{release}
 Provides: gstreamer-lame = %{version}-%{release}
@@ -81,6 +84,7 @@ be shipped in gstreamer-plugins-good because:
     --with-package-name="gst-plugins-ugly rpmfusion rpm" \
     --with-package-origin="http://rpmfusion.org/" \
     --enable-debug --enable-gtk-doc \
+    --disable-cdio \
     --disable-static
 
 # remove rpath from libtool
@@ -90,7 +94,12 @@ sed -i.rpath 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
 %{__make} %{?_smp_mflags}
 
 
+%clean 
+rm -rf $RPM_BUILD_ROOT
+
+
 %install
+rm -rf $RPM_BUILD_ROOT
 %{__make} install DESTDIR="%{buildroot}"
 %find_lang gst-plugins-ugly-%{majorminor}
 
@@ -115,7 +124,7 @@ sed -i.rpath 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
 %{_libdir}/gstreamer-%{majorminor}/libgsta52dec.so
 %{_libdir}/gstreamer-%{majorminor}/libgstamrnb.so
 %{_libdir}/gstreamer-%{majorminor}/libgstamrwbdec.so
-%{_libdir}/gstreamer-%{majorminor}/libgstcdio.so
+#%{_libdir}/gstreamer-%{majorminor}/libgstcdio.so
 %{_libdir}/gstreamer-%{majorminor}/libgstdvdread.so
 %{_libdir}/gstreamer-%{majorminor}/libgstlame.so
 %{_libdir}/gstreamer-%{majorminor}/libgstmad.so
@@ -130,6 +139,16 @@ sed -i.rpath 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
 
 
 %changelog
+* Sun Jul 14 2013 Lars Kiesow <lkiesow@uos.de> - 0.10.19-3
+- Linked against new x264
+
+* Tue Feb 19 2013 Lars Kiesow <lkiesow@uos.de> - 0.10.19-3
+- Disabled libcdio (Incompatible with old gvfs on CentOS/Scientific Linux)
+- Fixed dependency (libmpeg2_0)
+
+* Mon Feb 11 2013 Lars Kiesow <lkiesow@uos.de> - 0.10.19-2
+- Rebuilt for x264 ABI 0.129
+
 * Tue May 15 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.10.19-1
 - Update to 0.10.19
 
