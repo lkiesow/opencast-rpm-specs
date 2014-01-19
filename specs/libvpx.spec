@@ -1,5 +1,5 @@
 %global majorver 1
-%global minorver 2
+%global minorver 3
 %global tinyver  0
 
 Name:			libvpx
@@ -153,6 +153,9 @@ popd
 %{_bindir}/*
 
 %changelog
+* Wed Jan 15 2014 Lars Kiesow <lkiesow@uos.de> - 		1.3.0-1
+- Update to 1.3.0
+
 * Thu Feb 28 2013 Tom Callaway <spot@fedoraproject.org> - 1.2.0-1
 - update to 1.2.0
 

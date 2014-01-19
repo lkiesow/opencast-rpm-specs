@@ -1,7 +1,7 @@
 %define srcname ffmpeg
 Name:          %{srcname}-nonfree
 Summary:       Hyper fast MPEG1/MPEG4/H263/RV and AC3/MPEG audio encoder
-Version:       2.1.1
+Version:       2.1.2
 Release:       1%{?dist}
 License:       GPLv3+
 Group:         System Environment/Libraries
@@ -38,6 +38,8 @@ BuildRequires: openal-soft-devel
 BuildRequires: soxr-devel
 #License incompatible with x264
 BuildRequires: faac-devel
+#License incompatible with x264
+BuildRequires: fdk-aac-devel
 %endif
 BuildRequires: libvdpau-devel
 BuildRequires: libvpx-devel >= 0.9.6
@@ -47,8 +49,6 @@ BuildRequires: openjpeg-devel
 BuildRequires: openssl-devel
 %if 0%{?rhel} >= 6
 BuildRequires: frei0r-plugins-devel
-#License incompatible with x264
-BuildRequires: fdk-aac-devel
 %endif
 %if 0%{?fedora}
 BuildRequires: celt-devel
@@ -222,6 +222,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jan 15 2014 Lars Kiesow <lkiesow@uos.de> - 2.1.2-1
+- Update to FFmpeg 2.1.2
+
 * Thu Nov 21 2013 Lars Kiesow <lkiesow@uos.de> - 2.1.1-1
 - Update to FFmpeg 2.1.1
 
