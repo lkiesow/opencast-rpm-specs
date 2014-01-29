@@ -3,11 +3,18 @@
 %global  matterhorn_user          matterhorn
 %global  matterhorn_group         %{matterhorn_user}
 
-%define __INTERNAL_VERSION 1.4.2-rc1
+%define __INTERNAL_VERSION 1.4.2-rc2
+
+%if 0%{?sles_version} 
+  %define __GST_SUFFIX -0_10 
+%else
+  %define __GST_SUFFIX %{nil}
+%endif
+
 
 Name:           opencast-matterhorn14
 Version:        1.4.2
-Release:        0.rc1%{?dist}
+Release:        0.rc2.1%{?dist}
 Summary:        Open Source Lecture Capture & Video Management Tool
 
 Group:          Applications/Multimedia
@@ -28,7 +35,12 @@ Patch0:         matterhorn-config-%{__INTERNAL_VERSION}.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires: maven >= 3
+
+%if 0%{?sles_version} 
+BuildRequires: jdk >= 1:1.6.0
+%else 
 BuildRequires: java-devel >= 1:1.6.0
+%endif 
 Requires:      %{name}-base                  = %{version}-%{release}
 Requires:      %{name}-distribution-default = %{version}-%{release}
 
@@ -36,19 +48,28 @@ BuildArch: noarch
 
 %package base
 Summary: Base package for Opencast Matterhorn 
+Group: Applications/Multimedia
 Requires(pre): /usr/sbin/useradd
+
+%if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version}
 Requires(post): chkconfig
 Requires(preun): chkconfig
 # This is for /sbin/service
 Requires(preun): initscripts
 Requires(postun): initscripts
+%endif
 
 Requires:      bash
-Requires:      java >= 1:1.6.0
+%if 0%{?sles_version} 
+BuildRequires: jdk >= 1:1.6.0
+%else 
+BuildRequires: java >= 1:1.6.0
+%endif 
 
 
 %package distribution-default
 Summary: Default Matterhorn distribution
+Group: Applications/Multimedia
 Requires: %{name}-profile-admin           = %{version}-%{release}
 Requires: %{name}-profile-dist            = %{version}-%{release}
 Requires: %{name}-profile-engage          = %{version}-%{release}
@@ -59,11 +80,13 @@ Requires: %{name}-profile-directory-db    = %{version}-%{release}
 
 %package distribution-capture-agent
 Summary: Capture-Agent Matterhorn distribution
+Group: Applications/Multimedia
 Requires: %{name}-profile-capture              = %{version}-%{release}
 Requires: %{name}-profile-serviceregistry-stub = %{version}-%{release}
 
 %package distribution-admin
 Summary: Admin Matterhorn distribution
+Group: Applications/Multimedia
 Requires: %{name}-profile-admin              = %{version}-%{release}
 Requires: %{name}-profile-workspace          = %{version}-%{release}
 Requires: %{name}-profile-dist-stub          = %{version}-%{release}
@@ -74,12 +97,14 @@ Requires: mysql-server >= 5
 
 %package distribution-worker
 Summary: Worker Matterhorn distribution
+Group: Applications/Multimedia
 Requires: %{name}-profile-serviceregistry   = %{version}-%{release}
 Requires: %{name}-profile-workspace         = %{version}-%{release}
 Requires: %{name}-profile-worker-standalone = %{version}-%{release}
 
 %package distribution-engage
 Summary: Engage Matterhorn distribution
+Group: Applications/Multimedia
 Requires: %{name}-profile-engage-standalone = %{version}-%{release}
 Requires: %{name}-profile-serviceregistry   = %{version}-%{release}
 Requires: %{name}-profile-dist-standalone   = %{version}-%{release}
@@ -87,6 +112,7 @@ Requires: %{name}-profile-workspace         = %{version}-%{release}
 
 %package distribution-admin-worker
 Summary: Combined Admin/Worker Matterhorn distribution
+Group: Applications/Multimedia
 Requires: %{name}-profile-admin              = %{version}-%{release}
 Requires: %{name}-profile-workspace          = %{version}-%{release}
 Requires: %{name}-profile-dist-stub          = %{version}-%{release}
@@ -96,6 +122,7 @@ Requires: %{name}-profile-serviceregistry    = %{version}-%{release}
 
 %package profile-admin
 Summary: Admin profile for Opencast Matterhorn %{__INTERNAL_VERSION}
+Group: Applications/Multimedia
 Requires: %{name}-module-matterhorn-admin-ui = %{version}-%{release}
 Requires: %{name}-module-matterhorn-authorization-xacml = %{version}-%{release}
 Requires: %{name}-module-matterhorn-caption-api = %{version}-%{release}
@@ -146,6 +173,7 @@ Requires: %{name}-module-matterhorn-workspace-api = %{version}-%{release}
 
 %package profile-analytics
 Summary: Analytics profile for Opencast Matterhorn %{__INTERNAL_VERSION}
+Group: Applications/Multimedia
 Requires: %{name}-module-matterhorn-analytics-impl = %{version}-%{release}
 Requires: %{name}-module-matterhorn-analytics-ui = %{version}-%{release}
 Requires: %{name}-module-matterhorn-common = %{version}-%{release}
@@ -161,6 +189,7 @@ Requires: %{name}-module-matterhorn-workspace-api = %{version}-%{release}
 
 %package profile-export-admin
 Summary: Export-admin profile for Opencast Matterhorn %{__INTERNAL_VERSION}
+Group: Applications/Multimedia
 Requires: %{name}-module-matterhorn-common = %{version}-%{release}
 Requires: %{name}-module-matterhorn-export-impl = %{version}-%{release}
 Requires: %{name}-module-matterhorn-gstreamer-service-api = %{version}-%{release}
@@ -171,11 +200,13 @@ Requires: %{name}-module-matterhorn-static-mod = %{version}-%{release}
 
 %package profile-export-worker
 Summary: Export-worker profile for Opencast Matterhorn %{__INTERNAL_VERSION}
+Group: Applications/Multimedia
 Requires: %{name}-module-matterhorn-gstreamer-service-api = %{version}-%{release}
 Requires: %{name}-module-matterhorn-gstreamer-service-impl = %{version}-%{release}
 
 %package profile-export-all-in-one
 Summary: Export-all-in-one profile for Opencast Matterhorn %{__INTERNAL_VERSION}
+Group: Applications/Multimedia
 Requires: %{name}-module-matterhorn-common = %{version}-%{release}
 Requires: %{name}-module-matterhorn-export-impl = %{version}-%{release}
 Requires: %{name}-module-matterhorn-gstreamer-service-api = %{version}-%{release}
@@ -186,6 +217,7 @@ Requires: %{name}-module-matterhorn-static-mod = %{version}-%{release}
 
 %package profile-ingest
 Summary: Ingest profile for Opencast Matterhorn %{__INTERNAL_VERSION}
+Group: Applications/Multimedia
 Requires: %{name}-module-matterhorn-common = %{version}-%{release}
 Requires: %{name}-module-matterhorn-db = %{version}-%{release}
 Requires: %{name}-module-matterhorn-dublincore = %{version}-%{release}
@@ -209,6 +241,7 @@ Requires: %{name}-module-matterhorn-workspace-api = %{version}-%{release}
 
 %package profile-ingest-standalone
 Summary: Ingest-standalone profile for Opencast Matterhorn %{__INTERNAL_VERSION}
+Group: Applications/Multimedia
 Requires: %{name}-module-matterhorn-common = %{version}-%{release}
 Requires: %{name}-module-matterhorn-db = %{version}-%{release}
 Requires: %{name}-module-matterhorn-dublincore = %{version}-%{release}
@@ -236,6 +269,7 @@ Requires: %{name}-module-matterhorn-workspace-impl = %{version}-%{release}
 
 %package profile-dist
 Summary: Dist profile for Opencast Matterhorn %{__INTERNAL_VERSION}
+Group: Applications/Multimedia
 # Remote and non-remote module will not work together
 Conflicts: %{name}-profile-dist-stub
 Conflicts: %{name}-profile-dist-standalone
@@ -265,6 +299,7 @@ Requires: %{name}-module-matterhorn-workspace-api = %{version}-%{release}
 
 %package profile-dist-standalone
 Summary: Dist profile without series service for Opencast Matterhorn %{__INTERNAL_VERSION}
+Group: Applications/Multimedia
 # Remote and non-remote module will not work together
 Conflicts: %{name}-profile-dist-stub
 Conflicts: %{name}-profile-dist
@@ -294,6 +329,7 @@ Requires: %{name}-module-matterhorn-workspace-api = %{version}-%{release}
 
 %package profile-dist-stub
 Summary: Dist-stub profile for Opencast Matterhorn %{__INTERNAL_VERSION}
+Group: Applications/Multimedia
 # Remote and non-remote module will not work together
 Conflicts: %{name}-profile-dist
 Conflicts: %{name}-profile-dist-standalone
@@ -319,6 +355,7 @@ Requires: %{name}-module-matterhorn-workspace-api = %{version}-%{release}
 
 %package profile-engage
 Summary: Engage profile for Opencast Matterhorn %{__INTERNAL_VERSION}
+Group: Applications/Multimedia
 Requires: %{name}-module-matterhorn-annotation-api = %{version}-%{release}
 Requires: %{name}-module-matterhorn-annotation-impl = %{version}-%{release}
 Requires: %{name}-module-matterhorn-authorization-xacml = %{version}-%{release}
@@ -347,6 +384,7 @@ Requires: %{name}-module-matterhorn-workspace-api = %{version}-%{release}
 
 %package profile-engage-standalone
 Summary: Engage-standalone profile for Opencast Matterhorn %{__INTERNAL_VERSION}
+Group: Applications/Multimedia
 Requires: %{name}-module-matterhorn-annotation-api = %{version}-%{release}
 Requires: %{name}-module-matterhorn-annotation-impl = %{version}-%{release}
 Requires: %{name}-module-matterhorn-authorization-xacml = %{version}-%{release}
@@ -375,6 +413,7 @@ Requires: %{name}-module-matterhorn-workspace-api = %{version}-%{release}
 
 %package profile-engage-stub
 Summary: Engage-stub profile for Opencast Matterhorn %{__INTERNAL_VERSION}
+Group: Applications/Multimedia
 Requires: %{name}-module-matterhorn-authorization-xacml = %{version}-%{release}
 Requires: %{name}-module-matterhorn-common = %{version}-%{release}
 Requires: %{name}-module-matterhorn-db = %{version}-%{release}
@@ -398,6 +437,7 @@ Requires: %{name}-module-matterhorn-workspace-api = %{version}-%{release}
 
 %package profile-worker
 Summary: Worker profile for Opencast Matterhorn %{__INTERNAL_VERSION}
+Group: Applications/Multimedia
 # Remote and non-remote module will not work together
 Conflicts: %{name}-profile-worker-stub
 Requires: %{name}-module-matterhorn-authorization-xacml = %{version}-%{release}
@@ -432,6 +472,7 @@ Requires: %{name}-module-matterhorn-workspace-api = %{version}-%{release}
 
 %package profile-worker-standalone
 Summary: Worker profile for Opencast Matterhorn %{__INTERNAL_VERSION}
+Group: Applications/Multimedia
 # Remote and non-remote module will not work together
 Conflicts: %{name}-profile-worker-stub
 Requires: %{name}-module-matterhorn-authorization-xacml = %{version}-%{release}
@@ -466,6 +507,7 @@ Requires: %{name}-module-matterhorn-workspace-api = %{version}-%{release}
 
 %package profile-worker-stub
 Summary: Worker-stub profile for Opencast Matterhorn %{__INTERNAL_VERSION}
+Group: Applications/Multimedia
 # Remote and non-remote module will not work together
 Conflicts: %{name}-profile-worker
 Requires: %{name}-module-matterhorn-authorization-xacml = %{version}-%{release}
@@ -492,6 +534,7 @@ Requires: %{name}-module-matterhorn-workspace-api = %{version}-%{release}
 
 %package profile-workspace
 Summary: Workspace profile for Opencast Matterhorn %{__INTERNAL_VERSION}
+Group: Applications/Multimedia
 # Stub and non-stub profiles will not work together
 Conflicts: %{name}-profile-workspace-stub
 Requires: %{name}-module-matterhorn-common = %{version}-%{release}
@@ -503,6 +546,7 @@ Requires: %{name}-module-matterhorn-workspace-impl = %{version}-%{release}
 
 %package profile-workspace-stub
 Summary: Workspace-stub profile for Opencast Matterhorn %{__INTERNAL_VERSION}
+Group: Applications/Multimedia
 # Stub and non-stub profiles will not work together
 Conflicts: %{name}-profile-workspace
 Requires: %{name}-module-matterhorn-common = %{version}-%{release}
@@ -514,6 +558,7 @@ Requires: %{name}-module-matterhorn-workspace-impl = %{version}-%{release}
 
 %package profile-serviceregistry
 Summary: Serviceregistry profile for Opencast Matterhorn %{__INTERNAL_VERSION}
+Group: Applications/Multimedia
 # Stub and non-stub profiles will not work together
 Conflicts: %{name}-profile-serviceregistry-stub
 Requires: %{name}-module-matterhorn-common = %{version}-%{release}
@@ -524,6 +569,7 @@ Requires: %{name}-module-matterhorn-serviceregistry = %{version}-%{release}
 
 %package profile-serviceregistry-stub
 Summary: Serviceregistry-stub profile for Opencast Matterhorn %{__INTERNAL_VERSION}
+Group: Applications/Multimedia
 # Stub and non-stub profiles will not work together
 Conflicts: %{name}-profile-serviceregistry
 Requires: %{name}-module-matterhorn-common = %{version}-%{release}
@@ -533,6 +579,7 @@ Requires: %{name}-module-matterhorn-serviceregistry-remote = %{version}-%{releas
 
 %package profile-oaipmh
 Summary: Oaipmh profile for Opencast Matterhorn %{__INTERNAL_VERSION}
+Group: Applications/Multimedia
 Requires: %{name}-module-matterhorn-common = %{version}-%{release}
 Requires: %{name}-module-matterhorn-json = %{version}-%{release}
 Requires: %{name}-module-matterhorn-search-service-api = %{version}-%{release}
@@ -548,6 +595,7 @@ Requires: %{name}-module-matterhorn-oaipmh = %{version}-%{release}
 
 %package profile-directory-db
 Summary: Directory-db profile for Opencast Matterhorn %{__INTERNAL_VERSION}
+Group: Applications/Multimedia
 Requires: %{name}-module-matterhorn-common = %{version}-%{release}
 Requires: %{name}-module-matterhorn-dataloader = %{version}-%{release}
 Requires: %{name}-module-matterhorn-db = %{version}-%{release}
@@ -560,6 +608,7 @@ Requires: %{name}-module-matterhorn-workspace-api = %{version}-%{release}
 
 %package profile-directory-ldap
 Summary: Directory-ldap profile for Opencast Matterhorn %{__INTERNAL_VERSION}
+Group: Applications/Multimedia
 Requires: %{name}-module-matterhorn-common = %{version}-%{release}
 Requires: %{name}-module-matterhorn-json = %{version}-%{release}
 Requires: %{name}-module-matterhorn-security-ldap = %{version}-%{release}
@@ -567,14 +616,17 @@ Requires: %{name}-module-matterhorn-userdirectory-ldap = %{version}-%{release}
 
 %package profile-directory-cas
 Summary: Directory-cas profile for Opencast Matterhorn %{__INTERNAL_VERSION}
+Group: Applications/Multimedia
 Requires: %{name}-module-matterhorn-security-cas = %{version}-%{release}
 
 %package profile-directory-openid
 Summary: Directory-openid profile for Opencast Matterhorn %{__INTERNAL_VERSION}
+Group: Applications/Multimedia
 Requires: %{name}-module-matterhorn-security-openid = %{version}-%{release}
 
 %package profile-capture
 Summary: Capture profile for Opencast Matterhorn %{__INTERNAL_VERSION}
+Group: Applications/Multimedia
 Requires: %{name}-module-matterhorn-common = %{version}-%{release}
 Requires: %{name}-module-matterhorn-json = %{version}-%{release}
 Requires: %{name}-module-matterhorn-kernel = %{version}-%{release}
@@ -589,13 +641,16 @@ Requires: %{name}-module-matterhorn-webconsole = %{version}-%{release}
 
 %package profile-test
 Summary: Test profile for Opencast Matterhorn %{__INTERNAL_VERSION}
+Group: Applications/Multimedia
 Requires: %{name}-module-matterhorn-test-harness = %{version}-%{release}
 
 %package profile-test-performance
 Summary: Test-performance profile for Opencast Matterhorn %{__INTERNAL_VERSION}
+Group: Applications/Multimedia
 
 %package profile-test-load
 Summary: Test-load profile for Opencast Matterhorn %{__INTERNAL_VERSION}
+Group: Applications/Multimedia
 Requires: %{name}-module-matterhorn-common = %{version}-%{release}
 Requires: %{name}-module-matterhorn-json = %{version}-%{release}
 Requires: %{name}-module-matterhorn-kernel = %{version}-%{release}
@@ -607,63 +662,78 @@ Requires: %{name}-module-matterhorn-webconsole = %{version}-%{release}
 %package module-matterhorn-videosegmenter-api
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-videosegmenter-api module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-analytics-impl
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-analytics-impl module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-engage-ui
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-engage-ui module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-analytics-ui
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-analytics-ui module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-videosegmenter-remote
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-videosegmenter-remote module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-workflow-service-api
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-workflow-service-api module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-ingest-service-impl
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-ingest-service-impl module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-scheduler-api
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-scheduler-api module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-episode-service-impl
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-episode-service-impl module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-workspace-api
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-workspace-api module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-textextractor-tesseract
 Requires: %{name}-base = %{version}-%{release}
 Requires: tesseract >= 3
 Summary: Matterhorn-textextractor-tesseract module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-episode-service-api
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-episode-service-api module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-dictionary-api
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-dictionary-api module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-mpeg7
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-mpeg7 module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-publication-service-api
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-publication-service-api module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-publication-service-youtube
 Requires: %{name}-base = %{version}-%{release}
@@ -672,6 +742,7 @@ Conflicts: %{name}-module-matterhorn-publication-service-youtube-remote
 Provides: %{name}-module-matterhorn-distribution-service-youtube = %{version}-%{release}
 Obsoletes: %{name}-module-matterhorn-distribution-service-youtube < %{version}-%{release}
 Summary: Matterhorn-publication-service-youtube module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-publication-service-youtube-remote
 Requires: %{name}-base = %{version}-%{release}
@@ -680,363 +751,449 @@ Conflicts: %{name}-module-matterhorn-publication-service-youtube
 Provides: %{name}-module-matterhorn-distribution-service-youtube-remote = %{version}-%{release}
 Obsoletes: %{name}-module-matterhorn-distribution-service-youtube-remote < %{version}-%{release}
 Summary: Publication-service-youtube-remote module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-search-service-remote
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-search-service-remote module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-working-file-repository-service-impl
 Requires: %{name}-base = %{version}-%{release}
 Summary: Working-file-repository-service-impl module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-inspection-service-api
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-inspection-service-api module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-composer-service-remote
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-composer-service-remote module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-composer-ffmpeg
 Requires: %{name}-base = %{version}-%{release}
 Requires: qt_sbtl_embedder >= 0.4
 Requires: ffmpeg >= 0.9
 Summary: Matterhorn-composer-ffmpeg module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-static-mod
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-static module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-distribution-service-acl
 Requires: %{name}-base = %{version}-%{release}
 # You cannot install remote and non-remote at the same time
 Conflicts: %{name}-module-matterhorn-distribution-service-acl-remote
 Summary: Matterhorn-distribution-service-acl module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-serviceregistry-remote
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-serviceregistry-remote module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-search-service-impl
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-search-service-impl module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-serviceregistry
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-serviceregistry module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-distribution-service-download-remote
 Requires: %{name}-base = %{version}-%{release}
 # Remote and non-remote module will not work together
 Conflicts: %{name}-module-matterhorn-distribution-service-download
 Summary: Distribution-service-download-remote module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-usertracking-impl
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-usertracking-impl module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-textanalyzer-impl
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-textanalyzer-impl module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-workflow-service-impl
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-workflow-service-impl module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-working-file-repository-service-api
 Requires: %{name}-base = %{version}-%{release}
 Summary: Working-file-repository-service-api module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-oaipmh
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-oaipmh module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-capture-admin-service-impl
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-capture-admin-service-impl module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-dictionary-impl
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-dictionary-impl module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-ingest-service-api
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-ingest-service-api module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-gstreamer-service-remote
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-gstreamer-service-remote module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-inspection-service-remote
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-inspection-service-remote module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-episode-service-filesystem
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-episode-service-filesystem module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-fileupload
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-fileupload module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-series-service-api
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-series-service-api module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-userdirectory-jpa
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-userdirectory-jpa module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-capture-admin-service-api
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-capture-admin-service-api module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-json
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-json module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-admin-ui
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-admin-ui module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-gstreamer-service-api
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-gstreamer-service-api module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-workspace-impl
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-workspace-impl module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-videosegmenter-impl
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-videosegmenter-impl module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-confidence-monitoring-ui
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-confidence-monitoring-ui module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-db
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-db module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-distribution-service-api
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-distribution-service-api module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-dublincore
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-dublincore module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-distribution-service-acl-remote
 Requires: %{name}-base = %{version}-%{release}
 # You cannot install remote and non-remote at the same time
 Conflicts: %{name}-module-matterhorn-distribution-service-acl
 Summary: Distribution-service-acl-remote module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-series-service-remote
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-series-service-remote module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-composer-service-api
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-composer-service-api module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-solr
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-solr module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-series-service-impl
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-series-service-impl module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-distribution-service-download
 Requires: %{name}-base = %{version}-%{release}
 # Remote and non-remote module will not work together
 Conflicts: %{name}-module-matterhorn-distribution-service-download-remote
 Summary: Matterhorn-distribution-service-download module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-mediapackage-ui
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-mediapackage-ui module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-scheduler-impl
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-scheduler-impl module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-export-impl
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-export-impl module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-textanalyzer-remote
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-textanalyzer-remote module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-security-cas
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-security-cas module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-security-openid
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-security-openid module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-distribution-service-streaming
 Requires: %{name}-base = %{version}-%{release}
 # Remote and non-remote module will not work together
 Conflicts: %{name}-module-matterhorn-distribution-service-streaming-remote
 Summary: Matterhorn-distribution-service-streaming module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-caption-api
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-caption-api module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-runtime-info-ui
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-runtime-info-ui module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-metadata
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-metadata module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-working-file-repository-service-remote
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-working-file-repository-service-remote module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-load-test
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-load-test module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-mediapackage-manipulator
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-mediapackage-manipulator module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-metadata-api
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-metadata-api module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-distribution-service-streaming-remote
 Requires: %{name}-base = %{version}-%{release}
 # Remote and non-remote module will not work together
 Conflicts: %{name}-module-matterhorn-distribution-service-streaming
 Summary: Matterhorn-distribution-service-streaming-remote module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-common
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-common module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-gstreamer-service-impl
 Requires: %{name}-base = %{version}-%{release}
-Requires: gstreamer
-Requires: gstreamer-plugins-base
+Requires: gstreamer%{__GST_SUFFIX}
+Requires: gstreamer%{__GST_SUFFIX}-plugins-base
 Summary: Matterhorn-gstreamer-service-impl module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-dataloader
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-dataloader module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-kernel
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-kernel module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-webconsole
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-webconsole module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-usertracking-api
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-usertracking-api module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-search-service-api
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-search-service-api module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-runtime-dependencies
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-runtime-dependencies module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-search-service-feeds
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-search-service-feeds module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-inspection-service-impl
 Requires: %{name}-base = %{version}-%{release}
 Requires:     mediainfo = 0.7.35
 Summary: Matterhorn-inspection-service-impl module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-conductor
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-conductor module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-caption-remote
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-caption-remote module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-textanalyzer-api
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-textanalyzer-api module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-userdirectory-ldap
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-userdirectory-ldap module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-capture-agent-api
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-capture-agent-api module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-annotation-api
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-annotation-api module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-authorization-xacml
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-authorization-xacml module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-caption-impl
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-caption-impl module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-security-ldap
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-security-ldap module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-capture-agent-impl
-BuildRequires: gstreamer
-BuildRequires: gstreamer-plugins-base
-BuildRequires: gstreamer-plugins-good
-BuildRequires: gstreamer-plugins-bad
-BuildRequires: gstreamer-plugins-bad-nonfree
-BuildRequires: gstreamer-plugins-ugly
-BuildRequires: gstreamer-ffmpeg
-Requires: gstreamer
-Requires: gstreamer-plugins-base
-Requires: gstreamer-plugins-good
-Requires: gstreamer-plugins-bad
-Requires: gstreamer-plugins-bad-nonfree
-Requires: gstreamer-plugins-ugly
-Requires: gstreamer-ffmpeg
+BuildRequires: gstreamer%{__GST_SUFFIX}
+BuildRequires: gstreamer%{__GST_SUFFIX}-plugins-base
+BuildRequires: gstreamer%{__GST_SUFFIX}-plugins-good
+BuildRequires: gstreamer%{__GST_SUFFIX}-plugins-bad
+%if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version}
+  BuildRequires: gstreamer-plugins-bad-nonfree
+%endif
+BuildRequires: gstreamer%{__GST_SUFFIX}-plugins-ugly
+BuildRequires: gstreamer%{__GST_SUFFIX}-ffmpeg
+Requires: gstreamer%{__GST_SUFFIX}
+Requires: gstreamer%{__GST_SUFFIX}-plugins-base
+Requires: gstreamer%{__GST_SUFFIX}-plugins-good
+Requires: gstreamer%{__GST_SUFFIX}-plugins-bad
+%if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version}
+  Requires: gstreamer-plugins-bad-nonfree
+%endif
+Requires: gstreamer%{__GST_SUFFIX}-plugins-ugly
+Requires: gstreamer%{__GST_SUFFIX}-ffmpeg
 Requires: jv4linfo >= 0.2.1
 Requires: v4l-utils
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-capture-agent-impl module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-lti
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-lti module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-speech-recognition-service-api
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-speech-recognition-service-api module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-annotation-impl
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-annotation-impl module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-scheduler-remote
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-scheduler-remote module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %package module-matterhorn-workflow-service-remote
 Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-workflow-service-remote module for Opencast Matterhorn
+Group: Applications/Multimedia
 
 
 %description
@@ -1068,7 +1225,6 @@ Capture-Agent distribution of Opencast Matterhorn components.
 
 This package will install the Matterhorn reference Capture Agent with remote
 service registry.
-
 
 %description distribution-admin
 Admin distribution of Opencast Matterhorn components.
@@ -1969,6 +2125,7 @@ Matterhorn-workflow-service-remote module for Opencast Matterhorn
 %package module-matterhorn-workflowoperation-mediapackagepost
 Requires: %{name}-base = %{version}-%{release}
 Summary: Mediapackage POST work-flow operation for Opencast Matterhorn
+Group: Applications/Multimedia
 
 %description module-matterhorn-workflowoperation-mediapackagepost
 This Opencast Matterhorn module contains a work-flow operation which will send a
@@ -2164,6 +2321,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Jan 29 2014 Per Pascal Grube <pascal.grube@rus.uni-stuttgart.de - 1.4.2-0.rc2.1
+- Updated SPEC to build on SLES 11-SP3
+
+* Sat Jan 25 2014 Lars Kiesow <lkiesow@uos.de> - 1.4.2-0.rc2
+- Update to 1.4.2-rc2
+
 * Sun Jan 19 2014 Lars Kiesow <lkiesow@uos.de> - 1.4.2-0.rc1
 - Update to 1.4.2-rc1
 
