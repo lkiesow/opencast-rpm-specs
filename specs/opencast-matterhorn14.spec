@@ -3,7 +3,7 @@
 %global  matterhorn_user          matterhorn
 %global  matterhorn_group         %{matterhorn_user}
 
-%define __INTERNAL_VERSION 1.4.2-rc2
+%define __INTERNAL_VERSION 1.4.3
 
 %if 0%{?sles_version} 
   %define __GST_SUFFIX -0_10 
@@ -13,8 +13,8 @@
 
 
 Name:           opencast-matterhorn14
-Version:        1.4.2
-Release:        0.rc2.1%{?dist}
+Version:        1.4.3
+Release:        4%{?dist}
 Summary:        Open Source Lecture Capture & Video Management Tool
 
 Group:          Applications/Multimedia
@@ -31,6 +31,7 @@ Source5:        matterhorn.8.gz
 Source6:        audio-1.0.mp3
 Source7:        camera-1.0.mpg
 Source8:        screen-1.0.mpg
+Source9:        opencast-matterhorn-%{__INTERNAL_VERSION}-inspection-service-ffmpeg.tar.gz
 Patch0:         matterhorn-config-%{__INTERNAL_VERSION}.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -1094,10 +1095,24 @@ Requires: %{name}-base = %{version}-%{release}
 Summary: Matterhorn-search-service-feeds module for Opencast Matterhorn
 Group: Applications/Multimedia
 
-%package module-matterhorn-inspection-service-impl
+%package module-matterhorn-inspection-service-mediainfo
 Requires: %{name}-base = %{version}-%{release}
 Requires:     mediainfo = 0.7.35
+# There can only be one inspection service
+Conflicts: %{name}-module-matterhorn-inspection-service-ffmpeg
+provides:  %{name}-module-matterhorn-inspection-service-impl = %{version}-%{release}
+Obsoletes: %{name}-module-matterhorn-inspection-service-impl < %{version}-%{release}
 Summary: Matterhorn-inspection-service-impl module for Opencast Matterhorn
+Group: Applications/Multimedia
+
+%package module-matterhorn-inspection-service-ffmpeg
+Requires: %{name}-base = %{version}-%{release}
+Requires: ffmpeg >= 1.0
+# There can only be one inspection service
+Conflicts: %{name}-module-matterhorn-inspection-service-mediainfo
+Provides:  %{name}-module-matterhorn-inspection-service-impl = %{version}-%{release}
+Obsoletes: %{name}-module-matterhorn-inspection-service-impl < %{version}-%{release}
+Summary: FFmpeg (ffprobe) based inspection-service module for Opencast Matterhorn
 Group: Applications/Multimedia
 
 %package module-matterhorn-conductor
@@ -1225,6 +1240,7 @@ Capture-Agent distribution of Opencast Matterhorn components.
 
 This package will install the Matterhorn reference Capture Agent with remote
 service registry.
+
 
 %description distribution-admin
 Admin distribution of Opencast Matterhorn components.
@@ -1591,8 +1607,11 @@ Matterhorn-runtime-dependencies module for Opencast Matterhorn
 %description module-matterhorn-search-service-feeds
 Matterhorn-search-service-feeds module for Opencast Matterhorn
 
-%description module-matterhorn-inspection-service-impl
-Matterhorn-inspection-service-impl module for Opencast Matterhorn
+%description module-matterhorn-inspection-service-mediainfo
+Matterhorn-inspection-service-impl module for Opencast Matterhorn based on mediainfo
+
+%description module-matterhorn-inspection-service-ffmpeg
+FFmpeg (ffprobe) based inspection-service module for Opencast Matterhorn
 
 %description module-matterhorn-conductor
 Matterhorn-conductor module for Opencast Matterhorn
@@ -2052,9 +2071,13 @@ Matterhorn-workflow-service-remote module for Opencast Matterhorn
 %defattr(-,root,root,-)
 %{_datadir}/matterhorn/lib/matterhorn/matterhorn-search-service-feeds-%{__INTERNAL_VERSION}.jar
 
-%files module-matterhorn-inspection-service-impl
+%files module-matterhorn-inspection-service-mediainfo
 %defattr(-,root,root,-)
 %{_datadir}/matterhorn/lib/matterhorn/matterhorn-inspection-service-impl-%{__INTERNAL_VERSION}.jar
+
+%files module-matterhorn-inspection-service-ffmpeg
+%defattr(-,root,root,-)
+%{_datadir}/matterhorn/lib/matterhorn/matterhorn-inspection-service-ffmpeg-%{__INTERNAL_VERSION}.jar
 
 %files module-matterhorn-conductor
 %defattr(-,root,root,-)
@@ -2141,7 +2164,7 @@ Matterhorn Media-package as HTTP POST request to a specified URL.
 
 
 %prep
-%setup -q -c -a 0 -a 2 -a 3
+%setup -q -c -a 0 -a 2 -a 3 -a 9
 pushd opencast-matterhorn-%{__INTERNAL_VERSION}
 %patch0 -p1
 popd
@@ -2205,11 +2228,17 @@ pushd opencast-matterhorn-%{__INTERNAL_VERSION}
       mvn -o -s ../settings.xml clean install -P \
 			admin,analytics,capture,directory-cas,directory-db,directory-ldap,directory-openid,dist,dist-stub,engage,engage-standalone,engage-stub,export-admin,export-all-in-one,export-worker,ingest,ingest-standalone,oaipmh,serviceregistry,serviceregistry-stub,test,test-load,worker,worker-standalone,worker-stub,workspace,workspace-stub \
          -DdeployTo=$RPM_BUILD_ROOT%{_datadir}/matterhorn/
-#			admin,analytics,export-admin,export-worker,export-all-in-one,ingest,ingest-standalone,dist,dist-stub,engage,engage-standalone,engage-stub,worker,worker-standalone,worker-stub,workspace,workspace-stub,serviceregistry,serviceregistry-stub,oaipmh,directory-db,directory-ldap,directory-cas,directory-openid,capture,test,test-performance,test-load,%                                                                 
 popd
 #
 # Build additional modules:
 pushd opencast-matterhorn-%{__INTERNAL_VERSION}/modules/matterhorn-workflowoperation-mediapackagepost/
+   MAVEN_OPTS='-Xms256m -Xmx960m -XX:PermSize=64m -XX:MaxPermSize=256m' \
+      mvn -o -s ../../../settings.xml clean install \
+         -DdeployTo=$RPM_BUILD_ROOT%{_datadir}/matterhorn/
+popd
+#
+# Build additional modules:
+pushd opencast-matterhorn-%{__INTERNAL_VERSION}/modules/matterhorn-inspection-service-ffmpeg/
    MAVEN_OPTS='-Xms256m -Xmx960m -XX:PermSize=64m -XX:MaxPermSize=256m' \
       mvn -o -s ../../../settings.xml clean install \
          -DdeployTo=$RPM_BUILD_ROOT%{_datadir}/matterhorn/
@@ -2321,6 +2350,16 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Feb 12 2014 Per Pascal Grube <pascal.grube@tik.uni-stuttgart.de> - 1.4.3-3
+- Merge changes to compile on SLES 11SP3
+
+* Wed Feb  5 2014 Lars Kiesow <lkiesow@uos.de> - 1.4.3-2
+- Fixed problem with inspection-service packets
+
+* Tue Feb  4 2014 Lars Kiesow <lkiesow@uos.de> - 1.4.3-1
+- Update to 1.4.3
+- Included backport of inspection-service-ffmpeg
+
 * Wed Jan 29 2014 Per Pascal Grube <pascal.grube@rus.uni-stuttgart.de - 1.4.2-0.rc2.1
 - Updated SPEC to build on SLES 11-SP3
 
