@@ -12,19 +12,12 @@
 %global _without_libavformat 1
 %global _without_libswscale  1
 }
-#Whitelist of arches with dedicated ASM code
-%ifnarch x86_64 i686 %{arm} ppc ppc64 %{sparc}
-%global _without_asm 1
-%endif
 
-%if 0%{?rhel}
-%global _without_asm 1
-%endif
 
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 3%{?gver}%{?dist}
+Release: 4%{?gver}%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
@@ -36,11 +29,11 @@ BuildRequires: perl-Digest-MD5-File
 Patch0: x264-nover.patch
 Patch10: x264-gpac.patch
 
-%{!?_without_gpac:BuildRequires: gpac-devel-static zlib-devel openssl-devel libpng-devel libjpeg-devel}
+BuildRequires: gpac-devel-static zlib-devel openssl-devel libpng-devel libjpeg-devel
 %{!?_without_libavformat:BuildRequires: ffmpeg-devel}
 %{?_with_ffmpegsource:BuildRequires: ffmpegsource-devel}
 %{?_with_visualize:BuildRequires: libX11-devel}
-%{!?_without_asm:BuildRequires: yasm >= 1.0.0}
+BuildRequires: yasm >= 1.0.0
 Requires: %{name}-libs = %{version}-%{release}
 
 %description
@@ -80,7 +73,6 @@ This package contains the development files.
 	%{?_without_libavformat:--disable-lavf} \\\
 	%{?_without_libswscale:--disable-swscale} \\\
 	%{!?_with_ffmpegsource:--disable-ffms} \\\
-	%{?_without_asm:--disable-asm} \\\
 	--enable-debug \\\
 	--enable-shared \\\
 	--system-libx264 \\\
@@ -95,9 +87,6 @@ pushd %{name}-0.%{api}-%{snapshot}
 popd
 
 variants="generic generic10"
-%ifarch i686
-variants="$variants simd"
-%endif
 for variant in $variants ; do
   rm -rf ${variant}
   cp -pr %{name}-0.%{api}-%{snapshot} ${variant}
@@ -108,54 +97,37 @@ done
 pushd generic
 %{x_configure}\
 	--host=%{_target_platform} \
-	--libdir=%{_libdir} \
-%ifarch i686 armv5tel armv6l
-	--disable-asm \
-%endif
+	--libdir=%{_libdir}
 
 %{__make} %{?_smp_mflags}
 popd
 
-%ifarch i686
-pushd simd
-%{x_configure}\
-	--host=%{_target_platform} \
-	--libdir=%{_libdir}/sse2 \
-
-%{__make} %{?_smp_mflags}
-popd
-%endif
-
+%if 0
 pushd generic10
 %{x_configure}\
 	--host=%{_target_platform} \
-	--libdir=%{_libdir} \
-%ifarch i686 armv5tel armv6l
-	--disable-asm \
-%endif
+	--libdir=%{_libdir}
 	--bit-depth=10
 
 sed -i -e "s/SONAME=libx264.so./SONAME=libx26410b.so./" config.mak
 
 %{__make} %{?_smp_mflags}
 popd
+%endif
+
 
 %install
 pushd generic
 %{__make} DESTDIR=%{buildroot} install
 popd
-%ifarch i686
-pushd simd
-%{__make} DESTDIR=%{buildroot} install
-rm %{buildroot}%{_libdir}/*/pkgconfig/x264.pc
-popd
-%endif
+%if 0
 pushd generic10
 SONAME=`grep "^SONAME=" config.mak`
 export $SONAME
 install -m 755 ${SONAME} %{buildroot}%{_libdir}
 ln -fs ${SONAME} %{buildroot}%{_libdir}/libx26410b.so
 popd
+%endif
 
 #Fix timestamp on x264 generated headers
 touch -r generic/version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_includedir}/x264_config.h
@@ -173,10 +145,7 @@ touch -r generic/version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_incl
 %files libs
 %defattr(644, root, root, 0755)
 %{_libdir}/libx264.so.%{api}
-%ifarch i686
-%{_libdir}/sse2/libx264.so.%{api}
-%endif
-%{_libdir}/libx26410b.so.%{api}
+#%{_libdir}/libx26410b.so.%{api}
 
 %files devel
 %defattr(644, root, root, 0755)
@@ -185,12 +154,12 @@ touch -r generic/version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_incl
 %{_includedir}/x264_config.h
 %{_libdir}/libx264.so
 %{_libdir}/pkgconfig/%{name}.pc
-%ifarch i686
-%{_libdir}/sse2/libx264.so
-%endif
-%{_libdir}/libx26410b.so
+#%{_libdir}/libx26410b.so
 
 %changelog
+* Fri Apr 25 2014 Lars Kiesow <lkiesow@uos.de> - 0.138-3.20131030-c628e3b
+- Fixed problem with yasm
+
 * Tue Nov 05 2013 Sérgio Basto <sergio@serjux.com> - 0.138-2.20131030-c628e3b
 - Unbootstrap.
 
