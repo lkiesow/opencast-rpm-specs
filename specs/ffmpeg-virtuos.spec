@@ -1,7 +1,7 @@
 %define srcname ffmpeg
 Name:          %{srcname}-virtuos
 Summary:       Hyper fast MPEG1/MPEG4/H263/RV and AC3/MPEG audio encoder
-Version:       2.2.1
+Version:       2.2.2
 Release:       1%{?dist}
 License:       GPLv3+
 Group:         System Environment/Libraries
@@ -113,7 +113,7 @@ test -f version.h || echo "#define FFMPEG_VERSION \"%{evr}\"" > version.h
    --enable-libopencore-amrwb \
    --enable-libopenjpeg \
    --enable-librtmp \
-	--enable-libsoxr \
+   --enable-libsoxr \
 %if 0%{?fedora}
    --enable-libcdio \
    --enable-libcelt \
@@ -150,7 +150,7 @@ test -f version.h || echo "#define FFMPEG_VERSION \"%{evr}\"" > version.h
    --enable-libfaac
 
 # Problems with OpenCL libs/headers
-#	--enable-opencl
+#   --enable-opencl
 
 # Problems with license (lib*aac license is GPL incompatible)
 make
@@ -189,8 +189,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon May  5 2014 Lars Kiesow <lkiesow@uos.de> - 2.2.2-1
+- Update to FFmpeg 2.2.2
+
 * Sat Apr 12 2014 Lars Kiesow <lkiesow@uos.de> - 2.2.1-1
-- iUpdate to FFmpeg 2.2.1
+- Update to FFmpeg 2.2.1
 
 * Sat Mar  1 2014 Lars Kiesow <lkiesow@uos.de> - 2.1.4-1
 - Update to FFmpeg 2.1.4
@@ -379,14 +382,3 @@ rm -rf %{buildroot}
 * Mon Mar 31 2003 Matthias Saou <matthias.saou@est.une.marmotte.net>
 - Rebuilt for Red Hat Linux 9.
 - Hardcode provides in order to get it right :-/
-
-* Tue Feb 25 2002 Matthias Saou <matthias.saou@est.une.marmotte.net>
-- Moved libavcodec.so to the main package to fix dependency problems.
-
-* Wed Feb 19 2002 Matthias Saou <matthias.saou@est.une.marmotte.net>
-- Major spec file updates, based on a very nice Mandrake spec.
-- Revert to the 0.4.6 release as CVS snapshots don't build.
-
-* Tue Feb  4 2002 Matthias Saou <matthias.saou@est.une.marmotte.net>
-- Initial RPM release.
-
