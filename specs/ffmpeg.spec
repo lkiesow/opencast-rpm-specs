@@ -1,6 +1,6 @@
 Name:          ffmpeg
 Summary:       Hyper fast MPEG1/MPEG4/H263/RV and AC3/MPEG audio encoder
-Version:       2.1.3
+Version:       2.2.2
 Release:       1%{?dist}
 License:       GPLv3+
 Group:         System Environment/Libraries
@@ -36,7 +36,7 @@ BuildRequires: soxr-devel
 #BuildRequires: faac-devel
 %endif
 BuildRequires: libvdpau-devel
-BuildRequires: libvpx-devel >= 0.9.6
+BuildRequires: libvpx-devel >= 1.3.0
 BuildRequires: opencore-amr-devel
 BuildRequires: opencv-devel
 BuildRequires: openjpeg-devel
@@ -124,7 +124,7 @@ test -f version.h || echo "#define FFMPEG_VERSION \"%{evr}\"" > version.h
    --enable-libopencore-amrwb \
    --enable-libopenjpeg \
    --enable-librtmp \
-	--enable-libsoxr \
+   --enable-libsoxr \
 %if 0%{?fedora}
    --enable-libcdio \
    --enable-libcelt \
@@ -158,7 +158,7 @@ test -f version.h || echo "#define FFMPEG_VERSION \"%{evr}\"" > version.h
    --disable-stripping
 
 # Problems with OpenCL libs/headers
-#	--enable-opencl
+#   --enable-opencl
 
 # Problems with license (lib*aac license is GPL incompatible)
 #   --extra-libs="-lstdc++" --enable-libfdk-aac
@@ -212,6 +212,18 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon May  5 2014 Lars Kiesow <lkiesow@uos.de> - 2.2.2-1
+- Update to FFmpeg 2.2.2
+
+* Sat Apr 12 2014 Lars Kiesow <lkiesow@uos.de> - 2.2.1-1
+- Update to FFmpeg 2.2.1
+
+* Fri Feb 28 2014 Lars Kiesow <lkiesow@uos.de> - 2.1.4-2
+- Fixed libvpx dependency
+
+* Fri Feb 28 2014 Lars Kiesow <lkiesow@uos.de> - 2.1.4-1
+- Update to FFmpeg 2.1.4
+
 * Sun Jan 19 2014 Lars Kiesow <lkiesow@uos.de> - 2.1.3-1
 - Update to FFmpeg 2.1.3
 
