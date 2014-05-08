@@ -3,7 +3,7 @@
 %global  matterhorn_user          matterhorn
 %global  matterhorn_group         %{matterhorn_user}
 
-%define __INTERNAL_VERSION 1.4.3
+%define __INTERNAL_VERSION 1.4.4-rc1
 
 %if 0%{?sles_version} 
   %define __GST_SUFFIX -0_10 
@@ -13,8 +13,8 @@
 
 
 Name:           opencast-matterhorn14
-Version:        1.4.3
-Release:        4%{?dist}
+Version:        1.4.4
+Release:        0.rc1%{?dist}
 Summary:        Open Source Lecture Capture & Video Management Tool
 
 Group:          Applications/Multimedia
@@ -1097,7 +1097,7 @@ Group: Applications/Multimedia
 
 %package module-matterhorn-inspection-service-impl
 Requires: %{name}-base = %{version}-%{release}
-Requires:     mediainfo = 0.7.35
+Requires:     mediainfo >= 0.7.35
 # There can only be one inspection service
 Conflicts: %{name}-module-matterhorn-inspection-service-ffmpeg
 Provides:  %{name}-module-matterhorn-inspection-service-ffmpeg = %{version}-%{release}
@@ -2350,6 +2350,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu May  8 2014 Lars Kiesow <lkiesow@uos.de> - 1.4.4-0.rc1
+- Update to Matterhorn 1.4.4-rc1
+
+* Fri Apr 25 2014 Lars Kiesow <lkiesow@uos.de> - 1.4.3-5
+- Fixed problem with mediainfo dependency
 
 * Wed Apr  9 2014 Lars Kiesow <lkiesow@uos.de> - 1.4.3-4
 - Merged SLES, Fedora and RHEL specs
