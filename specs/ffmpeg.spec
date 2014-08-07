@@ -1,6 +1,6 @@
 Name:          ffmpeg
 Summary:       Hyper fast MPEG1/MPEG4/H263/RV and AC3/MPEG audio encoder
-Version:       2.2.2
+Version:       2.3.1
 Release:       1%{?dist}
 License:       GPLv3+
 Group:         System Environment/Libraries
@@ -190,7 +190,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc COPYING* CREDITS README MAINTAINERS LICENSE RELEASE doc/
+%doc COPYING* CREDITS README* MAINTAINERS LICENSE* RELEASE doc/ RELEASE_NOTES VERSION
 %{_bindir}/*
 %{_datadir}/ffmpeg
 %{_mandir}/man1/*
@@ -198,20 +198,29 @@ rm -rf %{buildroot}
 
 %files libs
 %defattr(-,root,root,-)
-%doc COPYING* CREDITS README MAINTAINERS LICENSE RELEASE doc/
+%doc COPYING* CREDITS README* MAINTAINERS LICENSE* RELEASE doc/ RELEASE_NOTES VERSION
 %{_libdir}/*.so.*
 %{_mandir}/man3/*
 
 
 %files devel
 %defattr(-,root,root,-)
-%doc COPYING* CREDITS README MAINTAINERS LICENSE RELEASE doc/
+%doc COPYING* CREDITS README* MAINTAINERS LICENSE* RELEASE doc/ RELEASE_NOTES VERSION
 %{_includedir}/*
 %{_libdir}/pkgconfig/*.pc
 %{_libdir}/*.so
 
 
 %changelog
+* Mon Aug  4 2014 Lars Kiesow <lkiesow@uos.de> - 2.3.1-1
+- Update to FFmpeg 2.3.1
+
+* Wed Jul 16 2014 Lars Kiesow <lkiesow@uos.de> - 2.3-1
+- Update to FFmpeg 2.3
+
+* Sat Jun 28 2014 Lars Kiesow <lkiesow@uos.de> - 2.2.4-1
+- Update to FFmpeg 2.2.4
+
 * Mon May  5 2014 Lars Kiesow <lkiesow@uos.de> - 2.2.2-1
 - Update to FFmpeg 2.2.2
 
