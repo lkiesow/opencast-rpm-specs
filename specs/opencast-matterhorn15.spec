@@ -3,7 +3,7 @@
 %global  matterhorn_user          matterhorn
 %global  matterhorn_group         %{matterhorn_user}
 
-%define __INTERNAL_VERSION 1.5.0-rc3
+%define __INTERNAL_VERSION 1.5.0-rc5
 
 %if 0%{?sles_version} 
   %define __GST_SUFFIX -0_10 
@@ -16,7 +16,7 @@
 
 Name:           opencast-matterhorn15
 Version:        1.5.0
-Release:        0.4.rc3%{?__MATTERHORN_INSTITUTE}%{?dist}
+Release:        0.6.rc5%{?__MATTERHORN_INSTITUTE}%{?dist}
 Summary:        Open Source Lecture Capture & Video Management Tool
 
 Group:          Applications/Multimedia
@@ -210,8 +210,6 @@ Requires: %{name}-module-matterhorn-workspace-api = %{__FULL_VERSION}
 %package profile-analytics
 Summary: Analytics profile for Opencast Matterhorn %{__INTERNAL_VERSION}
 Group: Applications/Multimedia
-Requires: %{name}-module-matterhorn-analytics-impl = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-analytics-ui = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-common = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-dublincore = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-json = %{__FULL_VERSION}
@@ -227,7 +225,6 @@ Requires: %{name}-module-matterhorn-workspace-api = %{__FULL_VERSION}
 Summary: Export-admin profile for Opencast Matterhorn %{__INTERNAL_VERSION}
 Group: Applications/Multimedia
 Requires: %{name}-module-matterhorn-common = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-export-impl = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-gstreamer-service-api = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-gstreamer-service-remote = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-json = %{__FULL_VERSION}
@@ -244,7 +241,6 @@ Requires: %{name}-module-matterhorn-gstreamer-service-impl = %{__FULL_VERSION}
 Summary: Export-all-in-one profile for Opencast Matterhorn %{__INTERNAL_VERSION}
 Group: Applications/Multimedia
 Requires: %{name}-module-matterhorn-common = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-export-impl = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-gstreamer-service-api = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-gstreamer-service-impl = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-json = %{__FULL_VERSION}
@@ -716,19 +712,9 @@ Requires: %{name}-base = %{__FULL_VERSION}
 Summary: Matterhorn-videosegmenter-api module for Opencast Matterhorn
 Group: Applications/Multimedia
 
-%package module-matterhorn-analytics-impl
-Requires: %{name}-base = %{__FULL_VERSION}
-Summary: Matterhorn-analytics-impl module for Opencast Matterhorn
-Group: Applications/Multimedia
-
 %package module-matterhorn-engage-ui
 Requires: %{name}-base = %{__FULL_VERSION}
 Summary: Matterhorn-engage-ui module for Opencast Matterhorn
-Group: Applications/Multimedia
-
-%package module-matterhorn-analytics-ui
-Requires: %{name}-base = %{__FULL_VERSION}
-Summary: Matterhorn-analytics-ui module for Opencast Matterhorn
 Group: Applications/Multimedia
 
 %package module-matterhorn-videosegmenter-remote
@@ -1028,11 +1014,6 @@ Group: Applications/Multimedia
 %package module-matterhorn-scheduler-impl
 Requires: %{name}-base = %{__FULL_VERSION}
 Summary: Matterhorn-scheduler-impl module for Opencast Matterhorn
-Group: Applications/Multimedia
-
-%package module-matterhorn-export-impl
-Requires: %{name}-base = %{__FULL_VERSION}
-Summary: Matterhorn-export-impl module for Opencast Matterhorn
 Group: Applications/Multimedia
 
 %package module-matterhorn-textanalyzer-remote
@@ -1459,14 +1440,8 @@ test-load profile for Opencast Matterhorn
 %description module-matterhorn-videosegmenter-api
 Matterhorn-videosegmenter-api module for Opencast Matterhorn
 
-%description module-matterhorn-analytics-impl
-Matterhorn-analytics-impl module for Opencast Matterhorn
-
 %description module-matterhorn-engage-ui
 Matterhorn-engage-ui module for Opencast Matterhorn
-
-%description module-matterhorn-analytics-ui
-Matterhorn-analytics-ui module for Opencast Matterhorn
 
 %description module-matterhorn-videosegmenter-remote
 Matterhorn-videosegmenter-remote module for Opencast Matterhorn
@@ -1635,9 +1610,6 @@ Matterhorn-mediapackage-ui module for Opencast Matterhorn
 
 %description module-matterhorn-scheduler-impl
 Matterhorn-scheduler-impl module for Opencast Matterhorn
-
-%description module-matterhorn-export-impl
-Matterhorn-export-impl module for Opencast Matterhorn
 
 %description module-matterhorn-textanalyzer-remote
 Matterhorn-textanalyzer-remote module for Opencast Matterhorn
@@ -1864,17 +1836,9 @@ Configuration Manager Module for Opencast Matterhorn
 %defattr(-,root,root,-)
 %{_datadir}/matterhorn/lib/matterhorn/matterhorn-videosegmenter-api-%{__INTERNAL_VERSION}.jar
 
-%files module-matterhorn-analytics-impl
-%defattr(-,root,root,-)
-%{_datadir}/matterhorn/lib/matterhorn/matterhorn-analytics-impl-%{__INTERNAL_VERSION}.jar
-
 %files module-matterhorn-engage-ui
 %defattr(-,root,root,-)
 %{_datadir}/matterhorn/lib/matterhorn/matterhorn-engage-ui-%{__INTERNAL_VERSION}.jar
-
-%files module-matterhorn-analytics-ui
-%defattr(-,root,root,-)
-%{_datadir}/matterhorn/lib/matterhorn/matterhorn-analytics-ui-%{__INTERNAL_VERSION}.jar
 
 %files module-matterhorn-videosegmenter-remote
 %defattr(-,root,root,-)
@@ -2099,10 +2063,6 @@ Configuration Manager Module for Opencast Matterhorn
 %files module-matterhorn-scheduler-impl
 %defattr(-,root,root,-)
 %{_datadir}/matterhorn/lib/matterhorn/matterhorn-scheduler-impl-%{__INTERNAL_VERSION}.jar
-
-%files module-matterhorn-export-impl
-%defattr(-,root,root,-)
-%{_datadir}/matterhorn/lib/matterhorn/matterhorn-export-impl-%{__INTERNAL_VERSION}.jar
 
 %files module-matterhorn-textanalyzer-remote
 %defattr(-,root,root,-)
@@ -2443,6 +2403,13 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Aug  7 2014 Lars Kiesow <lkiesow@uos.de> - 1.5.0-0.6.rc5
+- Update to Matterhorn 1.5.0-rc5
+- 
+
+* Wed Jul 16 2014 Lars Kiesow <lkiesow@uos.de> - 1.5.0-0.5.rc4
+- Update to Matterhorn 1.5.0-rc4
+
 * Sat May 17 2014 Lars Kiesow <lkiesow@uos.de> - 1.5.0-0.4.rc3
 - Update to 1.5.0-rc3
 
