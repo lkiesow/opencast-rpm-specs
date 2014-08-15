@@ -16,7 +16,7 @@
 
 Name:           opencast-matterhorn15
 Version:        1.5.0
-Release:        0.6.rc5%{?__MATTERHORN_INSTITUTE}%{?dist}
+Release:        0.7.rc5%{?__MATTERHORN_INSTITUTE}%{?dist}
 Summary:        Open Source Lecture Capture & Video Management Tool
 
 Group:          Applications/Multimedia
@@ -45,7 +45,11 @@ BuildRequires: maven >= 3
 %if 0%{?sles_version} 
 BuildRequires: jdk >= 1:1.6.0
 %else 
-BuildRequires: java-devel >= 1:1.6.0
+%if 0%{?rhel} == 6
+BuildRequires: java-1.7.0-openjdk-devel >= 1:1.7.0
+%else
+BuildRequires: java-devel >= 1:1.7.0
+%endif
 %endif 
 Requires:      %{name}-base                 = %{__FULL_VERSION}
 Requires:      %{name}-distribution-default = %{__FULL_VERSION}
@@ -57,7 +61,7 @@ Summary: Base package for Opencast Matterhorn
 Group: Applications/Multimedia
 Requires(pre): /usr/sbin/useradd
 
-%if 0%{?fedora}%{?rhel_version}%{?centos_version}
+%if 0%{?fedora}%{?rhel}%{?centos_version}
 Requires(post): chkconfig
 Requires(preun): chkconfig
 # This is for /sbin/service
@@ -67,9 +71,9 @@ Requires(postun): initscripts
 
 Requires:      bash
 %if 0%{?sles_version} 
-BuildRequires: jdk >= 1:1.6.0
+Requires: jdk >= 1:1.6.0
 %else 
-BuildRequires: java >= 1:1.6.0
+Requires: java >= 1:1.7.0
 %endif 
 
 
@@ -833,11 +837,13 @@ Group: Applications/Multimedia
 %package module-matterhorn-serviceregistry-remote
 Requires: %{name}-base = %{__FULL_VERSION}
 Summary: Matterhorn-serviceregistry-remote module for Opencast Matterhorn
+Conflicts: %{name}-module-matterhorn-serviceregistry-impl
 Group: Applications/Multimedia
 
 %package module-matterhorn-search-service-impl
 Requires: %{name}-base = %{__FULL_VERSION}
 Summary: Matterhorn-search-service-impl module for Opencast Matterhorn
+Conflicts: %{name}-module-matterhorn-serviceregistry-remote
 Group: Applications/Multimedia
 
 %package module-matterhorn-serviceregistry
@@ -2298,10 +2304,6 @@ mkdir -m 755 -p ${RPM_BUILD_ROOT}%{_localstatedir}/log/matterhorn
 mkdir -p ${RPM_BUILD_ROOT}%{_sysconfdir}/matterhorn
 mv opencast-matterhorn-%{__INTERNAL_VERSION}/etc/* ${RPM_BUILD_ROOT}%{_sysconfdir}/matterhorn/
 
-# Link configuration dir.
-# Otherwise MH will not start up properly
-ln -s %{_sysconfdir}/matterhorn/ ${RPM_BUILD_ROOT}%{_datadir}/matterhorn/etc
-
 # Install samples
 install -p -D -m 0644 %{SOURCE6} \
    ${RPM_BUILD_ROOT}/srv/matterhorn/samples/audio-1.0.mp3
@@ -2317,7 +2319,6 @@ install -p -D -m 0644 %{SOURCE4} \
 # Add documentation
 mkdir -p ${RPM_BUILD_ROOT}%{_datadir}/matterhorn/docs/scripts/ddl/
 mkdir -p ${RPM_BUILD_ROOT}%{_datadir}/matterhorn/docs/licenses/
-mkdir -p ${RPM_BUILD_ROOT}%{_datadir}/matterhorn/docs/module-docs/
 pushd opencast-matterhorn-%{__INTERNAL_VERSION}/docs/
 cp licenses.txt  ${RPM_BUILD_ROOT}%{_datadir}/matterhorn/docs/
 cp licenses/*    ${RPM_BUILD_ROOT}%{_datadir}/matterhorn/docs/licenses/
@@ -2392,9 +2393,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_sbindir}/*
 %dir %{_datadir}/matterhorn
 %dir %{_datadir}/matterhorn/lib
-%dir %{_datadir}/matterhorn/lib/matterhorn
 %{_datadir}/matterhorn/lib/felix
-%{_datadir}/matterhorn/etc
 %{_datadir}/matterhorn/bin
 %dir /srv/matterhorn
 %dir /srv/matterhorn/inbox
@@ -2403,6 +2402,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Aug 14 2014 Lars Kiesow <lkiesow@uos.de> - 1.5.0-0.7.rc5
+- Fixed some smaller spec issues
+
 * Thu Aug  7 2014 Lars Kiesow <lkiesow@uos.de> - 1.5.0-0.6.rc5
 - Update to Matterhorn 1.5.0-rc5
 - 
