@@ -16,7 +16,7 @@
 
 Name:           opencast-matterhorn15
 Version:        1.5.0
-Release:        0.7.rc5%{?__MATTERHORN_INSTITUTE}%{?dist}
+Release:        0.8.rc5%{?__MATTERHORN_INSTITUTE}%{?dist}
 Summary:        Open Source Lecture Capture & Video Management Tool
 
 Group:          Applications/Multimedia
@@ -487,7 +487,7 @@ Requires: %{name}-module-matterhorn-dictionary-api = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-dictionary-impl = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-dublincore = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-inspection-service-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-inspection-service-mediainfo = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-inspection-service-impl = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-json = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-kernel = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-metadata-api = %{__FULL_VERSION}
@@ -522,7 +522,7 @@ Requires: %{name}-module-matterhorn-dictionary-api = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-dictionary-impl = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-dublincore = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-inspection-service-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-inspection-service-mediainfo = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-inspection-service-impl = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-json = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-kernel = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-metadata-api = %{__FULL_VERSION}
@@ -685,11 +685,6 @@ Summary: Server management profile for Opencast Matterhorn %{__INTERNAL_VERSION}
 Group: Applications/Multimedia
 Requires: %{name}-module-matterhorn-manager-api = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-manager-impl = %{__FULL_VERSION}
-
-%package profile-alternatives
-Summary: Alternatives profile for Opencast Matterhorn %{__INTERNAL_VERSION}
-Group: Applications/Multimedia
-Requires: %{name}-module-matterhorn-inspection-service-ffmpeg = %{__FULL_VERSION}
 
 %package profile-test
 Summary: Test profile for Opencast Matterhorn %{__INTERNAL_VERSION}
@@ -1138,8 +1133,8 @@ Requires: %{name}-base = %{__FULL_VERSION}
 Requires:     mediainfo >= 0.7.35
 # There can only be one inspection service
 Conflicts: %{name}-module-matterhorn-inspection-service-ffmpeg
-Provides:  %{name}-module-matterhorn-inspection-service-ffmpeg = %{__FULL_VERSION}
-Obsoletes: %{name}-module-matterhorn-inspection-service-ffmpeg < %{__FULL_VERSION}
+Provides:  %{name}-module-matterhorn-inspection-service-impl = %{__FULL_VERSION}
+#Obsoletes: %{name}-module-matterhorn-inspection-service-ffmpeg < %{__FULL_VERSION}
 Summary: Matterhorn-inspection-service-mediainfo module for Opencast Matterhorn
 Group: Applications/Multimedia
 
@@ -1148,8 +1143,8 @@ Requires: %{name}-base = %{__FULL_VERSION}
 Requires: ffmpeg >= 1.1
 # There can only be one inspection service
 Conflicts: %{name}-module-matterhorn-inspection-service-mediainfo
-Provides:  %{name}-module-matterhorn-inspection-service-mediainfo = %{__FULL_VERSION}
-Obsoletes: %{name}-module-matterhorn-inspection-service-mediainfo < %{__FULL_VERSION}
+Provides:  %{name}-module-matterhorn-inspection-service-impl = %{__FULL_VERSION}
+#Obsoletes: %{name}-module-matterhorn-inspection-service-mediainfo < %{__FULL_VERSION}
 Summary: FFmpeg (ffprobe) based inspection-service module for Opencast Matterhorn
 Group: Applications/Multimedia
 
@@ -1427,9 +1422,6 @@ directory-shibboleth profile for Opencast Matterhorn
 
 %description profile-server-management
 server-management profile for Opencast Matterhorn
-
-%description profile-alternatives
-alternatives profile for Opencast Matterhorn
 
 %description profile-capture
 capture profile for Opencast Matterhorn
@@ -1824,9 +1816,6 @@ Configuration Manager Module for Opencast Matterhorn
 # Nothing to do
 
 %files profile-server-management
-# Nothing to do
-
-%files profile-alternatives
 # Nothing to do
 
 %files profile-capture
@@ -2402,6 +2391,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Aug 18 2014 Lars Kiesow <lkiesow@uos.de> - 1.5.0-0.8.rc5
+- Fixed inspection service dependency
+
 * Thu Aug 14 2014 Lars Kiesow <lkiesow@uos.de> - 1.5.0-0.7.rc5
 - Fixed some smaller spec issues
 
