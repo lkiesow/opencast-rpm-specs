@@ -172,7 +172,9 @@ sed -i 's/opencv <= 2.3.1/opencv <= 2.4.3/g' configure
 %configure \
     --with-package-name="Fedora gstreamer-plugins-bad package" \
     --with-package-origin="http://download.fedora.redhat.com/fedora" \
-    %{!?with_extras:--disable-fbdev --disable-decklink --disable-linsys} \
+    %{!?with_extras:--disable-fbdev --disable-decklink --disable-linsys \
+	 --disable-celt --disable-vdpau --disable-assrender --disable-dc1394 \
+	 --disable-schro --disable-sdl --disable-voaacenc} \
     --enable-debug --disable-static --enable-gtk-doc --enable-experimental \
     --disable-divx --disable-dts --disable-faac --disable-faad --disable-nas \
     --disable-mimic --disable-libmms --disable-mpeg2enc --disable-mplex \
@@ -299,30 +301,6 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_libdir}/gstreamer-%{majorminor}/libgstsoundtouch.so
 %{_libdir}/gstreamer-%{majorminor}/libgstvp8.so
 %{_libdir}/gstreamer-%{majorminor}/libgstopus.so
-
-/usr/include/gstreamer-0.10/gst/vdpau/gstvdp.h
-/usr/include/gstreamer-0.10/gst/vdpau/gstvdpbuffer.h
-/usr/include/gstreamer-0.10/gst/vdpau/gstvdpbufferpool.h
-/usr/include/gstreamer-0.10/gst/vdpau/gstvdpdecoder.h
-/usr/include/gstreamer-0.10/gst/vdpau/gstvdpdevice.h
-/usr/include/gstreamer-0.10/gst/vdpau/gstvdpoutputbuffer.h
-/usr/include/gstreamer-0.10/gst/vdpau/gstvdpoutputbufferpool.h
-/usr/include/gstreamer-0.10/gst/vdpau/gstvdpoutputsrcpad.h
-/usr/include/gstreamer-0.10/gst/vdpau/gstvdputils.h
-/usr/include/gstreamer-0.10/gst/vdpau/gstvdpvideobuffer.h
-/usr/include/gstreamer-0.10/gst/vdpau/gstvdpvideobufferpool.h
-/usr/include/gstreamer-0.10/gst/vdpau/gstvdpvideosrcpad.h
-/usr/lib64/gstreamer-0.10/libgstassrender.so
-/usr/lib64/gstreamer-0.10/libgstcelt.so
-/usr/lib64/gstreamer-0.10/libgstdc1394.so
-/usr/lib64/gstreamer-0.10/libgstopencv.so
-/usr/lib64/gstreamer-0.10/libgstschro.so
-/usr/lib64/gstreamer-0.10/libgstsdl.so
-/usr/lib64/gstreamer-0.10/libgstvdpau.so
-/usr/lib64/gstreamer-0.10/libgstvoaacenc.so
-/usr/lib64/libgstvdp-0.10.so
-/usr/lib64/libgstvdp-0.10.so.23
-/usr/lib64/libgstvdp-0.10.so.23.0.0
 
 
 #debugging plugin
