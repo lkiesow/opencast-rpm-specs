@@ -11,7 +11,7 @@
 Summary: GStreamer streaming media framework "ugly" plug-ins
 Name: gstreamer-plugins-ugly
 Version: 0.10.19
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: LGPLv2+
 Group: Applications/Multimedia
 URL: http://gstreamer.freedesktop.org/
@@ -26,7 +26,6 @@ BuildRequires: %{gstreamer}-plugins-base-devel >= %{gstpb_minver}
 BuildRequires: gettext-devel
 BuildRequires: gtk-doc
 
-BuildRequires: libsidplay-devel >= 1.36.0
 BuildRequires: a52dec-devel >= 0.7.3
 BuildRequires: libdvdread-devel >= 0.9.0
 BuildRequires: lame-devel >= 3.89
@@ -38,9 +37,8 @@ BuildRequires: twolame-devel
 BuildRequires: x264-devel >= 0.0.0-0.28
 BuildRequires: opencore-amr-devel
 BuildRequires: PyXML
-BuildRequires: libmpeg2_0
+BuildRequires: libmpeg2
 
-Provides: gstreamer-sid = %{version}-%{release}
 Provides: gstreamer-lame = %{version}-%{release}
 Provides: gstreamer-mad = %{version}-%{release}
 Provides: gstreamer-a52dec = %{version}-%{release}
@@ -85,6 +83,7 @@ be shipped in gstreamer-plugins-good because:
     --with-package-origin="http://rpmfusion.org/" \
     --enable-debug --enable-gtk-doc \
     --disable-cdio \
+    --disable-sidplay \
     --disable-static
 
 # remove rpath from libtool
@@ -129,7 +128,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gstreamer-%{majorminor}/libgstlame.so
 %{_libdir}/gstreamer-%{majorminor}/libgstmad.so
 %{_libdir}/gstreamer-%{majorminor}/libgstmpeg2dec.so
-%{_libdir}/gstreamer-%{majorminor}/libgstsid.so
 %{_libdir}/gstreamer-%{majorminor}/libgsttwolame.so
 %{_libdir}/gstreamer-%{majorminor}/libgstx264.so
 
@@ -139,6 +137,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Sep 27 2014 Lars Kiesow <lkiesow@uos.de> - 0.10.19-6
+- Fixed libmpeg2 dependency
+
 * Sat Jan 25 2014 Lars Kiesow <lkiesow@uos.de> - 0.10.19-4
 - Build against libx264.so.133
 
