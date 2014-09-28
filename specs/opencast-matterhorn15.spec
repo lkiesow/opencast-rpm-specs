@@ -3,10 +3,10 @@
 %global  matterhorn_user          matterhorn
 %global  matterhorn_group         %{matterhorn_user}
 
-%define __INTERNAL_VERSION 1.5.0-rc5
+%define __INTERNAL_VERSION 1.5.0-rc7
 
-%if 0%{?sles_version} 
-  %define __GST_SUFFIX -0_10 
+%if 0%{?sles_version}
+  %define __GST_SUFFIX -0_10
 %else
   %define __GST_SUFFIX %{nil}
 %endif
@@ -16,7 +16,7 @@
 
 Name:           opencast-matterhorn15
 Version:        1.5.0
-Release:        0.8.rc5%{?__MATTERHORN_INSTITUTE}%{?dist}
+Release:        0.9.rc7%{?__MATTERHORN_INSTITUTE}%{?dist}
 Summary:        Open Source Lecture Capture & Video Management Tool
 
 Group:          Applications/Multimedia
@@ -26,9 +26,6 @@ Source0:        https://github.com/lkiesow/opencast-matterhorn/archive/%{__INTER
 Source2:        maven-repo-matterhorn-%{__INTERNAL_VERSION}.tar.gz
 Source3:        settings.xml
 Source4:        matterhorn.logrotate
-Source6:        audio-1.0.mp3
-Source7:        camera-1.0.mpg
-Source8:        screen-1.0.mpg
 Patch0:         matterhorn-config-%{__INTERNAL_VERSION}.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -42,22 +39,22 @@ Epoch:          %{?_matterhorn_importance}
 
 BuildRequires: maven >= 3
 
-%if 0%{?sles_version} 
+%if 0%{?sles_version}
 BuildRequires: jdk >= 1:1.6.0
-%else 
+%else
 %if 0%{?rhel} == 6
 BuildRequires: java-1.7.0-openjdk-devel >= 1:1.7.0
 %else
 BuildRequires: java-devel >= 1:1.7.0
 %endif
-%endif 
+%endif
 Requires:      %{name}-base                 = %{__FULL_VERSION}
 Requires:      %{name}-distribution-default = %{__FULL_VERSION}
 
 BuildArch: noarch
 
 %package base
-Summary: Base package for Opencast Matterhorn 
+Summary: Base package for Opencast Matterhorn
 Group: Applications/Multimedia
 Requires(pre): /usr/sbin/useradd
 
@@ -70,11 +67,11 @@ Requires(postun): initscripts
 %endif
 
 Requires:      bash
-%if 0%{?sles_version} 
+%if 0%{?sles_version}
 Requires: jdk >= 1:1.6.0
-%else 
+%else
 Requires: java >= 1:1.7.0
-%endif 
+%endif
 
 
 %package distribution-default
@@ -135,24 +132,37 @@ Group: Applications/Multimedia
 Requires: %{name}-base              = %{__FULL_VERSION}
 Requires: %{name}-third-party-tools = %{__FULL_VERSION}
 
+%package distribution-demo
+Summary: Demo Matterhorn distribution (All-in-one + Demo Capture Agent)
+Group: Applications/Multimedia
+Requires: %{name}-profile-admin           = %{__FULL_VERSION}
+Requires: %{name}-profile-capture         = %{__FULL_VERSION}
+Requires: %{name}-profile-directory-db    = %{__FULL_VERSION}
+Requires: %{name}-profile-dist            = %{__FULL_VERSION}
+Requires: %{name}-profile-engage          = %{__FULL_VERSION}
+Requires: %{name}-profile-serviceregistry = %{__FULL_VERSION}
+Requires: %{name}-profile-worker          = %{__FULL_VERSION}
+Requires: %{name}-profile-workspace       = %{__FULL_VERSION}
+
 %package third-party-tools
 Summary: All required third party tools for Matterhorn
 Group: Applications/Multimedia
-%if 0%{?sles_version} 
+%if 0%{?sles_version}
 BuildRequires: jdk >= 1:1.6.0
-%else 
+%else
 BuildRequires: java >= 1:1.6.0
 #Requires: java-devel >= 1:1.6.0
-%endif 
+%endif
 #Requires: maven >= 3
 Requires: ffmpeg >= 1.1
 Requires: gstreamer%{__GST_SUFFIX}
 Requires: gstreamer%{__GST_SUFFIX}-ffmpeg
-Requires: gstreamer%{__GST_SUFFIX}-plugins-bad
 Requires: gstreamer%{__GST_SUFFIX}-plugins-base
 Requires: gstreamer%{__GST_SUFFIX}-plugins-good
 Requires: gstreamer%{__GST_SUFFIX}-plugins-ugly
-Requires: gstreamer-plugins-bad-nonfree
+%if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version}
+BuildRequires: gstreamer-plugins-bad-free
+%endif
 Requires: jv4linfo >= 0.2.1
 Requires: mediainfo >= 0.7.35
 Requires: qt_sbtl_embedder >= 0.4
@@ -1197,21 +1207,16 @@ Group: Applications/Multimedia
 BuildRequires: gstreamer%{__GST_SUFFIX}
 BuildRequires: gstreamer%{__GST_SUFFIX}-plugins-base
 BuildRequires: gstreamer%{__GST_SUFFIX}-plugins-good
-BuildRequires: gstreamer%{__GST_SUFFIX}-plugins-bad
-%if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version}
-BuildRequires: gstreamer-plugins-bad-nonfree
-%endif
 BuildRequires: gstreamer%{__GST_SUFFIX}-plugins-ugly
 BuildRequires: gstreamer%{__GST_SUFFIX}-ffmpeg
 Requires: gstreamer%{__GST_SUFFIX}
 Requires: gstreamer%{__GST_SUFFIX}-plugins-base
 Requires: gstreamer%{__GST_SUFFIX}-plugins-good
-Requires: gstreamer%{__GST_SUFFIX}-plugins-bad
-%if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version}
-Requires: gstreamer-plugins-bad-nonfree
-%endif
 Requires: gstreamer%{__GST_SUFFIX}-plugins-ugly
 Requires: gstreamer%{__GST_SUFFIX}-ffmpeg
+%if 0%{?fedora}%{?rhel}
+BuildRequires: gstreamer-plugins-bad-free
+%endif
 Requires: jv4linfo >= 0.2.1
 Requires: v4l-utils
 Requires: %{name}-base = %{__FULL_VERSION}
@@ -1334,6 +1339,11 @@ Distribution of Opencast Matterhorn components for developers.
 This package will create the basic structure for an Opencast Matterhorn node
 like the directries, the basic configuration, the SysV-init scripts and pull in
 all required third party tools.
+
+
+%description distribution-demo
+All-in-one Matterhorn distribution with attached demo refernece capture agent.
+This package is not meant for production use.
 
 
 %description third-party-tools
@@ -2294,11 +2304,14 @@ mkdir -p ${RPM_BUILD_ROOT}%{_sysconfdir}/matterhorn
 mv opencast-matterhorn-%{__INTERNAL_VERSION}/etc/* ${RPM_BUILD_ROOT}%{_sysconfdir}/matterhorn/
 
 # Install samples
-install -p -D -m 0644 %{SOURCE6} \
+install -p -D -m 0644 \
+   mvn2/org/opencastproject/samples/audio/1.0/audio-1.0.mp3 \
    ${RPM_BUILD_ROOT}/srv/matterhorn/samples/audio-1.0.mp3
-install -p -D -m 0644 %{SOURCE7} \
+install -p -D -m 0644 \
+   mvn2/org/opencastproject/samples/camera/1.0/camera-1.0.mpg \
    ${RPM_BUILD_ROOT}/srv/matterhorn/samples/camera-1.0.mpg
-install -p -D -m 0644 %{SOURCE8} \
+install -p -D -m 0644 \
+   mvn2/org/opencastproject/samples/screen/1.0/screen-1.0.mpg \
    ${RPM_BUILD_ROOT}/srv/matterhorn/samples/screen-1.0.mpg
 
 # Install logrotate configuration
@@ -2391,6 +2404,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Sep 27 2014 Lars Kiesow <lkiesow@uos.de> - 1.5.0-0.9.rc7
+- Update to Matterhorn 1.5.0-rc7
+- Added demo distribution
+- Fixed GStreamer dependency
+
 * Mon Aug 18 2014 Lars Kiesow <lkiesow@uos.de> - 1.5.0-0.8.rc5
 - Fixed inspection service dependency
 
@@ -2399,7 +2417,7 @@ rm -rf $RPM_BUILD_ROOT
 
 * Thu Aug  7 2014 Lars Kiesow <lkiesow@uos.de> - 1.5.0-0.6.rc5
 - Update to Matterhorn 1.5.0-rc5
-- 
+-
 
 * Wed Jul 16 2014 Lars Kiesow <lkiesow@uos.de> - 1.5.0-0.5.rc4
 - Update to Matterhorn 1.5.0-rc4
