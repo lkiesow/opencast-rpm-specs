@@ -14,7 +14,7 @@ Source0:        http://download.gnome.org/sources/gobject-introspection/1.32/%{n
 
 Obsoletes:      gir-repository
 
-BuildRequires:  glib2-devel
+BuildRequires:  glib2-devel >= 2.29.7
 BuildRequires:  python-devel >= 2.5
 BuildRequires:  gettext
 BuildRequires:  flex
