@@ -18,7 +18,6 @@ BuildRequires: gsm-devel
 BuildRequires: imlib2-devel
 BuildRequires: lame-devel
 BuildRequires: libdc1394-devel, libraw1394-devel
-BuildRequires: librtmp-devel >= 2.2.f
 BuildRequires: libstdc++-devel
 BuildRequires: libvorbis-devel
 %if 0%{?rhel}%{?fedora} >= 6
@@ -38,15 +37,22 @@ BuildRequires: soxr-devel
 BuildRequires: libvdpau-devel
 BuildRequires: libvpx-devel >= 1.3.0
 BuildRequires: opencore-amr-devel
-BuildRequires: opencv-devel
 BuildRequires: openjpeg-devel
 BuildRequires: openssl-devel
-%if 0%{?rhel} >= 6
+%if 0%{?rhel} > 6
+#This would require a glib2 update on RHEL 6.x
 BuildRequires: frei0r-plugins-devel
+%endif
+%if 0%{?rhel} >= 6
 #License incompatible with x264
 #BuildRequires: fdk-aac-devel
 %endif
+%if 0%{?fedora}%{rhel} > 6
+BuildRequires: librtmp-devel >= 2.2.f
+%endif
 %if 0%{?fedora}
+# opencv needs gstreamer. We usually don't want that dependency
+BuildRequires: opencv-devel
 BuildRequires: celt-devel
 BuildRequires: frei0r-devel
 BuildRequires: libcdio-devel
@@ -114,8 +120,13 @@ test -f version.h || echo "#define FFMPEG_VERSION \"%{evr}\"" > version.h
    --enable-x11grab \
    --enable-vdpau \
    --disable-avisynth \
+%if 0%{?rhel}%{?fedora} > 6
    --enable-frei0r \
+   --enable-librtmp \
+%endif
+%if 0%{?fedora}
    --enable-libopencv \
+%endif
    --enable-libdc1394 \
    --enable-libvo-aacenc \
    --enable-libgsm \
@@ -123,7 +134,6 @@ test -f version.h || echo "#define FFMPEG_VERSION \"%{evr}\"" > version.h
    --enable-libopencore-amrnb \
    --enable-libopencore-amrwb \
    --enable-libopenjpeg \
-   --enable-librtmp \
    --enable-libsoxr \
 %if 0%{?fedora}
    --enable-libcdio \
@@ -212,11 +222,10 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Tue Sep 23 2014 Lars Kiesow <lkiesow@uos.de> - 2.4.1-1
+* Fri Sep 26 2014 Lars Kiesow <lkiesow@uos.de> - 2.4.1-1
 - Update to FFmpeg 2.4.1
-
-* Fri Aug 29 2014 Lars Kiesow <lkiesow@uos.de> - 2.3.3-1
-- Update to FFmpeg 2.3.3
+- Removed frei0r dependency for RHEL 6.x
+- Removed librtmp dependency for RHEL 6.x
 
 * Mon Aug  4 2014 Lars Kiesow <lkiesow@uos.de> - 2.3.1-1
 - Update to FFmpeg 2.3.1
