@@ -1,6 +1,6 @@
 Name:           jv4linfo
 Version:        0.2.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Java API to query and control video4linux(two) devices through JNI
 
 Group:          System Environment/Libraries
@@ -13,6 +13,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  jpackage-utils
 BuildRequires:  java-devel
 BuildRequires:  ant
+BuildRequires:  ant-nodeps
 Requires:       jpackage-utils
 Requires:       java
 
@@ -77,5 +78,8 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Sep 27 2014 Lars Kiesow <lkiesow@uos.de> - 0.2.1-2
+- Fixed additional dependency (ant-nodeps)
+
 * Sat Nov 17 2012 Lars Kiesow <lkiesow@uos.de> - 0.2.1-1
 - Initial build for CentOS 6
