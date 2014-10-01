@@ -222,6 +222,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Oct  1 2014 2.4.1 Nico Schottelius <nico-matterhorn@schottelius.org> - 2.4.1-1
+- Update to FFmpeg 2.4.1
+
 * Mon Aug  4 2014 Lars Kiesow <lkiesow@uos.de> - 2.3.1-1
 - Update to FFmpeg 2.3.1
 
