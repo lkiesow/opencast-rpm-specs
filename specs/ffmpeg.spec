@@ -1,6 +1,6 @@
 Name:          ffmpeg
 Summary:       Hyper fast MPEG1/MPEG4/H263/RV and AC3/MPEG audio encoder
-Version:       2.4.1
+Version:       2.4.2
 Release:       1%{?dist}
 License:       GPLv3+
 Group:         System Environment/Libraries
@@ -33,21 +33,17 @@ BuildRequires: openal-soft-devel
 BuildRequires: soxr-devel
 #License incompatible with x264
 #BuildRequires: faac-devel
+#License incompatible with x264
+#BuildRequires: fdk-aac-devel
 %endif
 BuildRequires: libvdpau-devel
 BuildRequires: libvpx-devel >= 1.3.0
 BuildRequires: opencore-amr-devel
 BuildRequires: openjpeg-devel
 BuildRequires: openssl-devel
-%if 0%{?rhel} > 6
+%if 0%{?fedora}%{rhel} > 6
 #This would require a glib2 update on RHEL 6.x
 BuildRequires: frei0r-plugins-devel
-%endif
-%if 0%{?rhel} >= 6
-#License incompatible with x264
-#BuildRequires: fdk-aac-devel
-%endif
-%if 0%{?fedora}%{rhel} > 6
 BuildRequires: librtmp-devel >= 2.2.f
 %endif
 %if 0%{?fedora}
@@ -59,7 +55,7 @@ BuildRequires: libcdio-devel
 %endif
 BuildRequires: texi2html
 BuildRequires: vo-aacenc-devel
-BuildRequires: x264-devel
+%{!?_without_x264:BuildRequires: x264-devel}
 BuildRequires: xvidcore-devel
 BuildRequires: yasm
 BuildRequires: zlib-devel
@@ -120,13 +116,6 @@ test -f version.h || echo "#define FFMPEG_VERSION \"%{evr}\"" > version.h
    --enable-x11grab \
    --enable-vdpau \
    --disable-avisynth \
-%if 0%{?rhel}%{?fedora} > 6
-   --enable-frei0r \
-   --enable-librtmp \
-%endif
-%if 0%{?fedora}
-   --enable-libopencv \
-%endif
    --enable-libdc1394 \
    --enable-libvo-aacenc \
    --enable-libgsm \
@@ -136,6 +125,7 @@ test -f version.h || echo "#define FFMPEG_VERSION \"%{evr}\"" > version.h
    --enable-libopenjpeg \
    --enable-libsoxr \
 %if 0%{?fedora}
+   --enable-libopencv \
    --enable-libcdio \
    --enable-libcelt \
 %endif
@@ -153,17 +143,18 @@ test -f version.h || echo "#define FFMPEG_VERSION \"%{evr}\"" > version.h
    --enable-libv4l2 \
    --disable-debug \
 %endif
+%if 0%{?rhel}%{?fedora} > 6
+   --enable-frei0r \
+   --enable-librtmp \
+%endif
    --enable-libvorbis \
    --enable-libvpx \
-   --enable-libx264 \
+   %{!?_without_x264:--enable-libx264} \
    --enable-libxvid \
 %ifarch %ix86
    --extra-cflags="%{optflags}" \
 %else
    --extra-cflags="%{optflags} -fPIC" \
-%endif
-%if 0%{?rhel}%{?fedora} < 6
-   %{!?with_v4l:--disable-demuxer=v4l --disable-demuxer=v4l2 --disable-indev=v4l --disable-indev=v4l2} \
 %endif
    --disable-stripping
 
@@ -222,6 +213,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Oct  8 2014 Lars Kiesow <lkiesow@uos.de> - 2.4.2-1
+- Update to FFmpeg 2.4.2
+- Some condition clean-up
+
 * Fri Sep 26 2014 Lars Kiesow <lkiesow@uos.de> - 2.4.1-1
 - Update to FFmpeg 2.4.1
 - Removed frei0r dependency for RHEL 6.x
