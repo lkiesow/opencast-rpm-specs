@@ -1,6 +1,6 @@
 Name:           jv4linfo
 Version:        0.2.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Java API to query and control video4linux(two) devices through JNI
 
 Group:          System Environment/Libraries
@@ -13,7 +13,9 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  jpackage-utils
 BuildRequires:  java-devel
 BuildRequires:  ant
+%if 0%{rhel} == 6
 BuildRequires:  ant-nodeps
+%endif
 Requires:       jpackage-utils
 Requires:       java
 
@@ -51,7 +53,7 @@ pushd net/luniks/linux/jv4linfo/
 cp JV4LInfo.java JV4LInfo.java.bak 
 cat JV4LInfo.java.bak | sed -r 's,System.loadLibrary\(LIBRARY\),System.load("%{_libdir}/%{name}/libjv4linfo.so"),g' > JV4LInfo.java
 popd
-ant
+JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8 ant
 popd
 
 %install
@@ -78,6 +80,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Sep 30 2014 Lars Kiesow <lkiesow@uos.de> - 0.2.1-3
+- Fixed encoding problem
+- Fixed ant dependendy on non rhel 6
+
 * Sat Sep 27 2014 Lars Kiesow <lkiesow@uos.de> - 0.2.1-2
 - Fixed additional dependency (ant-nodeps)
 
