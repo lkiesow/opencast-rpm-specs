@@ -3,7 +3,7 @@
 %global  matterhorn_user          matterhorn
 %global  matterhorn_group         %{matterhorn_user}
 
-%define __INTERNAL_VERSION 1.6.0-beta1
+%define __INTERNAL_VERSION 1.6.0-beta2
 
 %if 0%{?sles_version}
   %define __GST_SUFFIX -0_10
@@ -16,7 +16,7 @@
 
 Name:           opencast-matterhorn16
 Version:        1.6.0
-Release:        0.1.beta1%{?__MATTERHORN_INSTITUTE}%{?dist}
+Release:        0.2.beta2%{?__MATTERHORN_INSTITUTE}%{?dist}
 Summary:        Open Source Lecture Capture & Video Management Tool
 
 Group:          Applications/Multimedia
@@ -168,6 +168,7 @@ Requires: mediainfo >= 0.7.35
 Requires: qt_sbtl_embedder >= 0.4
 Requires: tesseract >= 3
 Requires: v4l-utils
+Requires: gnonlin0.10
 
 %package profile-admin
 Summary: Admin profile for Opencast Matterhorn %{__INTERNAL_VERSION}
@@ -1383,8 +1384,8 @@ BuildRequires: gstreamer%{__GST_SUFFIX}-plugins-base
 BuildRequires: gstreamer%{__GST_SUFFIX}-plugins-good
 BuildRequires: gstreamer%{__GST_SUFFIX}-plugins-ugly
 BuildRequires: gstreamer%{__GST_SUFFIX}-ffmpeg
-BuildRequires: gnonlin
-Requires: gnonlin
+BuildRequires: gnonlin0.10
+Requires: gnonlin0.10
 Requires: gstreamer%{__GST_SUFFIX}
 Requires: gstreamer%{__GST_SUFFIX}-plugins-base
 Requires: gstreamer%{__GST_SUFFIX}-plugins-good
