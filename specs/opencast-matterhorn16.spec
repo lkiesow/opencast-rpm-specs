@@ -3,7 +3,7 @@
 %global  matterhorn_user          matterhorn
 %global  matterhorn_group         %{matterhorn_user}
 
-%define __INTERNAL_VERSION 1.6.0-beta2
+%define __INTERNAL_VERSION 1.6.0-beta3
 
 %if 0%{?sles_version}
   %define __GST_SUFFIX -0_10
@@ -16,14 +16,14 @@
 
 Name:           opencast-matterhorn16
 Version:        1.6.0
-Release:        0.2.beta2%{?__MATTERHORN_INSTITUTE}%{?dist}
+Release:        0.3.beta3%{?__MATTERHORN_INSTITUTE}%{?dist}
 Summary:        Open Source Lecture Capture & Video Management Tool
 
 Group:          Applications/Multimedia
 License:        ECL 2.0
 URL:            http://opencast.org/matterhorn/
 Source0:        https://github.com/lkiesow/opencast-matterhorn/archive/%{__INTERNAL_VERSION}.tar.gz
-Source2:        maven-repo-matterhorn-%{__INTERNAL_VERSION}.tar.gz
+Source2:        maven-repo-matterhorn-%{__INTERNAL_VERSION}.tar.xz
 Source3:        settings.xml
 Source4:        matterhorn.logrotate
 Patch0:         matterhorn-config-%{__INTERNAL_VERSION}.patch
@@ -2639,6 +2639,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Oct 28 2014 Lars Kiesow <lkiesow@uos.de> - 1.6.0-0.3.beta3
+- Update to 1.6.0-beta3
+- Switched to tar.xz package for sources
+
 * Thu Oct  2 2014 Lars Kiesow <lkiesow@uos.de> - 1.6.0-0.1.beta1
 - First beta build for Matterhorn 1.6.0
 
