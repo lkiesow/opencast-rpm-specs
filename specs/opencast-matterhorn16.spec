@@ -38,6 +38,7 @@ Epoch:          %{?_matterhorn_importance}
 %define __FULL_VERSION %{?epoch}%{?epoch::}%{version}-%{release}
 
 BuildRequires: maven >= 3
+BuildRequires: tar
 
 %if 0%{?sles_version}
 BuildRequires: jdk >= 1:1.6.0
@@ -58,7 +59,7 @@ Summary: Base package for Opencast Matterhorn
 Group: Applications/Multimedia
 Requires(pre): /usr/sbin/useradd
 
-%if 0%{?fedora}%{?rhel}%{?centos_version}
+%if 0%{?rhel}%{?centos_version}
 Requires(post): chkconfig
 Requires(preun): chkconfig
 # This is for /sbin/service
@@ -67,6 +68,7 @@ Requires(postun): initscripts
 %endif
 
 Requires:      bash
+Requires:      sudo
 %if 0%{?sles_version}
 Requires: jdk >= 1:1.6.0
 %else
