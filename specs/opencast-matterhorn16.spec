@@ -791,6 +791,8 @@ Group: Applications/Multimedia
 %package module-matterhorn-textextractor-tesseract
 Requires: %{name}-base = %{__FULL_VERSION}
 Requires: tesseract >= 3
+BuildRequires: tesseract >= 3
+BuildRequires: tesseract-langpack-deu >= 3
 Summary: Matterhorn-textextractor-tesseract module for Opencast Matterhorn
 Group: Applications/Multimedia
 
@@ -856,6 +858,7 @@ Group: Applications/Multimedia
 Requires: %{name}-base = %{__FULL_VERSION}
 Requires: qt_sbtl_embedder >= 0.4
 Requires: ffmpeg >= 1.1
+BuildRequires: ffmpeg >= 1.1
 Summary: Matterhorn-composer-ffmpeg module for Opencast Matterhorn
 Group: Applications/Multimedia
 
@@ -932,6 +935,7 @@ Group: Applications/Multimedia
 
 %package module-matterhorn-dictionary-hunspell
 Requires: %{name}-base = %{__FULL_VERSION}
+BuildRequires: hunspell >= 1.2.8
 Requires: hunspell >= 1.2.8
 Summary: Hunspell based DictionaryService implementation for Opencast Matterhorn
 Group: Applications/Multimedia
@@ -1195,6 +1199,7 @@ Group: Applications/Multimedia
 %package module-matterhorn-inspection-service-ffmpeg
 Requires: %{name}-base = %{__FULL_VERSION}
 Requires: ffmpeg >= 1.1
+BuildRequires: ffmpeg >= 1.1
 # There can only be one inspection service
 Conflicts: %{name}-module-matterhorn-inspection-service-mediainfo
 Conflicts: %{name}-module-matterhorn-inspection-service-remote
