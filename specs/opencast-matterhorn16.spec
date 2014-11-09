@@ -3,7 +3,7 @@
 %global  matterhorn_user          matterhorn
 %global  matterhorn_group         %{matterhorn_user}
 
-%define __INTERNAL_VERSION 1.6.0-beta3
+%define __INTERNAL_VERSION 1.6.0-beta4
 
 %if 0%{?sles_version}
   %define __GST_SUFFIX -0_10
@@ -16,7 +16,7 @@
 
 Name:           opencast-matterhorn16
 Version:        1.6.0
-Release:        0.3.beta3%{?__MATTERHORN_INSTITUTE}%{?dist}
+Release:        0.4.beta4%{?__MATTERHORN_INSTITUTE}%{?dist}
 Summary:        Open Source Lecture Capture & Video Management Tool
 
 Group:          Applications/Multimedia
@@ -728,26 +728,6 @@ Group: Applications/Multimedia
 Requires: %{name}-module-matterhorn-manager-api = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-manager-impl = %{__FULL_VERSION}
 
-%package profile-test
-Summary: Test profile for Opencast Matterhorn %{__INTERNAL_VERSION}
-Group: Applications/Multimedia
-Requires: %{name}-module-matterhorn-test-harness = %{__FULL_VERSION}
-
-%package profile-test-performance
-Summary: Test-performance profile for Opencast Matterhorn %{__INTERNAL_VERSION}
-Group: Applications/Multimedia
-
-%package profile-test-load
-Summary: Test-load profile for Opencast Matterhorn %{__INTERNAL_VERSION}
-Group: Applications/Multimedia
-Requires: %{name}-module-matterhorn-common = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-json = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-kernel = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-load-test = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-runtime-info-ui = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-static-mod = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-webconsole = %{__FULL_VERSION}
-
 %package module-matterhorn-videosegmenter-api
 Requires: %{name}-base = %{__FULL_VERSION}
 Summary: Matterhorn-videosegmenter-api module for Opencast Matterhorn
@@ -1116,11 +1096,6 @@ Group: Applications/Multimedia
 %package module-matterhorn-working-file-repository-service-remote
 Requires: %{name}-base = %{__FULL_VERSION}
 Summary: Matterhorn-working-file-repository-service-remote module for Opencast Matterhorn
-Group: Applications/Multimedia
-
-%package module-matterhorn-load-test
-Requires: %{name}-base = %{__FULL_VERSION}
-Summary: Matterhorn-load-test module for Opencast Matterhorn
 Group: Applications/Multimedia
 
 %package module-matterhorn-mediapackage-manipulator
@@ -1576,15 +1551,6 @@ server-management profile for Opencast Matterhorn
 %description profile-capture
 capture profile for Opencast Matterhorn
 
-%description profile-test
-test profile for Opencast Matterhorn
-
-%description profile-test-performance
-test-performance profile for Opencast Matterhorn
-
-%description profile-test-load
-test-load profile for Opencast Matterhorn
-
 %description module-matterhorn-videosegmenter-api
 Matterhorn-videosegmenter-api module for Opencast Matterhorn
 
@@ -1788,9 +1754,6 @@ Matterhorn-metadata module for Opencast Matterhorn
 
 %description module-matterhorn-working-file-repository-service-remote
 Matterhorn-working-file-repository-service-remote module for Opencast Matterhorn
-
-%description module-matterhorn-load-test
-Matterhorn-load-test module for Opencast Matterhorn
 
 %description module-matterhorn-mediapackage-manipulator
 Matterhorn-mediapackage-manipulator module for Opencast Matterhorn
@@ -2202,10 +2165,6 @@ Migration Module for Opencast Matterhorn
 %defattr(-,root,root,-)
 %{_datadir}/matterhorn/lib/matterhorn/matterhorn-working-file-repository-service-remote-%{__INTERNAL_VERSION}.jar
 
-%files module-matterhorn-load-test
-%defattr(-,root,root,-)
-%{_datadir}/matterhorn/lib/matterhorn/matterhorn-load-test-%{__INTERNAL_VERSION}.jar
-
 %files module-matterhorn-mediapackage-manipulator
 %defattr(-,root,root,-)
 %{_datadir}/matterhorn/lib/matterhorn/matterhorn-mediapackage-manipulator-%{__INTERNAL_VERSION}.jar
@@ -2472,12 +2431,6 @@ Migration Module for Opencast Matterhorn
 %files profile-capture
 # Nothing to do
 
-%files profile-test-performance
-# Nothing to do
-
-%files profile-test-load
-# Nothing to do
-
 %files distribution-default
 %defattr(-,root,root,-)
 # No files here
@@ -2570,7 +2523,7 @@ sed -i "s#BUILDPATH#$(pwd)#" settings.xml
 #
 # Build Matterhorn
 pushd opencast-matterhorn-%{__INTERNAL_VERSION}
-mvn -o -s ../settings.xml clean install -Dall -Dtests \
+mvn -o -s ../settings.xml clean install -Dall \
    -DdeployTo=$RPM_BUILD_ROOT%{_datadir}/matterhorn/
 popd
 #
@@ -2646,6 +2599,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Nov  9 2014 Lars Kiesow <lkiesow@uos.de> - 1.6.0-0.4.beta4
+- Update to Matterhorn 1.6.0-beta4
+- Disabled test profiles
+
 * Tue Oct 28 2014 Lars Kiesow <lkiesow@uos.de> - 1.6.0-0.3.beta3
 - Update to 1.6.0-beta3
 - Switched to tar.xz package for sources
