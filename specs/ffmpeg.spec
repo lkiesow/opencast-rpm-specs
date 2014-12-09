@@ -1,6 +1,6 @@
 Name:          ffmpeg
 Summary:       Hyper fast MPEG1/MPEG4/H263/RV and AC3/MPEG audio encoder
-Version:       2.4.3
+Version:       2.5
 Release:       1%{?dist}
 License:       GPLv3+
 Group:         System Environment/Libraries
@@ -213,6 +213,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Dec  9 2014 Lars Kiesow <lkiesow@uos.de> - 2.5-1
+- Update to FFmpeg 2.5
+
 * Mon Nov 10 2014 Lars Kiesow <lkiesow@uos.de> - 2.4.3-1
 - Update to FFmpeg 2.4.3
 
