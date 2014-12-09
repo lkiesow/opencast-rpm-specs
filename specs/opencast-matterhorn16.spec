@@ -11,6 +11,9 @@
   %define __GST_SUFFIX %{nil}
 %endif
 
+# Systemd or SysV-init
+%define __use_systemd 0%{?fedora}%{?rhel} >= 7
+
 %{?_matterhorn_institute: %define __MATTERHORN_INSTITUTE .%{?_matterhorn_institute} }
 
 
@@ -59,7 +62,9 @@ Summary: Base package for Opencast Matterhorn
 Group: Applications/Multimedia
 Requires(pre): /usr/sbin/useradd
 
-%if 0%{?rhel}%{?centos_version}
+%if %{__use_systemd}
+BuildRequires: systemd
+%else
 Requires(post): chkconfig
 Requires(preun): chkconfig
 # This is for /sbin/service
@@ -2494,18 +2499,23 @@ getent passwd matterhorn > /dev/null || \
 chown -R matterhorn:matterhorn /srv/matterhorn
 chown -R matterhorn:matterhorn %{_localstatedir}/log/matterhorn
 # This adds the proper /etc/rc*.d links for the script
-/sbin/chkconfig --add matterhorn
+%{!?__use_systemd:/sbin/chkconfig --add matterhorn}
 
 %preun base
 # If this is really uninstall and not upgrade
 if [ $1 -eq 0 ]; then
-   /sbin/service matterhorn stop >/dev/null 2>&1
-   /sbin/chkconfig --del matterhorn
+   %if %{__use_systemd}
+      systemctl stop matterhorn >/dev/null 2>&1
+   %else
+      /sbin/service matterhorn stop >/dev/null 2>&1
+      /sbin/chkconfig --del matterhorn
+   %endif
 fi
 
 %postun base
 if [ "$1" -ge "1" ]; then
-   /sbin/service matterhorn condrestart > /dev/null 2>&1 || :
+   %{?__use_systemd:systemctl try-restart matterhorn > /dev/null 2>&1 || :}
+   %{!?__use_systemd:/sbin/service matterhorn condrestart > /dev/null 2>&1 || :}
 fi
 
 %install
@@ -2565,9 +2575,14 @@ install -p -D -m 0755 usr-sbin-matterhorn \
 install -p -D -m 0644 etc-matterhorn-service.conf \
       ${RPM_BUILD_ROOT}%{_sysconfdir}/matterhorn/service.conf
 
-# Install SysV-init script
-install -p -D -m 0755 etc-init.d-matterhorn \
-      $RPM_BUILD_ROOT%{_initddir}/matterhorn
+%if %{__use_systemd}
+   install -p -D -m 0755 etc-systemd-system-matterhorn.service \
+         $RPM_BUILD_ROOT%{_unitdir}/matterhorn.service
+%else
+   # Install SysV-init script
+   install -p -D -m 0755 etc-init.d-matterhorn \
+         $RPM_BUILD_ROOT%{_initddir}/matterhorn
+%endif
 
 # Install manpage
 cat matterhorn.8 | gzip > matterhorn.8.gz
@@ -2586,7 +2601,8 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{_datadir}/matterhorn/docs
 %config(noreplace) %{_sysconfdir}/matterhorn/
 %config(noreplace) %{_sysconfdir}/logrotate.d/%{name}-base
-%{_initrddir}/*
+%{?__use_systemd:%{_unitdir}/*}
+%{!?__use_systemd:%{_initrddir}/*}
 %{_sbindir}/*
 %dir %{_datadir}/matterhorn
 %dir %{_datadir}/matterhorn/lib
@@ -2601,6 +2617,7 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Mon Dec  8 2014 Lars Kiesow <lkiesow@uos.de> - 1.6.0-0.5.RC1
 - Update to Matterhorn 1.6.0-RC1
+- Proper systemd integration
 
 * Sun Nov  9 2014 Lars Kiesow <lkiesow@uos.de> - 1.6.0-0.4.beta4
 - Update to Matterhorn 1.6.0-beta4
