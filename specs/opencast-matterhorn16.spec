@@ -3,7 +3,7 @@
 %global  matterhorn_user          matterhorn
 %global  matterhorn_group         %{matterhorn_user}
 
-%define __INTERNAL_VERSION 1.6.0-beta4
+%define __INTERNAL_VERSION 1.6.0-RC1
 
 %if 0%{?sles_version}
   %define __GST_SUFFIX -0_10
@@ -16,7 +16,7 @@
 
 Name:           opencast-matterhorn16
 Version:        1.6.0
-Release:        0.4.beta4%{?__MATTERHORN_INSTITUTE}%{?dist}
+Release:        0.5.RC1%{?__MATTERHORN_INSTITUTE}%{?dist}
 Summary:        Open Source Lecture Capture & Video Management Tool
 
 Group:          Applications/Multimedia
@@ -2599,6 +2599,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Dec  8 2014 Lars Kiesow <lkiesow@uos.de> - 1.6.0-0.5.RC1
+- Update to Matterhorn 1.6.0-RC1
+
 * Sun Nov  9 2014 Lars Kiesow <lkiesow@uos.de> - 1.6.0-0.4.beta4
 - Update to Matterhorn 1.6.0-beta4
 - Disabled test profiles
