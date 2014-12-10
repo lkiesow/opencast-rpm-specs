@@ -1,0 +1,14 @@
+--- gpac/configure.osmo	2010-05-27 13:25:30.365191378 -0600
++++ gpac/configure	2010-05-27 14:03:08.494369924 -0600
+@@ -1007,6 +1016,11 @@ wx_cflags=`wx-config --cppflags core, ba
+ wx_lflags=`wx-config --libs core, base`
+ fi
+ 
++if test "$has_wx" = "yes"; then
++wx_lflags="${wx_lflags} `gtk-config --libs`"
++wx_lflags="${wx_lflags} `pkg-config --libs gdk-2.0` -lstdc++"
++fi
++
+ if test "$darwin" = "yes" ; then
+ wx_lflags="-Wl,-bind_at_load $wx_lflags -lstdc++" #10.4 needs it, not sure about 10.3
+ fi

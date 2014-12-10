@@ -1,0 +1,9 @@
+#!/bin/sh
+r=$1
+specdir=$HOME/matterhorn-rpms/specs/
+sourcedir=~/rpmbuild/SOURCES/
+
+(cd "$sourcedir" && spectool --all --get-files "$specdir/${r}.spec")
+sudo yum-builddep -y ${r}.spec; 
+rpmbuild -ba ${r}.spec; 
+sudo rpm -i ~/rpmbuild/RPMS/x86_64/*${r}*

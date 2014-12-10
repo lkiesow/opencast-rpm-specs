@@ -1,0 +1,80 @@
+diff -up gpac/configure.ffmpeg gpac/configure
+--- gpac/configure.ffmpeg	2010-01-16 19:09:26.451865570 +0100
++++ gpac/configure	2010-01-16 19:19:49.604861370 +0100
+@@ -852,12 +852,21 @@ fi
+ 
+ #look for FFMPEG support
+ 
++if pkg-config --exists libavcodec libavformat libswscale 2> /dev/null  ; then
++  ffmpeg_cflags=`pkg-config --cflags libavcodec libavformat libswscale libavutil`
++  ffmpeg_lflags=`pkg-config --libs libavcodec libavformat libswscale libavutil`
++  has_ffmpeg="system"
++else
++  ffmpeg_cflags=``
++  ffmpeg_lflags=`-lz -lavcodec -lavformat`
++fi
++
+ cat > $TMPC << EOF
+ #include <libavcodec/avcodec.h>
+ int main( void ) { return 0; }
+ EOF
+ 
+-if $cc $TMPO -c $TMPC 2> /dev/null  ; then
++if $cc $TMPO  $ffmpeg_cflags -c $TMPC 2> /dev/null  ; then
+ old_ffmpeg_inc="no"
+ else
+ 
+@@ -872,10 +881,10 @@ fi
+ 
+ 
+ if test "$cross_prefix"  != "" ; then
+-  if $cc -o $TMPO $TMPC -I$prefix/include -L$prefix/lib -lz -lavcodec -lavformat -lavutil 2> /dev/null  ; then
++  if $cc -o $TMPO $TMPC -I$prefix/include -L$prefix/lib $ffmpeg_cflags $ffmpeg_lflags 2> /dev/null  ; then
+      has_ffmpeg="system"
+   else
+-     if $cc -o $TMPO $TMPC -I$local_inc -L$local_lib -lz -lavcodec -lavformat 2> /dev/null  ; then
++     if $cc -o $TMPO $TMPC -I$local_inc -L$local_lib $ffmpeg_cflags $ffmpeg_lflags 2> /dev/null  ; then
+         has_ffmpeg="local"
+         echo OK 
+      fi
+@@ -1978,6 +1987,10 @@ echo "CONFIG_VORBIS=$has_vorbis" >> conf
+ echo "CONFIG_THEORA=$has_theora" >> config.mak
+ echo "CONFIG_FFMPEG=$has_ffmpeg" >> config.mak
+ echo "CONFIG_FFMPEG_OLD=$old_ffmpeg_inc" >> config.mak
++if test x$has_ffmpeg != x ; then
++  echo "FFMPEG_CFLAGS=$ffmpeg_cflags" >> config.mak
++  echo "FFMPEG_LFLAGS=$ffmpeg_lflags" >> config.mak
++fi
+ 
+ echo "CONFIG_OSS_AUDIO=$has_oss_audio" >> config.mak
+ echo "CONFIG_ALSA=$has_alsa" >> config.mak
+diff -up gpac/modules/ffmpeg_in/Makefile.ffmpeg gpac/modules/ffmpeg_in/Makefile
+--- gpac/modules/ffmpeg_in/Makefile.ffmpeg	2010-05-21 01:49:31.000000000 -0600
++++ gpac/modules/ffmpeg_in/Makefile	2010-05-27 13:17:56.052191678 -0600
+@@ -2,7 +2,7 @@ include ../../config.mak
+ 
+ vpath %.c $(SRC_PATH)/modules/ffmpeg_in
+ 
+-CFLAGS= $(OPTFLAGS) -I$(SRC_PATH)/include
++CFLAGS= $(OPTFLAGS) -I$(SRC_PATH)/include $(FFMPEG_CFLAGS)
+ 
+ ifeq ($(DEBUGBUILD), yes)
+ CFLAGS+=-g
+@@ -15,7 +15,7 @@ LDFLAGS+=-pg
+ endif
+ 
+ LOCAL_LIB=
+-LINKLIBS=-lgpac -lavcodec -lavformat -lavutil -lz
++LINKLIBS=-lgpac -lz $(FFMPEG_LFLAGS)
+ 
+ #darwin needs bz2
+ ifeq ($(CONFIG_DARWIN),yes)
+@@ -25,8 +25,6 @@ endif
+ #old ffmpeg lib
+ ifeq ($(CONFIG_FFMPEG_OLD), yes)
+ CFLAGS+=-DFFMPEG_OLD_HEADERS
+-else
+-LINKLIBS+=-lswscale
+ endif
+ 
+ #common obj

@@ -1,0 +1,57 @@
+diff -up gpac/src/Makefile.soname gpac/src/Makefile
+--- gpac/src/Makefile.soname	2010-05-29 15:48:35.000000000 +0200
++++ gpac/src/Makefile	2010-05-29 15:57:23.000000000 +0200
+@@ -158,27 +158,27 @@ endif
+ 
+ 
+ ##libgpac library output
+-LIB=libgpac.$(DYN_LIB_SUFFIX)
++LIBGPAC=libgpac.$(DYN_LIB_SUFFIX)
++LIBGPAC_SOVERSION=".0"
++LIBGPAC_SONAME=$(LIBGPAC)$(LIBGPAC_SOVERSION)
++LD_SONAME="-Wl,-soname,$(LIBGPAC_SONAME)"
+ ifeq ($(CONFIG_WIN32),yes)
+ #LDFLAGS+=-export-symbols libgpac.def
++LD_SONAME=
+ else
+ ifeq ($(CONFIG_DARWIN),yes)
+-LDFLAGS+=-install_name $(prefix)/lib/$(LIB)
++LDFLAGS+=-install_name $(prefix)/lib/$(LIBGPAC)
++LD_SONAME=
+ endif
+ EXTRALIBS+=$(GPAC_SH_FLAGS)
+ endif
+ 
+-LD_SONAME="-Wl,-soname,$(LIB)"
+-ifeq ($(CONFIG_DARWIN), yes)
+-LD_SONAME=
+-endif
+-
+ 
+ SRCS := $(OBJS:.o=.c) 
+ 
+ all: lib
+ 
+-lib: $(LIB)
++lib: $(LIBGPAC)
+ 
+ #there's a bunch of warnings in there, get rid of them
+ mcrypt: CFLAGS= $(OPTFLAGS) -w -I$(SRC_PATH)/include
+@@ -197,7 +197,7 @@ compositor: $(LIBGPAC_COMPOSITOR)
+ 	$(CC) $(CFLAGS) -c -o $@ $< 
+ 
+ 
+-$(LIB): $(LIBGPAC_UTILS) $(LIBGPAC_IETF) $(LIBGPAC_BIFS) $(LIBGPAC_ODF) $(LIBGPAC_LASER) $(LIBGPAC_ISOM) $(LIBGPAC_SCENEMANAGER) $(LIBGPAC_TERMINAL) compositor scenegraph mediatools mcrypt $(OBJS)
++$(LIBGPAC): $(LIBGPAC_UTILS) $(LIBGPAC_IETF) $(LIBGPAC_BIFS) $(LIBGPAC_ODF) $(LIBGPAC_LASER) $(LIBGPAC_ISOM) $(LIBGPAC_SCENEMANAGER) $(LIBGPAC_TERMINAL) compositor scenegraph mediatools mcrypt $(OBJS)
+ ifeq ($(CONFIG_DARWIN),yes)
+ 	libtool -s -o ../bin/gcc/libgpac_static.a $(OBJS)
+ 	ranlib ../bin/gcc/libgpac_static.a
+@@ -215,7 +215,7 @@ depend:
+ 	$(CC) -MM $(CFLAGS) $(SRCS) 1>.depend
+ 
+ clean: 
+-	rm -f $(OBJS) ../bin/gcc/$(LIB)
++	rm -f $(OBJS) ../bin/gcc/$(LIBGPAC)
+ 	rm -rf ../bin/gcc/libgpac_static.a
+ 
+ distclean: clean

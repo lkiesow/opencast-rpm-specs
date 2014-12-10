@@ -1,0 +1,12 @@
+diff -up gpac/configure.noldflag gpac/configure
+--- gpac/configure.noldflag     2011-03-10 16:15:56.887459002 +0100
++++ gpac/configure      2011-03-10 16:58:50.029459001 +0100
+@@ -143,7 +143,7 @@ extralibs="-lm"
+ bigendian="no"
+ SHFLAGS=-shared
+ need_inet_aton="no"
+-LDFLAGS="$LDFLAGS -Wl --warn-common"
++#LDFLAGS="$LDFLAGS -Wl --warn-common"
+ CFLAGS=""
+ CPPFLAGS=""
+ GPAC_SH_FLAGS=-lpthread

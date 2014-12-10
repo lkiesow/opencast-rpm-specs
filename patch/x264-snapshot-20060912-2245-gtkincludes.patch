@@ -1,0 +1,20 @@
+--- x264-snapshot-20060912-2245/gtk/x264_gtk_encode_encode.c~	2006-09-12 22:45:02.000000000 +0200
++++ x264-snapshot-20060912-2245/gtk/x264_gtk_encode_encode.c	2006-09-14 13:51:23.000000000 +0200
+@@ -4,6 +4,7 @@
+ #else
+ #  include <stdint.h>
+ #endif
++#include <stdio.h>
+ 
+ #include <gtk/gtk.h>
+ 
+--- x264-snapshot-20060912-2245/gtk/x264_gtk_encode_main_window.c~	2006-09-12 22:45:02.000000000 +0200
++++ x264-snapshot-20060912-2245/gtk/x264_gtk_encode_main_window.c	2006-09-14 15:31:06.000000000 +0200
+@@ -4,6 +4,7 @@
+ #  include <stdint.h>
+ #endif
+ #include <unistd.h>
++#include <stdio.h>
+ #ifdef _WIN32 /* Needed to define _O_BINARY */
+ #  include <fcntl.h>
+ #  define strncasecmp _strnicmp
