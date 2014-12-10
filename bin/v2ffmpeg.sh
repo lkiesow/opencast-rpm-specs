@@ -1,99 +1,106 @@
-#!/bin/sh
+#!/bin/bash -e
 
+# Variables
 specdir=$HOME/matterhorn-rpms/specs/
 sourcedir=~/rpmbuild/SOURCES/
 
-# Get spec files
-#cd ~
-#git clone https://github.com/lkiesow/matterhorn-rpms.git
+# separator
+oldIFS="$IFS"
+
+function message()
+{
+    echo "$(date +%F-%T) M: $@"
+}
+
+function install_specs()
+{
+    rpm="$1"	
+
+    message "Install specs $rpm"
+
+    # application installed from local rpm?
+    if yum list installed $rpm | egrep "^$rpm.*(@/$rpm|installed)" >& /dev/null; then
+	echo "package $rpm installed from specs"
+	continue
+    fi 	
+
+    # Get source(s)
+    cd "$sourcedir" && spectool --all --get-files "$specdir/${rpm}.spec"
+
+    # Get dependencies
+    cd "$specdir" && sudo yum-builddep -y ${rpm}.spec
+
+    # Build package
+    rpmbuild -ba "$specdir/${rpm}.spec"
+
+    # Install package
+    sudo yum localinstall ~/rpmbuild/RPMS/x86_64/*${rpm}*
+}
+
+# Install basic packages
+sudo yum install -y rpmdevtools.noarch rpmlint.noarch createrepo.noarch vim
 
 # Setup build dirs
-mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
+cd ~
+rpmdev-setuptree
 
-# Setup spectool
-yum install -y rpmdevtools
-yum install -y vim
+# Enable EPEL and Rpmforge repositories.
+#sudo yum localinstall --nogpgcheck \
+#  http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm
 
-# Get sources from spec files
+if ! yum list installed epel-release.noarch >& /dev/null; then
+    cd /tmp/
+    wget http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+    sudo rpm -Uvh epel-release-6*.rpm
+fi
 
-# orc: spectool lädt patches nicht herunter
-# schroedinger: no spec
-# enca: no spec
-# lame: archive missing
-# libfaac -> faac, disable patch
-
-# Patches
+# Copy patches to working directory
 cd "$sourcedir"
 cp $HOME/matterhorn-rpms/patch/*.patch ./
 
-# We have patches for these mackages
-list1="a52dec faac faad2 gavl gpac libgdither libmad x264"
+# We solve dependencies with this order
+# 1) make rpm via specs, required if patches are needed
+# 2) online repository, yum install
+# 3) download rpm,  yum localinstall
 
-for rpm in $list1; do
-    # Get source(s)
-    cd "$sourcedir" && spectool --all --get-files "$specdir/${rpm}.spec"
-
-    # Get dependencies
-    cd "$specdir" && sudo yum-builddep -y ${rpm}.spec
-
-    # Build package
-    rpmbuild -ba "$specdir/${rpm}.spec"
-
-    # Install package
-    sudo rpm -i ~/rpmbuild/RPMS/x86_64/*${rpm}*
+# external rpms dependencies. RPMS storage is inside direcotry ./rpms
+# package depends_on_rpms
+#faad2 id3lib*
+#gpac js-*
+bdependencies="
+"
+IFS="
+"
+for d in $bdependencies; do
+    target="$(echo "$d" | cut -d' ' -f1)"
+    rpms="$(echo "$d" | cut -d' ' -f2-)"
+    message "Install localinstall $rpms"
+    sudo yum localinstall ~/matterhorn-rpms/rpms/$rpms
 done
 
-exit 0
-
-
-
-# SRPMs
-#wget ftp://download1.rpmfusion.org/pub/free/el/updates/6/SRPMS/gpac-0.4.6-0.13.cvs20100527.el6.3.src.rpm
-#wget http://dl.atrpms.net/src/el6-x86_64/atrpms/stable/x264-0.142-20_20140406.2245.src.rpm
-
-
-# rtmpdump
-# -> need to install *rtmp* afterwards!
-
-# libvpx
-# removed second source: libvpx.ver
-
-# frei0r-plugins: requires gavl-devel
-# Uses an old version
-# URL gives bad filename
-
-# gavl: libgdither-devel
-
-# libgdither.spec
-
-# gpac: found srpm in the internet -> using it for rebuilding
-# including the patches!
-
-# x264: bootstrap
-
-# by using the build deps of ffmpeg
-for rpm in a52dec faad2 lame rtmpdump soxr libvpx opencore-amr \
-    libgdither gavl frei0r-plugins vo-aacenc ; do
-
-    sudo rpm -i  ~/rpmbuild-matterhorn/RPMS/x86_64/*$rpm*
+# First install these specs packages
+# package depends_on_specs
+#gpac xvidcore
+sdependencies="
+"
+for d in $sdependencies; do
+    target="$(echo "$d" | cut -d' ' -f1)"
+    specs="$(echo "$d" | cut -d' ' -f2-)"
+    for s in $specs; do
+        install_specs $s
+    done
 done
 
-for rpm in xvidcore vo-aacenc soxr fdk-aac faac; do
-    # Get source(s)
-    cd "$sourcedir" && spectool --all --get-files "$specdir/${rpm}.spec"
+# We have patches for these packages, install it via specs
+# Packages order is important
+# Remove gpack, can not download sources and 
+#pack_with_patches="libgdither libmad a52dec faac faad2 gavl gpac x264"
+pack_with_patches="libgdither libmad a52dec faac faad2 gavl x264"
 
-    # Get dependencies
-    cd "$specdir" && sudo yum-builddep -y ${rpm}.spec
+# Install specs in this order
+list="$pack_with_patches"
 
-    # Build package
-    rpmbuild -ba "$specdir/${rpm}.spec"
-
-    # Install package
-    sudo rpm -i ~/rpmbuild/RPMS/x86_64/*${rpm}*
-
-    # Install package?
-    #[root@vagrant-centos65 specs]# r=lame; yum-builddep -y ${r}.spec; rpmbuild -ba ${r}.spec; rpm -i ~/rpmbuild/RPMS/x86_64/*${r}*
-
+IFS="$oldIFS"
+for rpm in $list; do
+    install_specs $rpm
 done
-
-# ffmpeg-nonfree ffmpeg-nonfree-libs fribidi lame libass librtmp libva libvpx libx264_138 openal-soft opencore-amr opus orc
