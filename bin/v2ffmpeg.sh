@@ -1,8 +1,10 @@
-#!/bin/bash -e
+#!/bin/bash 
 
 # Variables
 specdir=$HOME/matterhorn-rpms/specs/
 sourcedir=~/rpmbuild/SOURCES/
+
+debug="1"
 
 # separator
 oldIFS="$IFS"
@@ -12,54 +14,73 @@ function message()
     echo "$(date +%F-%T) M: $@"
 }
 
+function error()
+{
+    echo "$(date +%F-%T) E: $@"
+    exit 1
+}
+
+function xeval()
+{
+    cmd=$@
+    [ "$debug" == "1" ] && echo "$(date +%F-%T) D: $cmd"
+    eval $cmd || error "$cmd"
+}
+
 function install_specs()
 {
     rpm="$1"	
 
     message "Install specs $rpm"
 
+    line="$(yum list installed $rpm | egrep "^$rpm.*")" 
+    message "Package list item: $line"
+
     # application installed from local rpm?
-    if yum list installed $rpm | egrep "^$rpm.*(@/$rpm|installed)" >& /dev/null; then
+    if echo "$line" | egrep "^$rpm.*(@/$rpm|installed)" >& /dev/null; then
 	echo "package $rpm installed from specs, continue"
 	continue
-    else
+    elif [ -n "$line" ]; then
 	echo "package $prm installed via online repo, remove and install via specs"
-	sudo yum remove -y $rpm
+	# remove package without dependencies
+	#sudo yum remove -y $rpm
+	xeval "sudo rpm -e $rpm --nodeps"
     fi
 
     # Get source(s)
-    cd "$sourcedir" && spectool --all --get-files "$specdir/${rpm}.spec"
+    cd "$sourcedir"
+    xeval "spectool --all --get-files \"$specdir/${rpm}.spec\""
 
     # Get dependencies
-    cd "$specdir" && sudo yum-builddep -y ${rpm}.spec
+    cd "$specdir" 
+    xeval "sudo yum-builddep -y ${rpm}.spec"
 
     # Build package
-    rpmbuild -ba "$specdir/${rpm}.spec"
+    xeval "rpmbuild -ba \"$specdir/${rpm}.spec\""
 
     # Install package
-    sudo yum localinstall -y ~/rpmbuild/RPMS/x86_64/*${rpm}*
+    xeval "sudo yum localinstall -y ~/rpmbuild/RPMS/x86_64/*${rpm}*"
 }
 
 # Install basic packages
-sudo yum install -y rpmdevtools.noarch rpmlint.noarch createrepo.noarch vim
+xeval "sudo yum install -y rpmdevtools.noarch rpmlint.noarch createrepo.noarch vim"
 
 # Setup build dirs
 cd ~
-rpmdev-setuptree
+xeval "rpmdev-setuptree"
 
 # Enable EPEL and Rpmforge repositories.
 #sudo yum localinstall --nogpgcheck \
 #  http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm
-
 if ! yum list installed epel-release.noarch >& /dev/null; then
     cd /tmp/
-    wget http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
-    sudo rpm -Uvh epel-release-6*.rpm
+    xeval "wget http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm"
+    xeval "sudo rpm -Uvh epel-release-6*.rpm"
 fi
 
 # Copy patches to working directory
 cd "$sourcedir"
-cp $HOME/matterhorn-rpms/patch/*.patch ./
+xeval "cp $HOME/matterhorn-rpms/patch/*.patch ./"
 
 # We solve dependencies with this order
 # 1) make rpm via specs, required if patches are needed
@@ -78,7 +99,7 @@ for d in $bdependencies; do
     target="$(echo "$d" | cut -d' ' -f1)"
     rpms="$(echo "$d" | cut -d' ' -f2-)"
     message "Install localinstall $rpms"
-    sudo yum localinstall ~/matterhorn-rpms/rpms/$rpms
+    xeval "sudo yum localinstall ~/matterhorn-rpms/rpms/$rpms"
 done
 
 # First install these specs packages
