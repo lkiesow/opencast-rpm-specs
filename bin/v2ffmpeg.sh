@@ -20,9 +20,12 @@ function install_specs()
 
     # application installed from local rpm?
     if yum list installed $rpm | egrep "^$rpm.*(@/$rpm|installed)" >& /dev/null; then
-	echo "package $rpm installed from specs"
+	echo "package $rpm installed from specs, continue"
 	continue
-    fi 	
+    else
+	echo "package $prm installed via online repo, remove and install via specs"
+	sudo yum remove -y $rpm
+    fi
 
     # Get source(s)
     cd "$sourcedir" && spectool --all --get-files "$specdir/${rpm}.spec"
@@ -34,7 +37,7 @@ function install_specs()
     rpmbuild -ba "$specdir/${rpm}.spec"
 
     # Install package
-    sudo yum localinstall ~/rpmbuild/RPMS/x86_64/*${rpm}*
+    sudo yum localinstall -y ~/rpmbuild/RPMS/x86_64/*${rpm}*
 }
 
 # Install basic packages
