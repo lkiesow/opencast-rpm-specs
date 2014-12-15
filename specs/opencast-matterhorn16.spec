@@ -3,7 +3,7 @@
 %global  matterhorn_user          matterhorn
 %global  matterhorn_group         %{matterhorn_user}
 
-%define __INTERNAL_VERSION 1.6.0-RC1
+%define __INTERNAL_VERSION 1.6.0
 
 %if 0%{?sles_version}
   %define __GST_SUFFIX -0_10
@@ -19,7 +19,7 @@
 
 Name:           opencast-matterhorn16
 Version:        1.6.0
-Release:        0.5.RC1%{?__MATTERHORN_INSTITUTE}%{?dist}
+Release:        1%{?__MATTERHORN_INSTITUTE}%{?dist}
 Summary:        Open Source Lecture Capture & Video Management Tool
 
 Group:          Applications/Multimedia
@@ -237,94 +237,94 @@ Requires: %{name}-module-matterhorn-workspace-api                       = %{__FU
 %package profile-analytics
 Summary: Analytics profile for Opencast Matterhorn %{__INTERNAL_VERSION}
 Group: Applications/Multimedia
-Requires: %{name}-module-matterhorn-common = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-dublincore = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-json = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-metadata-api = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-common             = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-dublincore         = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-json               = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-metadata-api       = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-search-service-api = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-series-service-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-static-mod = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-usertracking-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-usertracking-impl = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-workspace-api = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-static-mod         = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-usertracking-api   = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-usertracking-impl  = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-workspace-api      = %{__FULL_VERSION}
 
 %package profile-export-admin
 Summary: Export-admin profile for Opencast Matterhorn %{__INTERNAL_VERSION}
 Group: Applications/Multimedia
-Requires: %{name}-module-matterhorn-common = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-gstreamer-service-api = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-common                   = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-gstreamer-service-api    = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-gstreamer-service-remote = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-json = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-serviceregistry = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-static-mod = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-json                     = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-serviceregistry          = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-static-mod               = %{__FULL_VERSION}
 
 %package profile-export-worker
 Summary: Export-worker profile for Opencast Matterhorn %{__INTERNAL_VERSION}
 Group: Applications/Multimedia
-Requires: %{name}-module-matterhorn-gstreamer-service-api = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-gstreamer-service-api  = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-gstreamer-service-impl = %{__FULL_VERSION}
 
 %package profile-export-all-in-one
 Summary: Export-all-in-one profile for Opencast Matterhorn %{__INTERNAL_VERSION}
 Group: Applications/Multimedia
-Requires: %{name}-module-matterhorn-common = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-gstreamer-service-api = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-common                 = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-gstreamer-service-api  = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-gstreamer-service-impl = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-json = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-serviceregistry = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-static-mod = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-json                   = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-serviceregistry        = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-static-mod             = %{__FULL_VERSION}
 
 %package profile-ingest
 Summary: Ingest profile for Opencast Matterhorn %{__INTERNAL_VERSION}
 Group: Applications/Multimedia
 Requires: %{name}-module-matterhorn-common = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-db = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-dublincore = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-ingest-service-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-ingest-service-impl = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-json = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-kernel = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-metadata-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-mpeg7 = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-runtime-dependencies = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-runtime-info-ui = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-scheduler-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-scheduler-impl = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-series-service-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-series-service-impl = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-serviceregistry = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-userdirectory = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-workflow-service-api = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-db                                  = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-dublincore                          = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-ingest-service-api                  = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-ingest-service-impl                 = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-json                                = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-kernel                              = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-metadata-api                        = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-mpeg7                               = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-runtime-dependencies                = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-runtime-info-ui                     = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-scheduler-api                       = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-scheduler-impl                      = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-series-service-api                  = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-series-service-impl                 = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-serviceregistry                     = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-userdirectory                       = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-workflow-service-api                = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-working-file-repository-service-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-workspace-api = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-workspace-api                       = %{__FULL_VERSION}
 
 %package profile-ingest-standalone
 Summary: Ingest-standalone profile for Opencast Matterhorn %{__INTERNAL_VERSION}
 Group: Applications/Multimedia
-Requires: %{name}-module-matterhorn-common = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-db = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-dublincore = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-ingest-service-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-ingest-service-impl = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-json = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-kernel = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-metadata-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-mpeg7 = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-runtime-dependencies = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-runtime-info-ui = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-scheduler-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-scheduler-remote = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-series-service-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-series-service-remote = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-serviceregistry = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-userdirectory = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-webconsole = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-workflow-service-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-workflow-service-remote = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-working-file-repository-service-api = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-common                               = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-db                                   = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-dublincore                           = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-ingest-service-api                   = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-ingest-service-impl                  = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-json                                 = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-kernel                               = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-metadata-api                         = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-mpeg7                                = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-runtime-dependencies                 = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-runtime-info-ui                      = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-scheduler-api                        = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-scheduler-remote                     = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-series-service-api                   = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-series-service-remote                = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-serviceregistry                      = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-userdirectory                        = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-webconsole                           = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-workflow-service-api                 = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-workflow-service-remote              = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-working-file-repository-service-api  = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-working-file-repository-service-impl = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-workspace-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-workspace-impl = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-workspace-api                        = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-workspace-impl                       = %{__FULL_VERSION}
 
 %package profile-dist
 Summary: Dist profile for Opencast Matterhorn %{__INTERNAL_VERSION}
@@ -332,29 +332,29 @@ Group: Applications/Multimedia
 # Remote and non-remote module will not work together
 Conflicts: %{name}-profile-dist-stub
 Conflicts: %{name}-profile-dist-standalone
-Requires: %{name}-module-matterhorn-authorization-xacml = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-common = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-db = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-distribution-service-acl = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-distribution-service-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-distribution-service-download = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-authorization-xacml            = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-common                         = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-db                             = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-distribution-service-acl       = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-distribution-service-api       = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-distribution-service-download  = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-distribution-service-streaming = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-dublincore = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-json = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-kernel = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-metadata-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-mpeg7 = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-publication-service-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-publication-service-youtube = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-runtime-dependencies = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-runtime-info-ui = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-series-service-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-series-service-impl = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-static-mod = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-userdirectory = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-webconsole = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-workflow-service-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-workspace-api = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-dublincore                     = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-json                           = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-kernel                         = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-metadata-api                   = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-mpeg7                          = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-publication-service-api        = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-publication-service-youtube    = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-runtime-dependencies           = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-runtime-info-ui                = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-series-service-api             = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-series-service-impl            = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-static-mod                     = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-userdirectory                  = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-webconsole                     = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-workflow-service-api           = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-workspace-api                  = %{__FULL_VERSION}
 
 %package profile-dist-standalone
 Summary: Dist profile without series service for Opencast Matterhorn %{__INTERNAL_VERSION}
@@ -362,29 +362,29 @@ Group: Applications/Multimedia
 # Remote and non-remote module will not work together
 Conflicts: %{name}-profile-dist-stub
 Conflicts: %{name}-profile-dist
-Requires: %{name}-module-matterhorn-authorization-xacml = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-common = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-db = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-distribution-service-acl = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-distribution-service-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-distribution-service-download = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-authorization-xacml            = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-common                         = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-db                             = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-distribution-service-acl       = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-distribution-service-api       = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-distribution-service-download  = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-distribution-service-streaming = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-dublincore = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-json = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-kernel = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-metadata-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-mpeg7 = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-publication-service-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-publication-service-youtube = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-runtime-dependencies = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-runtime-info-ui = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-series-service-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-series-service-remote = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-static-mod = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-userdirectory = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-webconsole = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-workflow-service-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-workspace-api = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-dublincore                     = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-json                           = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-kernel                         = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-metadata-api                   = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-mpeg7                          = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-publication-service-api        = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-publication-service-youtube    = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-runtime-dependencies           = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-runtime-info-ui                = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-series-service-api             = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-series-service-remote          = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-static-mod                     = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-userdirectory                  = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-webconsole                     = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-workflow-service-api           = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-workspace-api                  = %{__FULL_VERSION}
 
 %package profile-dist-stub
 Summary: Dist-stub profile for Opencast Matterhorn %{__INTERNAL_VERSION}
@@ -392,107 +392,107 @@ Group: Applications/Multimedia
 # Remote and non-remote module will not work together
 Conflicts: %{name}-profile-dist
 Conflicts: %{name}-profile-dist-standalone
-Requires: %{name}-module-matterhorn-authorization-xacml = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-common = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-db = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-distribution-service-acl-remote = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-distribution-service-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-distribution-service-download-remote = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-authorization-xacml                   = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-common                                = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-db                                    = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-distribution-service-acl-remote       = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-distribution-service-api              = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-distribution-service-download-remote  = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-distribution-service-streaming-remote = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-dublincore = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-json = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-kernel = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-metadata-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-mpeg7 = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-publication-service-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-publication-service-youtube-remote = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-runtime-dependencies = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-runtime-info-ui = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-series-service-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-webconsole = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-workspace-api = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-dublincore                            = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-json                                  = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-kernel                                = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-metadata-api                          = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-mpeg7                                 = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-publication-service-api               = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-publication-service-youtube-remote    = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-runtime-dependencies                  = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-runtime-info-ui                       = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-series-service-api                    = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-webconsole                            = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-workspace-api                         = %{__FULL_VERSION}
 
 %package profile-engage
 Summary: Engage profile for Opencast Matterhorn %{__INTERNAL_VERSION}
 Group: Applications/Multimedia
-Requires: %{name}-module-matterhorn-annotation-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-annotation-impl = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-authorization-xacml = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-common = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-db = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-dublincore = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-engage-ui = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-json = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-kernel = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-lti = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-metadata-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-mpeg7 = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-annotation-api       = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-annotation-impl      = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-authorization-xacml  = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-common               = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-db                   = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-dublincore           = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-engage-ui            = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-json                 = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-kernel               = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-lti                  = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-metadata-api         = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-mpeg7                = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-runtime-dependencies = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-runtime-info-ui = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-series-service-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-series-service-impl = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-search-service-api = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-runtime-info-ui      = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-series-service-api   = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-series-service-impl  = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-search-service-api   = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-search-service-feeds = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-search-service-impl = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-solr = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-userdirectory = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-usertracking-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-usertracking-impl = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-webconsole = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-workspace-api = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-search-service-impl  = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-solr                 = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-userdirectory        = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-usertracking-api     = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-usertracking-impl    = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-webconsole           = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-workspace-api        = %{__FULL_VERSION}
 
 %package profile-engage-standalone
 Summary: Engage-standalone profile for Opencast Matterhorn %{__INTERNAL_VERSION}
 Group: Applications/Multimedia
-Requires: %{name}-module-matterhorn-annotation-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-annotation-impl = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-authorization-xacml = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-common = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-db = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-dublincore = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-engage-ui = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-json = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-kernel = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-lti = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-metadata-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-mpeg7 = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-runtime-dependencies = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-runtime-info-ui = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-series-service-api = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-annotation-api        = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-annotation-impl       = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-authorization-xacml   = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-common                = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-db                    = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-dublincore            = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-engage-ui             = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-json                  = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-kernel                = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-lti                   = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-metadata-api          = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-mpeg7                 = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-runtime-dependencies  = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-runtime-info-ui       = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-series-service-api    = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-series-service-remote = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-search-service-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-search-service-feeds = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-search-service-impl = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-solr = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-userdirectory = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-usertracking-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-usertracking-impl = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-webconsole = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-workspace-api = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-search-service-api    = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-search-service-feeds  = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-search-service-impl   = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-solr                  = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-userdirectory         = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-usertracking-api      = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-usertracking-impl     = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-webconsole            = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-workspace-api         = %{__FULL_VERSION}
 
 %package profile-engage-stub
 Summary: Engage-stub profile for Opencast Matterhorn %{__INTERNAL_VERSION}
 Group: Applications/Multimedia
-Requires: %{name}-module-matterhorn-authorization-xacml = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-common = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-db = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-distribution-service-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-distribution-service-download-remote = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-authorization-xacml                   = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-common                                = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-db                                    = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-distribution-service-api              = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-distribution-service-download-remote  = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-distribution-service-streaming-remote = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-dublincore = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-json = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-kernel = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-lti = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-metadata-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-mpeg7 = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-publication-service-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-publication-service-youtube-remote = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-runtime-dependencies = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-search-service-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-search-service-remote = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-series-service-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-webconsole = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-workspace-api = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-dublincore                            = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-json                                  = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-kernel                                = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-lti                                   = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-metadata-api                          = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-mpeg7                                 = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-publication-service-api               = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-publication-service-youtube-remote    = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-runtime-dependencies                  = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-search-service-api                    = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-search-service-remote                 = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-series-service-api                    = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-webconsole                            = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-workspace-api                         = %{__FULL_VERSION}
 
 %package profile-worker
 Summary: Worker profile for Opencast Matterhorn %{__INTERNAL_VERSION}
@@ -620,34 +620,34 @@ Summary: Workspace profile for Opencast Matterhorn %{__INTERNAL_VERSION}
 Group: Applications/Multimedia
 # Stub and non-stub profiles will not work together
 Conflicts: %{name}-profile-workspace-stub
-Requires: %{name}-module-matterhorn-common = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-json = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-working-file-repository-service-api = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-common                               = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-json                                 = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-working-file-repository-service-api  = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-working-file-repository-service-impl = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-workspace-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-workspace-impl = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-workspace-api                        = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-workspace-impl                       = %{__FULL_VERSION}
 
 %package profile-workspace-stub
 Summary: Workspace-stub profile for Opencast Matterhorn %{__INTERNAL_VERSION}
 Group: Applications/Multimedia
 # Stub and non-stub profiles will not work together
 Conflicts: %{name}-profile-workspace
-Requires: %{name}-module-matterhorn-common = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-json = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-working-file-repository-service-api = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-common                                 = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-json                                   = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-working-file-repository-service-api    = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-working-file-repository-service-remote = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-workspace-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-workspace-impl = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-workspace-api                          = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-workspace-impl                         = %{__FULL_VERSION}
 
 %package profile-serviceregistry
 Summary: Serviceregistry profile for Opencast Matterhorn %{__INTERNAL_VERSION}
 Group: Applications/Multimedia
 # Stub and non-stub profiles will not work together
 Conflicts: %{name}-profile-serviceregistry-stub
-Requires: %{name}-module-matterhorn-common = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-db = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-json = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-kernel = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-common          = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-db              = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-json            = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-kernel          = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-serviceregistry = %{__FULL_VERSION}
 
 %package profile-serviceregistry-stub
@@ -655,46 +655,46 @@ Summary: Serviceregistry-stub profile for Opencast Matterhorn %{__INTERNAL_VERSI
 Group: Applications/Multimedia
 # Stub and non-stub profiles will not work together
 Conflicts: %{name}-profile-serviceregistry
-Requires: %{name}-module-matterhorn-common = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-kernel = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-json = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-common                 = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-kernel                 = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-json                   = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-serviceregistry-remote = %{__FULL_VERSION}
 
 %package profile-oaipmh
 Summary: Oaipmh profile for Opencast Matterhorn %{__INTERNAL_VERSION}
 Group: Applications/Multimedia
-Requires: %{name}-module-matterhorn-common = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-json = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-search-service-api = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-common              = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-json                = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-search-service-api  = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-search-service-impl = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-series-service-api = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-series-service-api  = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-series-service-impl = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-solr = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-dublincore = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-metadata-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-workspace-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-mpeg7 = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-oaipmh = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-solr                = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-dublincore          = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-metadata-api        = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-workspace-api       = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-mpeg7               = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-oaipmh              = %{__FULL_VERSION}
 
 %package profile-directory-db
 Summary: Directory-db profile for Opencast Matterhorn %{__INTERNAL_VERSION}
 Group: Applications/Multimedia
-Requires: %{name}-module-matterhorn-common = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-dataloader = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-db = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-dublincore = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-json = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-metadata-api = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-common             = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-dataloader         = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-db                 = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-dublincore         = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-json               = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-metadata-api       = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-series-service-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-userdirectory = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-workspace-api = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-userdirectory      = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-workspace-api      = %{__FULL_VERSION}
 
 %package profile-directory-ldap
 Summary: Directory-ldap profile for Opencast Matterhorn %{__INTERNAL_VERSION}
 Group: Applications/Multimedia
-Requires: %{name}-module-matterhorn-common = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-json = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-security-ldap = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-common             = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-json               = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-security-ldap      = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-userdirectory-ldap = %{__FULL_VERSION}
 
 %package profile-directory-cas
@@ -715,17 +715,17 @@ Requires: %{name}-module-matterhorn-security-shibboleth = %{__FULL_VERSION}
 %package profile-capture
 Summary: Capture profile for Opencast Matterhorn %{__INTERNAL_VERSION}
 Group: Applications/Multimedia
-Requires: %{name}-module-matterhorn-common = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-json = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-kernel = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-common                    = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-json                      = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-kernel                    = %{__FULL_VERSION}
 Requires: %{name}-module-matterhorn-capture-admin-service-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-capture-agent-api = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-capture-agent-impl = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-confidence-monitoring-ui = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-runtime-dependencies = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-runtime-info-ui = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-static-mod = %{__FULL_VERSION}
-Requires: %{name}-module-matterhorn-webconsole = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-capture-agent-api         = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-capture-agent-impl        = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-confidence-monitoring-ui  = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-runtime-dependencies      = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-runtime-info-ui           = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-static-mod                = %{__FULL_VERSION}
+Requires: %{name}-module-matterhorn-webconsole                = %{__FULL_VERSION}
 
 %package profile-server-management
 Summary: Server management profile for Opencast Matterhorn %{__INTERNAL_VERSION}
@@ -2615,6 +2615,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Dec 15 2014 Lars Kiesow <lkiesow@uos.de> - 1.6.0-1
+- Update to Matterhorn 1.6.0
+
 * Mon Dec  8 2014 Lars Kiesow <lkiesow@uos.de> - 1.6.0-0.5.RC1
 - Update to Matterhorn 1.6.0-RC1
 - Proper systemd integration
