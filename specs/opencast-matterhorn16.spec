@@ -2499,7 +2499,9 @@ getent passwd matterhorn > /dev/null || \
 chown -R matterhorn:matterhorn /srv/matterhorn
 chown -R matterhorn:matterhorn %{_localstatedir}/log/matterhorn
 # This adds the proper /etc/rc*.d links for the script
-%{!?__use_systemd:/sbin/chkconfig --add matterhorn}
+%if %{__use_systemd}
+   /sbin/chkconfig --add matterhorn
+%endif
 
 %preun base
 # If this is really uninstall and not upgrade
@@ -2514,8 +2516,11 @@ fi
 
 %postun base
 if [ "$1" -ge "1" ]; then
-   %{?__use_systemd:systemctl try-restart matterhorn > /dev/null 2>&1 || :}
-   %{!?__use_systemd:/sbin/service matterhorn condrestart > /dev/null 2>&1 || :}
+%if %{__use_systemd}
+   systemctl try-restart matterhorn > /dev/null 2>&1 || :
+%else
+   /sbin/service matterhorn condrestart > /dev/null 2>&1 || :
+%endif
 fi
 
 %install
@@ -2601,8 +2606,11 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{_datadir}/matterhorn/docs
 %config(noreplace) %{_sysconfdir}/matterhorn/
 %config(noreplace) %{_sysconfdir}/logrotate.d/%{name}-base
-%{?__use_systemd:%{_unitdir}/*}
-%{!?__use_systemd:%{_initrddir}/*}
+%if %{__use_systemd}
+%{_unitdir}/*
+%else
+%{_initrddir}/*
+%endif
 %{_sbindir}/*
 %dir %{_datadir}/matterhorn
 %dir %{_datadir}/matterhorn/lib
