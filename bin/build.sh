@@ -121,8 +121,10 @@ specfile="$specdir/${target%%-devel}.spec"
 if [ -f "$specfile" ]; then
     message "Specfile $specfile exists, following dependencies"
     # Solve dependencies via rekursion calls
-    breqs="$(xeval "/usr/local/bin/rpmspec -q --buildrequires $specfile")"
-    for breq in $breqs; do
+    breqs="$(/usr/local/bin/rpmspec -q --buildrequires $specfile)"
+    rc=$?
+    [ "$rc" != "0" ] && error "rpmspec -q --buildrequires returns $rc"
+    for breq in $(echo "$breqs" | cut -d' ' -f1); do
         message "Run $0 $breq"
         $0 $breq
     done
