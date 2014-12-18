@@ -100,6 +100,7 @@ function help()
 {
     echo "$0 [init] target"
     echo "$0 init ffmpeg"
+    exit 0
 }
 
 if [ "$1" = "init" ]; then
@@ -108,6 +109,8 @@ if [ "$1" = "init" ]; then
 else
     target="$1"
 fi
+
+[ -z "$target" ] && help
 
 message "Start with target $target"
 
