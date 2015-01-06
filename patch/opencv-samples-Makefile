@@ -1,0 +1,10 @@
+CFLAGS := `pkg-config --cflags opencv` $(CFLAGS)
+CXXFLAGS := `pkg-config --cflags opencv` $(CXXFLAGS)
+LDFLAGS := `pkg-config --libs opencv` $(LDFLAGS)
+
+PROGRAMS := $(patsubst %.c,%,$(wildcard *.c)) $(patsubst %.cpp,%,$(wildcard *.cpp))
+
+.PHONY: all clean
+all: $(PROGRAMS)
+clean:
+	rm -f $(PROGRAMS)

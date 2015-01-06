@@ -1,0 +1,129 @@
+diff -up OpenCV-2.1.0/3rdparty/flann/CMakeLists.txt.orig OpenCV-2.1.0/3rdparty/flann/CMakeLists.txt
+diff -up OpenCV-2.1.0/CMakeLists.txt.orig OpenCV-2.1.0/CMakeLists.txt
+--- OpenCV-2.1.0/CMakeLists.txt.orig	2010-04-06 03:24:37.000000000 +0200
++++ OpenCV-2.1.0/CMakeLists.txt	2010-04-19 11:46:37.372528366 +0200
+@@ -467,8 +467,8 @@ if(BUILD_SWIG_PYTHON_SUPPORT OR BUILD_NE
+ 
+     string(REGEX MATCH "[0-9].[0-9]" PYTHON_VERSION_MAJOR_MINOR "${PYTHON_VERSION_FULL}")
+     if(UNIX)
+-        set(PYTHON_PLUGIN_INSTALL_PATH lib/python${PYTHON_VERSION_MAJOR_MINOR}/site-packages/opencv)
+-        set(PYTHON_PACKAGES_PATH lib/python${PYTHON_VERSION_MAJOR_MINOR}/site-packages)
++        set(PYTHON_PLUGIN_INSTALL_PATH lib${LIB_SUFFIX}/python${PYTHON_VERSION_MAJOR_MINOR}/site-packages/opencv)
++        set(PYTHON_PACKAGES_PATH lib${LIB_SUFFIX}/python${PYTHON_VERSION_MAJOR_MINOR}/site-packages)
+     endif()
+     if(WIN32)
+         get_filename_component(PYTHON_PATH "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Python\\PythonCore\\${PYTHON_VERSION_MAJOR_MINOR}\\InstallPath]" ABSOLUTE CACHE)
+@@ -932,7 +932,7 @@ configure_file("${CMAKE_CURRENT_SOURCE_D
+ # Set CMAKE_INCLUDE_DIRS_CONFIGCMAKE to the list of include directories:
+ 
+ set(CMAKE_INCLUDE_DIRS_CONFIGCMAKE "${CMAKE_INSTALL_PREFIX}/include/opencv")
+-set(CMAKE_LIB_DIRS_CONFIGCMAKE "${CMAKE_INSTALL_PREFIX}/lib")
++set(CMAKE_LIB_DIRS_CONFIGCMAKE "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}")
+ 
+ #exec_program(${CMAKE_COMMAND} ARGS "-E make_directory \"${CMAKE_BINARY_DIR}/unix-install/\"")
+ exec_program(mkdir ARGS "-p \"${CMAKE_BINARY_DIR}/unix-install/\"")
+@@ -965,19 +965,19 @@ endif()
+ #  Part 2/2: ${BIN_DIR}/unix-install/opencv.pc -> For use *with* "make install"
+ # prefix=/usr
+ # exec_prefix=${prefix}
+-# libdir=${exec_prefix}/lib
++# libdir=${exec_prefix}/lib${LIB_SUFFIX}
+ # includedir=${prefix}/include/opencv
+ # -------------------------------------------------------------------------------------------
+ set(prefix      ${CMAKE_INSTALL_PREFIX})
+ set(exec_prefix     "\${prefix}")
+-set(libdir      "\${exec_prefix}/lib")
++set(libdir      "\${exec_prefix}/lib${LIB_SUFFIX}")
+ set(includedir      "\${prefix}/include")
+ set(VERSION             ${OPENCV_VERSION})
+ 
+ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/opencv.pc.cmake.in" "${CMAKE_BINARY_DIR}/unix-install/opencv.pc" @ONLY IMMEDIATE)
+ 
+ if(UNIX)
+-    install(FILES ${CMAKE_BINARY_DIR}/unix-install/opencv.pc DESTINATION lib/pkgconfig)
++    install(FILES ${CMAKE_BINARY_DIR}/unix-install/opencv.pc DESTINATION lib${LIB_SUFFIX}/pkgconfig)
+ endif()
+ 
+ 
+diff -up OpenCV-2.1.0/interfaces/ffopencv/CMakeLists.txt.orig OpenCV-2.1.0/interfaces/ffopencv/CMakeLists.txt
+--- OpenCV-2.1.0/interfaces/ffopencv/CMakeLists.txt.orig	2010-04-06 03:24:40.000000000 +0200
++++ OpenCV-2.1.0/interfaces/ffopencv/CMakeLists.txt	2010-04-19 11:48:35.488528706 +0200
+@@ -40,6 +40,6 @@ set_target_properties(${the_target} PROP
+ 
+ install(TARGETS ${the_target}
+ 	RUNTIME DESTINATION bin COMPONENT main
+-	ARCHIVE DESTINATION lib COMPONENT main
+-	LIBRARY DESTINATION lib COMPONENT main
++	ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT main
++	LIBRARY DESTINATION lib${LIB_SUFFIX} COMPONENT main
+     )
+diff -up OpenCV-2.1.0/src/cv/CMakeLists.txt.orig OpenCV-2.1.0/src/cv/CMakeLists.txt
+--- OpenCV-2.1.0/src/cv/CMakeLists.txt.orig	2010-04-06 03:24:42.000000000 +0200
++++ OpenCV-2.1.0/src/cv/CMakeLists.txt	2010-04-19 11:48:18.834529206 +0200
+@@ -71,8 +71,8 @@ add_dependencies(${the_target} cxcore)
+ 
+ install(TARGETS ${the_target}
+     RUNTIME DESTINATION bin COMPONENT main
+-    LIBRARY DESTINATION lib COMPONENT main
+-    ARCHIVE DESTINATION lib COMPONENT main)
++    LIBRARY DESTINATION lib${LIB_SUFFIX} COMPONENT main
++    ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT main)
+ 
+ install(FILES ${lib_hdrs}
+     DESTINATION include/opencv
+diff -up OpenCV-2.1.0/src/cxcore/CMakeLists.txt.orig OpenCV-2.1.0/src/cxcore/CMakeLists.txt
+--- OpenCV-2.1.0/src/cxcore/CMakeLists.txt.orig	2010-04-06 03:24:44.000000000 +0200
++++ OpenCV-2.1.0/src/cxcore/CMakeLists.txt	2010-04-19 11:47:53.671528574 +0200
+@@ -71,8 +71,8 @@ add_dependencies(${the_target} opencv_la
+ 
+ install(TARGETS ${the_target}
+     RUNTIME DESTINATION bin COMPONENT main
+-    LIBRARY DESTINATION lib COMPONENT main
+-    ARCHIVE DESTINATION lib COMPONENT main)
++    LIBRARY DESTINATION lib${LIB_SUFFIX} COMPONENT main
++    ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT main)
+ 
+ # install each module headers separately
+ install(FILES ${lib_hdrs}
+diff -up OpenCV-2.1.0/src/cvaux/CMakeLists.txt.orig OpenCV-2.1.0/src/cvaux/CMakeLists.txt
+--- OpenCV-2.1.0/src/cvaux/CMakeLists.txt.orig	2010-04-06 03:24:43.000000000 +0200
++++ OpenCV-2.1.0/src/cvaux/CMakeLists.txt	2010-04-23 12:24:39.197547832 +0200
+@@ -76,8 +76,8 @@ add_dependencies(${the_target} cxcore cv
+ 
+ install(TARGETS ${the_target}
+ 	RUNTIME DESTINATION bin COMPONENT main
+-	LIBRARY DESTINATION lib COMPONENT main
+-	ARCHIVE DESTINATION lib COMPONENT main)
++	LIBRARY DESTINATION lib${LIB_SUFFIX} COMPONENT main
++	ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT main)
+ 
+ install(FILES ${aux_hdrs_ext}
+         DESTINATION include/opencv
+diff -up OpenCV-2.1.0/src/highgui/CMakeLists.txt.orig OpenCV-2.1.0/src/highgui/CMakeLists.txt
+--- OpenCV-2.1.0/src/highgui/CMakeLists.txt.orig	2010-04-06 03:24:44.000000000 +0200
++++ OpenCV-2.1.0/src/highgui/CMakeLists.txt	2010-04-23 12:26:02.813546985 +0200
+@@ -282,8 +282,8 @@ endif()
+ 
+ install(TARGETS ${the_target}
+ 	RUNTIME DESTINATION bin COMPONENT main
+-	LIBRARY DESTINATION lib COMPONENT main
+-	ARCHIVE DESTINATION lib COMPONENT main)
++	LIBRARY DESTINATION lib${LIB_SUFFIX} COMPONENT main
++	ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT main)
+ 
+ install(FILES ${highgui_ext_hdrs}
+         DESTINATION include/opencv
+diff -up OpenCV-2.1.0/src/ml/CMakeLists.txt.orig OpenCV-2.1.0/src/ml/CMakeLists.txt
+--- OpenCV-2.1.0/src/ml/CMakeLists.txt.orig	2010-04-06 03:24:45.000000000 +0200
++++ OpenCV-2.1.0/src/ml/CMakeLists.txt	2010-04-23 12:25:06.485567884 +0200
+@@ -61,8 +61,8 @@ add_dependencies(${the_target} cxcore)
+ 
+ install(TARGETS ${the_target}
+ 	RUNTIME DESTINATION bin COMPONENT main
+-	LIBRARY DESTINATION lib COMPONENT main
+-	ARCHIVE DESTINATION lib COMPONENT main)
++	LIBRARY DESTINATION lib${LIB_SUFFIX} COMPONENT main
++	ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT main)
+ 
+ install(FILES ${lib_hdrs}
+         DESTINATION include/opencv
