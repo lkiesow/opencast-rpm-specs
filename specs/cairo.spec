@@ -8,8 +8,8 @@ Version:	1.10.2
 Release:	7%{?dist}
 URL:		http://cairographics.org
 #VCS:		git:git://git.freedesktop.org/git/cairo
-Source0:	http://cairographics.org/snapshots/%{name}-%{version}.tar.gz
-#Source0:	http://cairographics.org/releases/%{name}-%{version}.tar.gz
+#Source0:	http://cairographics.org/snapshots/%{name}-%{version}.tar.gz
+Source0:	http://cairographics.org/releases/%{name}-%{version}.tar.gz
 Patch0:         0001-image-Don-t-crash-on-weird-pixman-formats.patch
 License:	LGPLv2 or MPLv1.1
 Group:		System Environment/Libraries
