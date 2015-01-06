@@ -17,6 +17,7 @@
 
 # paths
 specdir=$HOME/matterhorn-rpms/specs/
+buildir=~/rpmbuild/BUILD/
 sourcedir=~/rpmbuild/SOURCES/
 # path to rpmspec tool (package rpm contains rpmspec) 
 rpmspec=/usr/local/bin/rpmspec
@@ -100,6 +101,9 @@ function install_specs()
 	#sudo yum remove -y $rpm
 	xeval "sudo rpm -e $rpm --nodeps"
     fi
+
+    # Clear buildir
+    rm -rf $buildir/* >& /dev/null
 
     # Get source(s)
     cd "$sourcedir"
