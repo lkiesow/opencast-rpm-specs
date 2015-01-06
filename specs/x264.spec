@@ -1,9 +1,15 @@
-%global api 138
+%global api 140
 %global gitdate 20131030
-%global gitversion c628e3b
+%global gitversion 2245
 %global snapshot %{gitdate}-%{gitversion}
 %global gver .%{gitdate}git%{gitversion}
 %global branch stable
+%global bname x264-snapshot-%{snapshot}
+
+# old name
+# x264-0.138-20131030-c628e3b.tar.bz2
+# new name
+# x264-snapshot-20131030-2245.tar.bz2
 
 #global _with_bootstrap 1
 
@@ -12,7 +18,6 @@
 %global _without_libswscale  1
 }
 
-
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
@@ -20,16 +25,17 @@ Release: 5%{?gver}%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
-Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
-Source1: x264-snapshot.sh
+Source0: ftp://ftp.videolan.org/pub/videolan/x264/snapshots/%{bname}.tar.bz2
+#Source1: x264-snapshot.sh
 BuildRequires: perl-Digest-MD5-File
 
 # don't remove config.h and don't re-run version.sh
 Patch0: x264-nover.patch
 
 BuildRequires: zlib-devel openssl-devel libpng-devel libjpeg-devel
-%{!?_without_libavformat:BuildRequires: ffmpeg-devel}
-%{?_with_ffmpegsource:BuildRequires: ffmpegsource-devel}
+# Deactivated because of loop x264 -> ffmpeg -> x264
+#%{!?_without_libavformat:BuildRequires: ffmpeg-devel}
+#%{?_with_ffmpegsource:BuildRequires: ffmpegsource-devel}
 %{?_with_visualize:BuildRequires: libX11-devel}
 BuildRequires: yasm >= 1.0.0
 Requires: %{name}-libs = %{version}-%{release}
@@ -78,15 +84,15 @@ This package contains the development files.
 
 
 %prep
-%setup -q -c -n %{name}-0.%{api}-%{snapshot}
-pushd %{name}-0.%{api}-%{snapshot}
-%patch0 -p1 -b .nover
+%setup -q -c -n %{bname}
+pushd %{bname}
+#%patch0 -p1 -b .nover
 popd
 
 variants="generic generic10"
 for variant in $variants ; do
   rm -rf ${variant}
-  cp -pr %{name}-0.%{api}-%{snapshot} ${variant}
+  cp -pr %{bname} ${variant}
 done
 
 
@@ -127,7 +133,8 @@ popd
 %endif
 
 #Fix timestamp on x264 generated headers
-touch -r generic/version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_includedir}/x264_config.h
+# generic/version.h does not exist
+#touch -r generic/version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_includedir}/x264_config.h
 
 
 %post libs -p /sbin/ldconfig
