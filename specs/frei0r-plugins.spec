@@ -7,7 +7,8 @@ Release: 3%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://frei0r.dyne.org/
-Source0: ftp://ftp.dyne.org/frei0r/releases/frei0r-plugins-%{version}.tar.gz
+#Source0: ftp://ftp.dyne.org/frei0r/releases/frei0r-plugins-%{version}.tar.gz
+Source0: http://pkgs.fedoraproject.org/repo/pkgs/frei0r-plugins/frei0r-plugins-%{version}.tar.gz/a2eb63feeeb0c5cf439ccca276cbf70c/frei0r-plugins-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: opencv-devel >= 2.0.0, gavl-devel >= 0.2.3
 
