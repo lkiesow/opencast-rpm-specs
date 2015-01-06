@@ -1,0 +1,31 @@
+HOWTO make rpms via spec files
+
+* make rpmbuild user
+
+  useradd -m makerpm
+
+* add sudo rule
+
+  echo "makerpm ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/makerpm
+
+* install git and clone git repo
+
+  yum install git
+  su - makerpm
+  git clone https://github.com/mfiala/matterhorn-rpms.git
+
+* On centos6 install new rpm version, New version contains tool rpmspec, which
+  can read build requirements from spec file
+
+  cd ~/matterhorn-rpms/bin
+  ./build_rpm.sh
+
+* Init system for rpm building
+
+  ./build.sh -i
+
+* Build rpms
+
+  ./build.sh -p ffmpeg
+  ./build.sh -p ffmpeg-nonfree
+
