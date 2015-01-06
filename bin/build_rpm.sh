@@ -25,7 +25,7 @@ sudo make install
 #%rhel 6
 #%centos 6
 # ..
-[ -l "/usr/local/etc/rpm" ] || sudo ln -s /etc/rpm /usr/local/etc/rpm
+[ -L "/usr/local/etc/rpm" ] || sudo ln -s /etc/rpm /usr/local/etc/rpm
 
 # make tmp dir for rpmspec
 sudo mkdir -p /usr/local/var/tmp/
