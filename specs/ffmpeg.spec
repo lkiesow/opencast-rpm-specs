@@ -41,7 +41,7 @@ BuildRequires: libvpx-devel >= 1.3.0
 BuildRequires: opencore-amr-devel
 BuildRequires: openjpeg-devel
 BuildRequires: openssl-devel
-%if 0%{?fedora}%{rhel} > 6
+%if 0%{?fedora}%{?rhel} > 6
 #This would require a glib2 update on RHEL 6.x
 BuildRequires: frei0r-plugins-devel
 BuildRequires: librtmp-devel >= 2.2.f
