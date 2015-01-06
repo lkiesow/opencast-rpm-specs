@@ -1,13 +1,11 @@
 Name:           fftw
-Version:        3.3.1
+Version:        3.3.3
 Release:        3%{?dist}
 Summary:        A Fast Fourier Transform library
 Group:          System Environment/Libraries
 License:        GPLv2+
 URL:            http://www.fftw.org
 Source0:        http://www.fftw.org/fftw-%{version}.tar.gz
-# Patch around gcc 4.7, obtained from upstream
-Patch0:		fftw-3.3.1-alignment.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 # OpenMP support not available on RHEL 4
@@ -140,9 +138,6 @@ library.
 
 %prep
 %setup -q
-%if 0%{?fedora} == 17 || 0%{?fedora} == 18
-%patch0 -p1 -b .alignment
-%endif
 
 
 %build
