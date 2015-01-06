@@ -147,9 +147,9 @@ function init()
         xeval "sudo rpm -Uvh epel-release-6*.rpm"
     fi
 
-    # Copy patches to working directory
+    # Copy files to working directory
     cd "$sourcedir"
-    xeval "cp $HOME/matterhorn-rpms/patch/*.patch ./"
+    xeval "cp $HOME/matterhorn-rpms/patch/* ./"
 }
 
 # main function, the base of recursion
