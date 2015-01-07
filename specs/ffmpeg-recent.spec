@@ -4,8 +4,8 @@
 %{?_with_nodist:Name:  %{srcname}-recent-nodist}
 %{!?_with_nodist:Name: %{srcname}-recent}
 Summary:       Hyper fast MPEG1/MPEG4/H263/RV and AC3/MPEG audio encoder
-Version:       2.5
-Release:       1%{?dist}
+Version:       2.5.2
+Release:       2%{?dist}
 License:       GPLv3+
 Group:         System Environment/Libraries
 
@@ -43,7 +43,6 @@ BuildRequires: opencore-amr-devel
 BuildRequires: opencv-devel
 BuildRequires: openjpeg-devel
 BuildRequires: openssl-devel
-BuildRequires: celt-devel
 BuildRequires: libcdio-devel
 BuildRequires: libcdio-paranoia-devel
 BuildRequires: texi2html
@@ -114,7 +113,6 @@ test -f version.h || echo "#define FFMPEG_VERSION \"%{evr}\"" > version.h
    --enable-librtmp \
    --enable-libsoxr \
    --enable-libcdio \
-   --enable-libcelt \
    --enable-libschroedinger \
    --enable-libspeex \
    --enable-libtheora \
@@ -137,7 +135,7 @@ test -f version.h || echo "#define FFMPEG_VERSION \"%{evr}\"" > version.h
    --extra-cflags="%{optflags} -fPIC" \
 %endif
 %{?_with_nodist: \
-   --extra-libs="-lstdc++" --enable-libfdk-aac \
+   --enable-libfdk-aac \
    --enable-nonfree \
    --enable-libfaac \
 } \
@@ -179,6 +177,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jan  7 2015 Lars Kiesow <lkiesow@uos.de> - 2.5.2-2
+- Update to FFmpeg 2.5.2
+
+* Wed Dec 17 2014 Lars Kiesow <lkiesow@uos.de> - 2.5-2
+- Removed celt dependency
+
 * Tue Dec  9 2014 Lars Kiesow <lkiesow@uos.de> - 2.5-1
 - Update to FFmpeg 2.5
 
