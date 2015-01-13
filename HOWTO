@@ -23,7 +23,7 @@ HOWTO make rpms via spec files
 
   On centos7 install package rpmdevtools, which contains rpmspec
 
-  yum install rpmdevtools
+  sudo yum install rpmdevtools
 
 * Init system for rpm building
 
