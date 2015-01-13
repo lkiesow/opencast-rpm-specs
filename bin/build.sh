@@ -15,15 +15,14 @@
 #       }
 # }
 
-# paths
-specdir=$HOME/matterhorn-rpms/specs/
+# base paths
+specdir=$HOME/matterhorn-rpms/specs
+rpmdir=$HOME/matterhorn-rpms/rpms
 buildir=~/rpmbuild/BUILD/
 sourcedir=~/rpmbuild/SOURCES/
-# path to rpmspec tool (package rpm contains rpmspec) 
-rpmspec=/usr/local/bin/rpmspec
 
 # Set PATH, prefere default system paths
-# default /usr/local is prefered, brake system rpm
+# default /usr/local is prefered, brake system rpm if compiled version is used
 export PATH="/bin:/sbin:/usr/bin:/usr/sbin:$PATH"
 
 # install ITEM1 means install ITEM2
@@ -38,6 +37,7 @@ debug="1"
 # log 
 log="1"
 log_file=~/build.log
+
 
 # reporting message
 function message()
@@ -138,18 +138,25 @@ function init()
     cd ~
     xeval "rpmdev-setuptree"
 
-    # Enable EPEL and Rpmforge repositories.
+    # Install EPEL repo
     #sudo yum localinstall --nogpgcheck \
     #  http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm
-    if ! yum list installed epel-release.noarch >& /dev/null; then
-        cd /tmp/
-        xeval "wget http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm"
-        xeval "sudo rpm -Uvh epel-release-6*.rpm"
-    fi
+    #if ! yum list installed epel-release.noarch >& /dev/null; then
+    #    cd /tmp/
+    #    xeval "wget http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm"
+    #    xeval "sudo rpm -Uvh epel-release-6*.rpm"
+    #fi
+    xeval "sudo yum install epel-release"
 
     # Copy files to working directory
     cd "$sourcedir"
     xeval "cp $HOME/matterhorn-rpms/patch/* ./"
+
+    # Download rpms
+    if [ -f "$rpmdir/url.txt" ]; then
+        cd $rpmdir
+        xeval "wget -i $rpmdir/url.txt"
+    fi
 }
 
 # main function, the base of recursion
@@ -184,13 +191,36 @@ function main()
             main $breq
         done
         install_specs $target $basetarget $specfile 
+    # package is not installed
     elif ! yum list installed $target >& /dev/null; then
-        message "Install target $target via yum"
-        xeval "sudo yum install -y -q $target"
+        # is package in online repo?
+        if yum list $target >& /dev/null; then
+            message "Install target $target from online repo"
+            xeval "sudo yum install -y -q $target"
+        # is package in local directory
+        elif ls $rpmdir/$target* >& /dev/null; then
+            message "Install target $target from local directory"
+            xeval "sudo yum localinstall -y -q $rpmdir/$target*"
+        fi
     else
         message "Target $target is installed, skipped"
     fi
 }
+
+# path to rpmspec tool (package rpm contains rpmspec) 
+if [ -f "/usr/bin/rpmspec" ]; then
+    rpmspec="/usr/bin/rpmspec"
+elif [ -f "/usr/local/bin/rpmspec" ]; then
+    rpmspec="/usr/local/bin/rpmspec"
+else
+    error "Can not find tool rpmspec"
+fi
+
+# change directories for centos7
+if egrep 'CentOS Linux release 7\.' /etc/redhat-release >& /dev/null; then
+    specdir="${specdir}-centos7"
+    rpmdir="${rpmdir}-centos7"
+fi
 
 # parse input arguments
 while [ "$#" != "0" ]; do
@@ -209,6 +239,9 @@ done
 
 # target is required
 [ -z "$target" ] && help
+
+# print variables
+message "rpmspec=$rpmspec specdir=$specdir rpmdir=$rpmdir"
 
 # start iteration #1
 main $target
