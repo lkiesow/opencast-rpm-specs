@@ -201,6 +201,9 @@ function main()
         elif ls $rpmdir/$target* >& /dev/null; then
             message "Install target $target from local directory"
             xeval "sudo yum localinstall -y -q $rpmdir/$target*"
+        # no source, can not install
+        else
+            error "There is no source to install $target"
         fi
     else
         message "Target $target is installed, skipped"
