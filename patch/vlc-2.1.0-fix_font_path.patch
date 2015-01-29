@@ -1,0 +1,14 @@
+diff -Naur vlc-2.1.0/modules/text_renderer/freetype.c vlc-2.1.0-new/modules/text_renderer/freetype.c
+--- vlc-2.1.0/modules/text_renderer/freetype.c	2013-09-12 12:18:34.000000000 -0300
++++ vlc-2.1.0-new/modules/text_renderer/freetype.c	2013-10-05 10:02:04.519688222 -0300
+@@ -67,8 +67,8 @@
+ # define SYSTEM_DEFAULT_MONOSPACE_FONT_FILE "/system/fonts/DroidSansMono.ttf"
+ # define SYSTEM_DEFAULT_MONOSPACE_FAMILY "Droid Sans Mono"
+ #else
+-# define SYSTEM_DEFAULT_FONT_FILE "/usr/share/fonts/truetype/freefont/FreeSerifBold.ttf"
+-# define SYSTEM_DEFAULT_FAMILY "Serif Bold"
++# define DEFAULT_FONT_FILE "/usr/share/fonts/bitstream-vera/VeraSe.ttf"
++# define DEFAULT_FAMILY "Vera Serif"
+ # define SYSTEM_DEFAULT_MONOSPACE_FONT_FILE "/usr/share/fonts/truetype/freefont/FreeMono.ttf"
+ # define SYSTEM_DEFAULT_MONOSPACE_FAMILY "Monospace"
+ #endif

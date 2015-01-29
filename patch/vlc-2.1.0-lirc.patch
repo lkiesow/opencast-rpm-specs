@@ -1,0 +1,11 @@
+diff -Naur vlc-2.1.0/modules/control/lirc.c vlc-2.1.0-new/modules/control/lirc.c
+--- vlc-2.1.0/modules/control/lirc.c	2013-06-24 15:00:38.000000000 -0300
++++ vlc-2.1.0-new/modules/control/lirc.c	2013-10-05 10:14:04.935000154 -0300
+@@ -36,6 +36,7 @@
+ #include <vlc_plugin.h>
+ #include <vlc_interface.h>
+ #include <vlc_keys.h>
++#include <errno.h>
+ 
+ #ifdef HAVE_POLL
+ # include <poll.h>

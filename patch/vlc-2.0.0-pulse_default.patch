@@ -1,0 +1,12 @@
+diff -Naur vlc-2.0.0/modules/audio_output/pulse.c vlc-2.0.0-new/modules/audio_output/pulse.c
+--- vlc-2.0.0/modules/audio_output/pulse.c	2011-12-08 16:00:26.000000000 -0200
++++ vlc-2.0.0-new/modules/audio_output/pulse.c	2012-02-26 14:15:36.654677751 -0300
+@@ -43,7 +43,7 @@
+ vlc_module_begin ()
+     set_shortname( "PulseAudio" )
+     set_description( N_("Pulseaudio audio output") )
+-    set_capability( "audio output", 160 )
++    set_capability( "audio output", 240 )
+     set_category( CAT_AUDIO )
+     set_subcategory( SUBCAT_AUDIO_AOUT )
+     add_shortcut( "pulseaudio", "pa" )

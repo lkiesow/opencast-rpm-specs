@@ -1,0 +1,14 @@
+diff -Naur vlc-2.1.0/configure.ac vlc-2.1.0-new/configure.ac
+--- vlc-2.1.0/configure.ac	2013-09-17 09:36:12.000000000 -0300
++++ vlc-2.1.0-new/configure.ac	2013-10-05 10:09:46.090608049 -0300
+@@ -4070,7 +4070,9 @@
+ dnl
+ dnl Libnotify notification plugin
+ dnl
+-PKG_ENABLE_MODULES_VLC([NOTIFY], [], [libnotify gtk+-2.0], [libnotify notification], [auto])
++PKG_CHECK_EXISTS([gtk+-2.0],
++[PKG_ENABLE_MODULES_VLC([NOTIFY], [], [libnotify gtk+-2.0], [libnotify notification], [auto])],
++[PKG_ENABLE_MODULES_VLC([NOTIFY], [], [libnotify gtk+-3.0], [libnotify notification], [auto])])
+ 
+ dnl
+ dnl  Endianness check

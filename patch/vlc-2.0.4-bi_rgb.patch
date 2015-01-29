@@ -1,0 +1,11 @@
+--- modules/codec/dmo/dmo.h     2012-10-19 16:37:46.215030513 +0200
++++ modules/codec/dmo/dmo.h     2012-10-19 16:37:12.273008490 +0200
+@@ -65,6 +65,8 @@
+ #define DMO_PROCESS_OUTPUT_DISCARD_WHEN_NO_BUFFER 1
+ #define DMO_E_NOTACCEPTING 0x80040204
+ 
++#define BI_RGB 0L
++
+ /*
+  * DMO types definition
+  */
