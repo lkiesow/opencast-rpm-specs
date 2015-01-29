@@ -9,10 +9,14 @@ Summary:	Library and tools for the WebP graphics format
 License:	BSD
 Source0:	http://webp.googlecode.com/files/%{name}-%{version}.tar.gz
 Source1:	libwebp_jni_example.java	
-BuildRequires:	libjpeg-devel libpng-devel libtool swig 
+# replace libjpeg-devel with faster libjpeg-turbo-devel
+#BuildRequires:	libjpeg-devel libpng-devel libtool swig 
+BuildRequires:	libjpeg-turbo-devel libpng-devel libtool swig 
 BuildRequires:  giflib-devel
 BuildRequires:  libtiff-devel
-BuildRequires:	java-devel
+# replace java-devel with java-1.7.0-openjdk-devel
+#BuildRequires:	java-devel
+BuildRequires:	java-1.7.0-openjdk-devel
 BuildRequires:	jpackage-utils
 
 %description
@@ -99,6 +103,7 @@ cp swig/*.jar swig/*.so %{buildroot}/%{_libdir}/%{name}-java/
 
 %files tools
 %{_bindir}/cwebp
+%{_bindir}/vwebp
 %{_bindir}/dwebp
 %{_bindir}/gif2webp
 %{_bindir}/webpmux

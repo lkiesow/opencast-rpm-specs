@@ -12,7 +12,9 @@ URL:     http://code.google.com/p/leptonica/
 Source0: http://leptonica.googlecode.com/files/%{name}-%{version}.tar.gz
 Patch0: %{name}-%{version}.pkg-config.patch
 
-BuildRequires: libjpeg-devel
+# replace libjpeg-devel with faster libjpeg-turbo-devel
+#BuildRequires: libjpeg-devel
+BuildRequires: libjpeg-turbo-devel
 BuildRequires: libtiff-devel
 BuildRequires: libpng-devel
 BuildRequires: zlib-devel
