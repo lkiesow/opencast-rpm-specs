@@ -29,6 +29,7 @@ export PATH="/bin:/sbin:/usr/bin:/usr/sbin:$PATH"
 eqarr="
 librtmp-devel rtmpdump
 cairo-gobject-devel cairo
+/usr/bin/perl perl
 "
 
 # debug, be more verbose
