@@ -43,7 +43,7 @@ BuildRequires:  libGLU-devel
 BuildRequires:  freeglut-devel
 BuildRequires:  freetype-devel >= 2.1.4
 #BuildRequires:  faad2-devel
-BuildRequires:  libjpeg-devel
+BuildRequires:  libjpeg-turbo-devel
 BuildRequires:  libpng-devel >= 1.2.5
 BuildRequires:  libmad-devel
 BuildRequires:  xvidcore-devel >= 1.0.0

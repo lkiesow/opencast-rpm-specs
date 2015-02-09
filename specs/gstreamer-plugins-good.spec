@@ -50,7 +50,7 @@ BuildRequires:  GConf2-devel
 BuildRequires:  glibc-devel
 BuildRequires:  gtk2-devel
 BuildRequires:  kernel-headers
-BuildRequires:  libjpeg-devel
+BuildRequires:  libjpeg-turbo-devel
 BuildRequires:  libpng-devel >= 1.2.0
 BuildRequires:  libshout-devel
 BuildRequires:  libsoup-devel
