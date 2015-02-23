@@ -4,8 +4,8 @@
 %{?_with_nodist:Name:  %{srcname}-recent-nodist}
 %{!?_with_nodist:Name: %{srcname}-recent}
 Summary:       Hyper fast MPEG1/MPEG4/H263/RV and AC3/MPEG audio encoder
-Version:       2.5.2
-Release:       2%{?dist}
+Version:       2.5.4
+Release:       1%{?dist}
 License:       GPLv3+
 Group:         System Environment/Libraries
 
@@ -177,6 +177,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Feb 22 2015 Lars Kiesow <lkiesow@uos.de> - 2.5.4-1
+- Update to FFmpeg 2.5.4
+
 * Wed Jan  7 2015 Lars Kiesow <lkiesow@uos.de> - 2.5.2-2
 - Update to FFmpeg 2.5.2
 

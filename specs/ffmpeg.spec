@@ -1,13 +1,19 @@
-Name:          ffmpeg
+%define srcname ffmpeg
+
+
+%{?_with_nodist:Name:  %{srcname}-nodist}
+%{!?_with_nodist:Name: %{srcname}}
 Summary:       Hyper fast MPEG1/MPEG4/H263/RV and AC3/MPEG audio encoder
-Version:       2.5.2
+Version:       2.5.4
 Release:       1%{?dist}
 License:       GPLv3+
 Group:         System Environment/Libraries
 
-Source:        http://ffmpeg.org/releases/%{name}-%{version}.tar.bz2
+Source:        http://ffmpeg.org/releases/%{srcname}-%{version}.tar.bz2
 URL:           http://ffmpeg.sourceforge.net/
 BuildRoot:     %{_tmppath}/%{name}-root
+
+Provides:      ffmpeg = %{version}-%{release}
 
 BuildRequires: SDL-devel
 BuildRequires: a52dec-devel
@@ -20,7 +26,6 @@ BuildRequires: lame-devel
 BuildRequires: libdc1394-devel, libraw1394-devel
 BuildRequires: libstdc++-devel
 BuildRequires: libvorbis-devel
-%if 0%{?rhel}%{?fedora} >= 6
 BuildRequires: libtheora-devel
 BuildRequires: libva-devel
 BuildRequires: schroedinger-devel
@@ -31,34 +36,24 @@ BuildRequires: pulseaudio-libs-devel
 BuildRequires: libv4l-devel
 BuildRequires: openal-soft-devel
 BuildRequires: soxr-devel
-#License incompatible with x264
-#BuildRequires: faac-devel
-#License incompatible with x264
-#BuildRequires: fdk-aac-devel
-%endif
 BuildRequires: libvdpau-devel
 BuildRequires: libvpx-devel >= 1.3.0
 BuildRequires: opencore-amr-devel
 BuildRequires: openjpeg-devel
 BuildRequires: openssl-devel
-%if 0%{?fedora}%{rhel} > 6
-#This would require a glib2 update on RHEL 6.x
-BuildRequires: frei0r-plugins-devel
-BuildRequires: librtmp-devel >= 2.2.f
-%endif
-%if 0%{?fedora}
-# opencv needs gstreamer. We usually don't want that dependency
-BuildRequires: opencv-devel
-BuildRequires: celt-devel
-BuildRequires: frei0r-devel
-BuildRequires: libcdio-devel
-%endif
 BuildRequires: texi2html
 BuildRequires: vo-aacenc-devel
 %{!?_without_x264:BuildRequires: x264-devel}
 BuildRequires: xvidcore-devel
 BuildRequires: yasm
 BuildRequires: zlib-devel
+# License incompatible with x264 We mark the package as nonredistributable
+# (nodist) if we enable these additonal decoders.
+# *Never* make these binaries public!
+%{?_with_nodist:
+BuildRequires: fdk-aac-devel
+BuildRequires: faac-devel
+}
 Requires:      %{name}-libs = %{version}-%{release}
 
 
@@ -99,7 +94,7 @@ This package contains the libraries for ffmpeg
 
 
 %prep
-%setup -q
+%setup -q -n %{srcname}-%{version}
 test -f version.h || echo "#define FFMPEG_VERSION \"%{evr}\"" > version.h
 
 %build
@@ -124,12 +119,6 @@ test -f version.h || echo "#define FFMPEG_VERSION \"%{evr}\"" > version.h
    --enable-libopencore-amrwb \
    --enable-libopenjpeg \
    --enable-libsoxr \
-%if 0%{?fedora}
-   --enable-libopencv \
-   --enable-libcdio \
-   --enable-libcelt \
-%endif
-%if 0%{?rhel}%{?fedora} >= 6
    --enable-libschroedinger \
    --enable-libspeex \
    --enable-libtheora \
@@ -142,11 +131,6 @@ test -f version.h || echo "#define FFMPEG_VERSION \"%{evr}\"" > version.h
    --enable-libpulse \
    --enable-libv4l2 \
    --disable-debug \
-%endif
-%if 0%{?rhel}%{?fedora} > 6
-   --enable-frei0r \
-   --enable-librtmp \
-%endif
    --enable-libvorbis \
    --enable-libvpx \
    %{!?_without_x264:--enable-libx264} \
@@ -156,15 +140,14 @@ test -f version.h || echo "#define FFMPEG_VERSION \"%{evr}\"" > version.h
 %else
    --extra-cflags="%{optflags} -fPIC" \
 %endif
+%{?_with_nodist: \
+   --enable-libfdk-aac \
+   --enable-nonfree \
+   --enable-libfaac \
+} \
    --disable-stripping
 
-# Problems with OpenCL libs/headers
-#   --enable-opencl
-
-# Problems with license (lib*aac license is GPL incompatible)
 #   --extra-libs="-lstdc++" --enable-libfdk-aac
-#   --enable-nonfree \
-#   --enable-libfaac
 make
 # remove some zero-length files, ...
 pushd doc
@@ -213,6 +196,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Feb 23 2015 Lars Kiesow <lkiesow@uos.de> - 2.5.4-1
+- Update to FFmpeg 2.5.4
+
 * Wed Jan  7 2015 Lars Kiesow <lkiesow@uos.de> - 2.5.2-1
 - Update to FFmpeg 2.5.2
 
