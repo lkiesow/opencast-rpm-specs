@@ -12,7 +12,7 @@ HOWTO make rpms via spec files
 
   yum install git
   su - makerpm
-  git clone https://github.com/mfiala/matterhorn-rpms.git
+  git clone https://github.com/ungleich/matterhorn-rpms.git
 
 * Install rpmspec, which can read build requirements from spec file
 
