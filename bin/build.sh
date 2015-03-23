@@ -133,7 +133,7 @@ function install_specs()
 function init()
 {
     # Install basic packages
-    xeval "sudo yum install -y rpmdevtools.noarch rpmlint.noarch createrepo.noarch vim"
+    xeval "sudo yum install -y rpmdevtools.noarch rpmlint.noarch createrepo.noarch vim wget"
 
     # Setup build dirs
     cd ~

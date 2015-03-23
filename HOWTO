@@ -19,7 +19,7 @@ HOWTO make rpms via spec files
   On centos6 install new rpm version, New version contains tool rpmspec.
   cd ~/matterhorn-rpms/bin
 
-  ./build_rpm.sh
+  ./bin/build_rpm.sh
 
   On centos7 install package rpmdevtools, which contains rpmspec
 
@@ -27,10 +27,10 @@ HOWTO make rpms via spec files
 
 * Init system for rpm building
 
-  ./build.sh -i
+  ./bin/build.sh -i
 
 * Build rpms
 
-  ./build.sh -p ffmpeg
-  ./build.sh -p ffmpeg-nonfree
+  ./bin/build.sh -p ffmpeg
+  ./bin/build.sh -p ffmpeg-nonfree
 
