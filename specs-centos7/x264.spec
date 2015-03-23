@@ -32,7 +32,7 @@ BuildRequires: perl-Digest-MD5-File
 # don't remove config.h and don't re-run version.sh
 Patch0: x264-nover.patch
 
-BuildRequires: zlib-devel openssl-devel libpng-devel libjpeg-devel
+BuildRequires: zlib-devel openssl-devel libpng-devel libjpeg-turbo-devel
 # Deactivated because of loop x264 -> ffmpeg -> x264
 #%{!?_without_libavformat:BuildRequires: ffmpeg-devel}
 #%{?_with_ffmpegsource:BuildRequires: ffmpegsource-devel}
