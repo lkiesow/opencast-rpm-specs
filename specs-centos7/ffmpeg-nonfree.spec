@@ -11,7 +11,9 @@ URL:           http://ffmpeg.sourceforge.net/
 BuildRoot:     %{_tmppath}/%{name}-root
 
 Provides:      ffmpeg = %{version}-%{release}
-Obsoletes:     ffmpeg <= %{version}-%{release}
+# if obsoletes active, then can not install basic ffmpeg, 
+# ffmpeg-nonfree goes first and replace ffmpeg
+#Obsoletes:     ffmpeg <= %{version}-%{release}
 
 BuildRequires: SDL-devel
 BuildRequires: a52dec-devel
@@ -69,7 +71,7 @@ Summary:        Library for ffmpeg
 Group:          System Environment/Libraries
 
 Provides:      ffmpeg-libs = %{version}-%{release}
-Obsoletes:     ffmpeg-libs <= %{version}-%{release}
+#Obsoletes:     ffmpeg-libs <= %{version}-%{release}
 
 
 %package devel
@@ -78,7 +80,7 @@ Group:          Development/Libraries
 Requires:       %{name}-libs = %{version}-%{release}
 
 Provides:      ffmpeg-devel = %{version}-%{release}
-Obsoletes:     ffmpeg-devel <= %{version}-%{release}
+#Obsoletes:     ffmpeg-devel <= %{version}-%{release}
 
 
 %description
