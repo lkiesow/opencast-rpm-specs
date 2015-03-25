@@ -13,12 +13,13 @@ HOWTO make rpms via spec files
   yum install git
   su - makerpm
   git clone https://github.com/ungleich/matterhorn-rpms.git
+  (devel repo git clone https://github.com/mfiala/matterhorn-rpms.git)
 
 * Install rpmspec, which can read build requirements from spec file
 
   On centos6 install new rpm version, New version contains tool rpmspec.
-  cd ~/matterhorn-rpms/bin
 
+  cd ~/matterhorn-rpms
   ./bin/build_rpm.sh
 
   On centos7 install package rpmdevtools, which contains rpmspec
@@ -27,6 +28,7 @@ HOWTO make rpms via spec files
 
 * Init system for rpm building
 
+  cd ~/matterhorn-rpms
   ./bin/build.sh -i
 
 * Build rpms
