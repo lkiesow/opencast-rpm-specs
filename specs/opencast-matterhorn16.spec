@@ -3,7 +3,7 @@
 %global  matterhorn_user          matterhorn
 %global  matterhorn_group         %{matterhorn_user}
 
-%define __INTERNAL_VERSION 1.6.1-RC1
+%define __INTERNAL_VERSION 1.6.1
 
 %if 0%{?sles_version}
   %define __GST_SUFFIX -0_10
@@ -21,7 +21,7 @@
 
 Name:           opencast-matterhorn16
 Version:        1.6.1
-Release:        0.2.RC1%{?__MATTERHORN_INSTITUTE}%{?dist}
+Release:        1%{?__MATTERHORN_INSTITUTE}%{?dist}
 Summary:        Open Source Lecture Capture & Video Management Tool
 
 Group:          Applications/Multimedia
@@ -2613,6 +2613,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Mar  6 2015 Lars Kiesow <lkiesow@uos.de> - 1.6.1-1
+- Update to Matterhorn 1.6.1
+
 * Tue Feb 24 2015 Lars Kiesow <lkiesow@uos.de> - 1.6.1-0.2.RC1
 - Fixed Systemd/Init installation macros
 
