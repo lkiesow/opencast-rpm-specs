@@ -148,7 +148,7 @@ function init()
     #    xeval "wget http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm"
     #    xeval "sudo rpm -Uvh epel-release-6*.rpm"
     #fi
-    xeval "sudo yum install epel-release"
+    xeval "sudo yum install -y epel-release"
 
     # Copy files to working directory
     cd "$sourcedir"
