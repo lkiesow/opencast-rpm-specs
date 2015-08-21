@@ -1,7 +1,7 @@
 %define srcname ffmpeg
 Name:          %{srcname}-nonfree
 Summary:       Hyper fast MPEG1/MPEG4/H263/RV and AC3/MPEG audio encoder
-Version:       2.7.1
+Version:       2.7.2
 Release:       1%{?dist}
 License:       GPLv3+
 Group:         System Environment/Libraries
