@@ -7,8 +7,8 @@ sudo rpm --rebuilddb -v -v
 sudo yum clean all
 
 # Install required packages
-sudo yum groupinstall Base 'Development Tools'
-sudo yum install zlib-devel nss-devel nspr-devel libarchive-devel db4-devel file-devel popt-devel
+sudo yum groupinstall -y Base 'Development Tools'
+sudo yum install -y zlib-devel nss-devel nspr-devel libarchive-devel db4-devel file-devel popt-devel
 
 # Clone rpm repo and install rpm
 git clone git://rpm.org/rpm.git
