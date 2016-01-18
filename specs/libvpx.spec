@@ -1,30 +1,22 @@
-%global majorver 1
-%global minorver 3
-%global tinyver  0
+%global somajor 3
+%global sominor 0
+%global sotiny  0
+%global soversion %{somajor}.%{sominor}.%{sotiny}
 
 Name:			libvpx
 Summary:		VP8 Video Codec SDK
-Version:		%{majorver}.%{minorver}.%{tinyver}
-%global soversion	%{version}
+Version:		1.5.0
 Release:		1%{?dist}
 License:		BSD
 Group:			System Environment/Libraries
-# Google forgot to make a 1.2.0 tarball, so I made one from the git tag.
-# git clone https://code.google.com/p/webm.libvpx/ libvpx
-# cd libvpx
-# git checkout v1.2.0
-# rm -rf .git*
-# cd ..
-# mv libvpx libvpx-v1.2.0
-# tar xvfj libvpx-v1.2.0.tar.bz2 libvpx-v1.2.0
-Source0:		http://webm.googlecode.com/files/%{name}-v%{version}.tar.bz2
+Source0:		http://downloads.webmproject.org/releases/webm/%{name}-%{version}.tar.bz2
 # Thanks to debian.
 Source2:		libvpx.ver
-URL:			http://www.webmproject.org/tools/vp8-sdk/
+URL:			http://www.webmproject.org/code/
 %ifarch %{ix86} x86_64
 BuildRequires:		yasm
 %endif
-BuildRequires:		doxygen, php-cli
+BuildRequires:		doxygen, php-cli, perl(Getopt::Long)
 
 %description
 libvpx provides the VP8 SDK, which allows you to integrate your applications 
@@ -50,7 +42,7 @@ A selection of utilities and tools for VP8, including a sample encoder
 and decoder.
 
 %prep
-%setup -q -n %{name}-v%{version}
+%setup -q -n libvpx-%{version}
 
 %build
 %ifarch %{ix86}
@@ -59,7 +51,11 @@ and decoder.
 %ifarch	x86_64
 %global	vpxtarget x86_64-linux-gcc
 %else
+%ifarch armv7hl
+%global vpxtarget armv7-linux-gcc
+%else
 %global vpxtarget generic-gnu
+%endif
 %endif
 %endif
 
@@ -71,18 +67,41 @@ and decoder.
 %global	generic_target 0
 %endif
 
-./configure --target=%{vpxtarget} --enable-pic --disable-install-srcs \
+%ifarch armv7hl
+CROSS=armv7hl-redhat-linux-gnueabi- CHOST=armv7hl-redhat-linux-gnueabi-hardfloat ./configure \
+%else
+./configure --target=%{vpxtarget} \
+%endif
+%ifarch %{arm}
+--disable-neon --disable-neon_asm \
+%endif
+--enable-pic --disable-install-srcs \
 %if ! %{generic_target}
 --enable-shared \
 %endif
---prefix=%{_prefix} --libdir=%{_libdir}
+--prefix=%{_prefix} --libdir=%{_libdir} --size-limit=16384x16384
 
 # Hack our optflags in.
 sed -i "s|-O3|%{optflags}|g" libs-%{vpxtarget}.mk
 sed -i "s|-O3|%{optflags}|g" examples-%{vpxtarget}.mk
 sed -i "s|-O3|%{optflags}|g" docs-%{vpxtarget}.mk
 
-make %{?_smp_mflags} verbose=true target=libs
+%ifarch armv7hl
+#hackety hack hack
+sed -i "s|AR=armv7hl-redhat-linux-gnueabi-ar|AR=ar|g" libs-%{vpxtarget}.mk
+sed -i "s|AR=armv7hl-redhat-linux-gnueabi-ar|AR=ar|g" examples-%{vpxtarget}.mk
+sed -i "s|AR=armv7hl-redhat-linux-gnueabi-ar|AR=ar|g" docs-%{vpxtarget}.mk
+
+sed -i "s|AS=armv7hl-redhat-linux-gnueabi-as|AS=as|g" libs-%{vpxtarget}.mk
+sed -i "s|AS=armv7hl-redhat-linux-gnueabi-as|AS=as|g" examples-%{vpxtarget}.mk
+sed -i "s|AS=armv7hl-redhat-linux-gnueabi-as|AS=as|g" docs-%{vpxtarget}.mk
+
+sed -i "s|NM=armv7hl-redhat-linux-gnueabi-nm|NM=nm|g" libs-%{vpxtarget}.mk
+sed -i "s|NM=armv7hl-redhat-linux-gnueabi-nm|NM=nm|g" examples-%{vpxtarget}.mk
+sed -i "s|NM=armv7hl-redhat-linux-gnueabi-nm|NM=nm|g" docs-%{vpxtarget}.mk
+%endif
+
+make %{?_smp_mflags} verbose=true
 
 %if %{generic_target}
 # Manual shared library creation
@@ -90,42 +109,48 @@ mkdir tmp
 cd tmp
 ar x ../libvpx_g.a
 cd ..
-gcc -fPIC -shared -pthread -lm -Wl,--no-undefined -Wl,-soname,libvpx.so.%{majorver} -Wl,--version-script,%{SOURCE2} -Wl,-z,noexecstack -o libvpx.so.%{soversion} tmp/*.o
+gcc -fPIC -shared -pthread -lm -Wl,--no-undefined -Wl,-soname,libvpx.so.%{somajor} -Wl,--version-script,%{SOURCE2} -Wl,-z,noexecstack -o libvpx.so.%{soversion} tmp/*.o
 rm -rf tmp
 %endif
 
 # Temporarily dance the static libs out of the way
-mv libvpx.a libNOTvpx.a
-mv libvpx_g.a libNOTvpx_g.a
+# mv libvpx.a libNOTvpx.a
+# mv libvpx_g.a libNOTvpx_g.a
 
 # We need to do this so the examples can link against it.
-ln -sf libvpx.so.%{soversion} libvpx.so
+# ln -sf libvpx.so.%{soversion} libvpx.so
 
-make %{?_smp_mflags} verbose=true target=examples CONFIG_SHARED=1
-make %{?_smp_mflags} verbose=true target=docs
+# make %{?_smp_mflags} verbose=true target=examples CONFIG_SHARED=1
+# make %{?_smp_mflags} verbose=true target=docs
 
 # Put them back so the install doesn't fail
-mv libNOTvpx.a libvpx.a
-mv libNOTvpx_g.a libvpx_g.a
+# mv libNOTvpx.a libvpx.a
+# mv libNOTvpx_g.a libvpx_g.a
 
 %install
 make DIST_DIR=%{buildroot}%{_prefix} dist
 
-# Simpler to label the dir as %doc.
-mv %{buildroot}/usr/docs doc/
+# Simpler to label the dir as %%doc.
+if [ -d %{buildroot}/usr/docs ]; then
+   mv %{buildroot}/usr/docs doc/
+fi
 
 %if %{generic_target}
 install -p libvpx.so.%{soversion} %{buildroot}%{_libdir}
 pushd %{buildroot}%{_libdir}
 ln -sf libvpx.so.%{soversion} libvpx.so
-ln -sf libvpx.so.%{soversion} libvpx.so.%{majorver}
-ln -sf libvpx.so.%{soversion} libvpx.so.%{majorver}.%{minorver}
+ln -sf libvpx.so.%{soversion} libvpx.so.%{somajor}
+ln -sf libvpx.so.%{soversion} libvpx.so.%{somajor}.%{sominor}
 popd
 %endif
 
 pushd %{buildroot}
 # Stuff we don't need.
 rm -rf usr/build/ usr/md5sums.txt usr/lib*/*.a usr/CHANGELOG usr/README
+# No, bad google. No treat.
+mv usr/bin/examples/* usr/bin/
+rm -rf usr/bin/examples
+
 # Rename a few examples
 mv usr/bin/postproc usr/bin/vp8_postproc
 mv usr/bin/simple_decoder usr/bin/vp8_simple_decoder
@@ -139,7 +164,8 @@ popd
 %postun -p /sbin/ldconfig
 
 %files
-%doc AUTHORS CHANGELOG LICENSE README
+%license LICENSE
+%doc AUTHORS CHANGELOG README
 %{_libdir}/libvpx.so.*
 
 %files devel
@@ -153,8 +179,50 @@ popd
 %{_bindir}/*
 
 %changelog
-* Wed Jan 15 2014 Lars Kiesow <lkiesow@uos.de> - 		1.3.0-1
-- Update to 1.3.0
+* Tue Dec  1 2015 Tom Callaway <spot@fedoraproject.org> - 1.5.0-1
+- update to 1.5.0
+
+* Mon Sep 21 2015 Tom Callaway <spot@fedoraproject.org> - 1.4.0-6
+- remove exit 0
+
+* Tue Sep 15 2015 Tom Callaway <spot@fedoraproject.org> - 1.4.0-5
+- set --size-limit=16384x16384 to avoid CVE-2015-1258
+
+* Mon Jul 27 2015 Kalev Lember <klember@redhat.com> - 1.4.0-4
+- Package review fixes (#1225648)
+- Update URL
+- Use license macro
+- Escape a commented out macro
+
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Sat May 02 2015 Kalev Lember <kalevlember@gmail.com> - 1.4.0-2
+- Rebuilt for GCC 5 C++11 ABI change
+
+* Mon Apr  6 2015 Tom Callaway <spot@fedoraproject.org> - 1.4.0-1
+- update to 1.4.0
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.0-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.0-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Thu Mar 20 2014 Wim Taymans <wtaymans@redhat.com> - 1.3.0-4
+- fix Illegal Instruction abort
+
+* Thu Feb 13 2014 Dan Horák <dan[at]danny.cz> - 1.3.0-3
+- update library symbol list for 1.3.0 from Debian
+
+* Tue Feb 11 2014 Tom Callaway <spot@fedoraproject.org> - 1.3.0-2
+- armv7hl specific target
+
+* Tue Feb 11 2014 Tom Callaway <spot@fedoraproject.org> - 1.3.0-1
+- update to 1.3.0
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
 * Thu Feb 28 2013 Tom Callaway <spot@fedoraproject.org> - 1.2.0-1
 - update to 1.2.0

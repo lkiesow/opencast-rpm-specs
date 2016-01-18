@@ -1,6 +1,6 @@
 Name:           maven
 Version:        3.2.1
-Release:        2%{?dist}
+Release:        1%{?dist}
 Summary:        Java project management and project comprehension tool
 
 Group:          Applications/Multimedia
@@ -11,11 +11,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
     
 BuildArch: noarch
 
-%if 0%{?rhel} == 6
-Requires: java-1.7.0-openjdk-devel >= 1:1.7.0
-%else
-Requires: java-devel >= 1:1.7.0
-%endif
+Requires: java-devel >= 1:1.6.0
 
 
 %description
@@ -81,9 +77,6 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Thu Aug 14 2014 Lars Kiesow <lkiesow@uos.de> - 3.2.1-2
-- Set to use OpenJDK 1.7
-
 * Fri Apr 11 2014 Lars Kiesow <lkiesow@uos.de> - 3.2.1-1
 - Update to version 3.2.1
 

@@ -3,7 +3,7 @@
 %global  matterhorn_user          matterhorn
 %global  matterhorn_group         %{matterhorn_user}
 
-%define __INTERNAL_VERSION 1.5.0-rc7
+%define __INTERNAL_VERSION 1.5.1
 
 %if 0%{?sles_version}
   %define __GST_SUFFIX -0_10
@@ -15,8 +15,8 @@
 
 
 Name:           opencast-matterhorn15
-Version:        1.5.0
-Release:        0.9.rc7%{?__MATTERHORN_INSTITUTE}%{?dist}
+Version:        1.5.1
+Release:        2%{?__MATTERHORN_INSTITUTE}%{?dist}
 Summary:        Open Source Lecture Capture & Video Management Tool
 
 Group:          Applications/Multimedia
@@ -2373,6 +2373,10 @@ rm -rf $RPM_BUILD_ROOT
 %files distribution-engage
 %defattr(-,root,root,-)
 
+%files distribution-demo
+%defattr(-,root,root,-)
+# No files here
+
 %files distribution-admin-worker
 %defattr(-,root,root,-)
 # No files here
@@ -2404,6 +2408,13 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Oct 21 2014 Lars Kiesow <lkiesow@uos.de> - 1.5.1-2
+- Fixed distribution-demo
+
+* Mon Oct  6 2014 Lars Kiesow <lkiesow@uos.de> - 1.5.1-1
+- Update to final release of Matterhorn 1.5.1 as 1.5.0 was skipped because of a
+  release issue.
+
 * Sat Sep 27 2014 Lars Kiesow <lkiesow@uos.de> - 1.5.0-0.9.rc7
 - Update to Matterhorn 1.5.0-rc7
 - Added demo distribution

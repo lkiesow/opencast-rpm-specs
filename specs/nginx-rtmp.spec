@@ -9,10 +9,10 @@
 %global  nginx_webroot       %{nginx_datadir}/html
 %global  nginx_videoroot     %{nginx_datadir}/videos
 
-%global  nginx_rtmp_version  1.1.6
+%global  nginx_rtmp_version  1.1.4
 
 Name:              nginx-rtmp
-Version:           1.6.2
+Version:           1.5.13
 Release:           1%{?dist}
 
 Summary:           A high performance web server, reverse proxy server and streaming server
@@ -275,10 +275,6 @@ fi
 
 
 %changelog
-* Tue Nov  4 2014 Lars Kiesow <lkiesow@uos.de> - 1.6.2-1
-- Update to Nginx 1.6.2
-- Update RTMP module to 1.1.6
-
 * Mon Apr 14 2014 Lars Kiesow <lkiesow@uos.de> - 1.5.13-1
 - Update Nginx to 1.5.13
 - Update RTMP module to 1.1.4

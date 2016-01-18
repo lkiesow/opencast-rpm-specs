@@ -119,7 +119,7 @@ install -dm755 %{buildroot}%{_mandir}/man1
 
 %files devel
 %defattr(-, root, root, -)
-%doc TODO docs/Ahead\ AAC\ Decoder\ library\ documentation.pdf
+%doc TODO docs/Ahead*documentation.pdf
 %{_includedir}/faad.h
 %{_includedir}/neaacdec.h
 %{_libdir}/libfaad.so

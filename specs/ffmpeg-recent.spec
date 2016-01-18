@@ -4,12 +4,12 @@
 %{?_with_nodist:Name:  %{srcname}-recent-nodist}
 %{!?_with_nodist:Name: %{srcname}-recent}
 Summary:       Hyper fast MPEG1/MPEG4/H263/RV and AC3/MPEG audio encoder
-Version:       2.5.4
+Version:       2.8.4
 Release:       1%{?dist}
 License:       GPLv3+
 Group:         System Environment/Libraries
 
-Source:        http://ffmpeg.org/releases/%{srcname}-%{version}.tar.bz2
+Source:        http://ffmpeg.org/releases/%{srcname}-%{version}.tar.xz
 URL:           http://ffmpeg.sourceforge.net/
 BuildRoot:     %{_tmppath}/%{name}-root
 
@@ -48,6 +48,7 @@ BuildRequires: libcdio-paranoia-devel
 BuildRequires: texi2html
 BuildRequires: vo-aacenc-devel
 BuildRequires: x264-devel
+BuildRequires: x265-devel
 BuildRequires: xvidcore-devel
 BuildRequires: yasm
 BuildRequires: zlib-devel
@@ -101,6 +102,7 @@ test -f version.h || echo "#define FFMPEG_VERSION \"%{evr}\"" > version.h
    --enable-pthreads \
    --enable-x11grab \
    --enable-vdpau \
+   --enable-vaapi \
    --disable-avisynth \
    --enable-libopencv \
    --enable-libdc1394 \
@@ -128,6 +130,7 @@ test -f version.h || echo "#define FFMPEG_VERSION \"%{evr}\"" > version.h
    --enable-libvorbis \
    --enable-libvpx \
    --enable-libx264 \
+   --enable-libx265 \
    --enable-libxvid \
 %ifarch %ix86
    --extra-cflags="%{optflags}" \
@@ -177,6 +180,36 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jan 08 2016 Lars Kiesow <lkiesow@uos.de> - 2.8.4-1
+- Update to FFmpeg 2.8.4
+
+* Wed Dec 09 2015 Lars Kiesow <lkiesow@uos.de> - 2.8.3-3
+- Enabled vaapi
+
+* Wed Dec 09 2015 Lars Kiesow <lkiesow@uos.de> - 2.8.3-2
+- Enabled x265
+
+* Wed Dec 09 2015 Lars Kiesow <lkiesow@uos.de> - 2.8.3-1
+- Update to FFmpeg 2.8.3
+
+* Sun Nov  1 2015 Lars Kiesow <lkiesow@uos.de> - 2.8.1-1
+- Update to FFmpeg 2.8.1
+
+* Mon Sep 14 2015 Lars Kiesow <lkiesow@uos.de> - 2.8-1
+- Update to FFmpeg 2.8
+
+* Mon Aug 10 2015 Lars Kiesow <lkiesow@uos.de> - 2.7.2-1
+- Update to FFmpeg 2.7.2
+
+* Mon Jun 15 2015 Lars Kiesow <lkiesow@uos.de> - 2.7-1
+- Update to FFmpeg 2.7
+
+* Fri Mar 27 2015 Lars Kiesow <lkiesow@uos.de> - 2.6.1-1
+- Update to FFmpeg 2.6.1
+
+* Mon Mar  9 2015 Lars Kiesow <lkiesow@uos.de> - 2.6-1
+- Update to FFmpeg 2.6
+
 * Sun Feb 22 2015 Lars Kiesow <lkiesow@uos.de> - 2.5.4-1
 - Update to FFmpeg 2.5.4
 

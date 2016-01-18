@@ -21,7 +21,7 @@
 
 Name:           opencast-matterhorn16
 Version:        1.6.1
-Release:        1%{?__MATTERHORN_INSTITUTE}%{?dist}
+Release:        2%{?__MATTERHORN_INSTITUTE}%{?dist}
 Summary:        Open Source Lecture Capture & Video Management Tool
 
 Group:          Applications/Multimedia
@@ -2490,25 +2490,25 @@ popd
 
 %pre base
 # Create matterhorn user.
-getent group matterhorn > /dev/null || groupadd -r matterhorn
+getent group matterhorn > /dev/null || groupadd -r matterhorn || :
 getent passwd matterhorn > /dev/null || \
    /usr/sbin/useradd -M -r -d /srv/matterhorn -g matterhorn \
    -c "Opencast Matterhorn" matterhorn > /dev/null 2>&1 || :
 
 %post base
 # Set owner of matterhorn content dir
-chown -R matterhorn:matterhorn /srv/matterhorn
-chown -R matterhorn:matterhorn %{_localstatedir}/log/matterhorn
+chown -R matterhorn:matterhorn /srv/matterhorn || :
+chown -R matterhorn:matterhorn %{_localstatedir}/log/matterhorn || :
 # This adds the proper /etc/rc*.d links for the script
-%{!?__use_systemd:/sbin/chkconfig --add matterhorn}
+%{!?__use_systemd:/sbin/chkconfig --add matterhorn || :}
 
 %preun base
 # If this is really uninstall and not upgrade
 if [ $1 -eq 0 ]; then
-	%{?__use_systemd:systemctl stop matterhorn >/dev/null 2>&1}
+	%{?__use_systemd:systemctl stop matterhorn >/dev/null 2>&1 || :}
 	%{!?__use_systemd:
-      /sbin/service matterhorn stop >/dev/null 2>&1
-      /sbin/chkconfig --del matterhorn
+      /sbin/service matterhorn stop >/dev/null 2>&1 || :
+      /sbin/chkconfig --del matterhorn || :
 	}
 fi
 
@@ -2613,6 +2613,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Apr 20 2015 Lars Kiesow <lkiesow@uos.de> - 1.6.1-2
+- Fixed possible problems with scriptlets
+
 * Fri Mar  6 2015 Lars Kiesow <lkiesow@uos.de> - 1.6.1-1
 - Update to Matterhorn 1.6.1
 

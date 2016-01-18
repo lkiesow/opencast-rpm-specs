@@ -4,12 +4,12 @@
 %{?_with_nodist:Name:  %{srcname}-nodist}
 %{!?_with_nodist:Name: %{srcname}}
 Summary:       Hyper fast MPEG1/MPEG4/H263/RV and AC3/MPEG audio encoder
-Version:       2.5.4
+Version:       2.8.4
 Release:       1%{?dist}
 License:       GPLv3+
 Group:         System Environment/Libraries
 
-Source:        http://ffmpeg.org/releases/%{srcname}-%{version}.tar.bz2
+Source:        http://ffmpeg.org/releases/%{srcname}-%{version}.tar.xz
 URL:           http://ffmpeg.sourceforge.net/
 BuildRoot:     %{_tmppath}/%{name}-root
 
@@ -196,6 +196,27 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jan  8 2016 Lars Kiesow <lkiesow@uos.de> - 2.8.4-1
+- Update to FFmpeg 2.8.4
+
+* Sun Nov  1 2015 Lars Kiesow <lkiesow@uos.de> - 2.8.1-1
+- Update to FFmpeg 2.8.1
+
+* Wed Sep 16 2015 Lars Kiesow <lkiesow@uos.de> - 2.8-1
+- Update to FFmpeg 2.8
+
+* Tue Aug 11 2015 Lars Kiesow <lkiesow@uos.de> - 2.7.2-1
+- Update to FFmpeg 2.7.2
+
+* Mon Jun 15 2015 Lars Kiesow <lkiesow@uos.de> - 2.7-1
+- Update to FFmpeg 2.7
+
+* Sun Apr  5 2015 Lars Kiesow <lkiesow@uos.de> - 2.6.1-1
+- Update to FFmpeg 2.6.1
+
+* Mon Mar  9 2015 Lars Kiesow <lkiesow@uos.de> - 2.6-1
+- Update to FFmpeg 2.6
+
 * Mon Feb 23 2015 Lars Kiesow <lkiesow@uos.de> - 2.5.4-1
 - Update to FFmpeg 2.5.4
 

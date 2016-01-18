@@ -5,8 +5,8 @@
 
 %define __INTERNAL_VERSION 1.4.4
 
-%if 0%{?sles_version} 
-  %define __GST_SUFFIX -0_10 
+%if 0%{?sles_version}
+  %define __GST_SUFFIX -0_10
 %else
   %define __GST_SUFFIX %{nil}
 %endif
@@ -16,7 +16,7 @@
 
 Name:           opencast-matterhorn14
 Version:        1.4.4
-Release:        1%{?__MATTERHORN_INSTITUTE}%{?dist}
+Release:        2%{?__MATTERHORN_INSTITUTE}%{?dist}
 Summary:        Open Source Lecture Capture & Video Management Tool
 
 Group:          Applications/Multimedia
@@ -47,18 +47,18 @@ Epoch:          %{?_matterhorn_importance}
 
 BuildRequires: maven >= 3
 
-%if 0%{?sles_version} 
+%if 0%{?sles_version}
 BuildRequires: jdk >= 1:1.6.0
-%else 
+%else
 BuildRequires: java-devel >= 1:1.6.0
-%endif 
+%endif
 Requires:      %{name}-base                  = %{__FULL_VERSION}
 Requires:      %{name}-distribution-default = %{__FULL_VERSION}
 
 BuildArch: noarch
 
 %package base
-Summary: Base package for Opencast Matterhorn 
+Summary: Base package for Opencast Matterhorn
 Group: Applications/Multimedia
 Requires(pre): /usr/sbin/useradd
 
@@ -71,11 +71,12 @@ Requires(postun): initscripts
 %endif
 
 Requires:      bash
-%if 0%{?sles_version} 
+%if 0%{?sles_version}
 BuildRequires: jdk >= 1:1.6.0
-%else 
+%else
 BuildRequires: java >= 1:1.6.0
-%endif 
+Requires: java >= 1:1.6.0
+%endif
 
 
 %package distribution-default
@@ -1174,7 +1175,6 @@ Group: Applications/Multimedia
 BuildRequires: gstreamer%{__GST_SUFFIX}
 BuildRequires: gstreamer%{__GST_SUFFIX}-plugins-base
 BuildRequires: gstreamer%{__GST_SUFFIX}-plugins-good
-BuildRequires: gstreamer%{__GST_SUFFIX}-plugins-bad
 %if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version}
 BuildRequires: gstreamer-plugins-bad-nonfree
 %endif
@@ -2360,6 +2360,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Oct 10 2014 Lars Kiesow <lkiesow@uos.de> - 1.4.4-2
+- Fixed missing Java dependency
+
 * Sat May 17 2014 Lars Kiesow <lkiesow@uos.de> - 1.4.4-1
 - Update to Matterhorn 1.4.4
 

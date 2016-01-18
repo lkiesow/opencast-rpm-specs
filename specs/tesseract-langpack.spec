@@ -2,7 +2,7 @@
 %define sname tesseract
 Name:		tesseract-langpack
 Version:	3.02
-Release:	7%{?dist}
+Release:	8%{?dist}
 Summary:	Langpacks for tesseract
 
 Group:		Applications/File
@@ -739,6 +739,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/%{sname}/tessdata/vie.traineddata
 
 %changelog
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.02-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.02-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

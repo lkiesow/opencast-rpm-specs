@@ -1,24 +1,36 @@
 %global fullname tesseract-ocr
+%global pre rc1
+
 Name:		tesseract
-Version:	3.02.02
-Release:	2%{?dist}
-Summary:	Raw OCR Engine 
+Version:	3.03
+Release:	0.4%{?pre:.%pre}%{?dist}
+Summary:	Raw OCR Engine
 
 Group:		Applications/File
 License:	ASL 2.0
 URL:		http://code.google.com/p/%{fullname}/
-Source0:	http://tesseract-ocr.googlecode.com/files/%{fullname}-%{version}.tar.gz
+# The downloads are now posted on google-drive which has impossible download URLS...
+# The url of the drive is
+#     https://drive.google.com/folderview?id=0B7l10Bj_LprhQnpSRkpGMGV2eE0
+Source0:	%{name}-%{version}%{?pre:-%pre}.tar.gz
 Source1:	http://tesseract-ocr.googlecode.com/files/%{fullname}-3.02.eng.tar.gz
-Patch0:		%{name}-pkgconfig.patch
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Source2:	http://tesseract-ocr.googlecode.com/files/%{fullname}-3.01.osd.tar.gz
 BuildRequires:	libtiff-devel
 BuildRequires:	leptonica-devel
-BuildRequires:	automake,libtool
+BuildRequires:	cairo-devel
+BuildRequires:	libicu-devel
+BuildRequires:	pango-devel
+BuildRequires:	automake libtool
 Obsoletes:	tesseract < 3.02.02
 
 %package devel
 Summary:	Development files for %{fullname}
 Group:		Development/Libraries
+Requires:	%{name} = %{version}-%{release}
+
+%package osd
+Summary:	Orientation & Script Detection Data for %{fullname}
+Group:		Applications/File
 Requires:	%{name} = %{version}-%{release}
 
 %description
@@ -30,28 +42,28 @@ open-sourced by HP and UNLV in 2005.
 The %{name}-devel package contains header file for
 developing applications that use %{name}.
 
+%description osd
+Orientation & Script Detection Data for %{fullname}
+
 %prep
-%setup -q -n %{fullname}
-%setup -q -a 1 -n %{fullname}
-%patch0 -p1
+%setup -q -n %{name}-%{version} -a1 -a2
 
 %build
 sed -i 's#-DTESSDATA_PREFIX=@datadir@/#-DTESSDATA_PREFIX=@datadir@/%{name}/##' ccutil/Makefile.*
+autoreconf -ifv
 %configure --disable-static
-sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
-sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
 make %{?_smp_mflags}
+# Remove compiled files, see https://groups.google.com/forum/#!topic/tesseract-dev/ARKOSV3zpWo
+make -C training clean
+make %{?_smp_mflags} training
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make install DESTDIR=$RPM_BUILD_ROOT
-rm -f $RPM_BUILD_ROOT%{_libdir}/*la
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/%{name}
-mv $RPM_BUILD_ROOT%{_datadir}/tessdata $RPM_BUILD_ROOT%{_datadir}/%{name}
-install -m 0644 %{fullname}/tessdata/* $RPM_BUILD_ROOT%{_datadir}/%{name}/tessdata
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+%make_install
+%make_install training-install
+rm -f %{buildroot}%{_libdir}/*la
+mkdir -p %{buildroot}%{_datadir}/%{name}
+mv %{buildroot}%{_datadir}/tessdata %{buildroot}%{_datadir}/%{name}
+install -m 0644 %{fullname}/tessdata/* %{buildroot}%{_datadir}/%{name}/tessdata
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -61,12 +73,20 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/classifier_tester
 %{_bindir}/combine_tessdata
 %{_bindir}/dawg2wordlist
+%{_bindir}/set_unicharset_properties
 %{_bindir}/shapeclustering
 %{_bindir}/*training
 %{_bindir}/%{name}
+%{_bindir}/text2image
 %{_bindir}/unicharset_extractor
 %{_bindir}/wordlist2dawg
-%{_datadir}/%{name}
+%dir %{_datadir}/%{name}
+%dir %{_datadir}/%{name}/tessdata
+%{_datadir}/%{name}/tessdata/configs
+%{_datadir}/%{name}/tessdata/tessconfigs
+%{_datadir}/%{name}/tessdata/eng.*
+%{_datadir}/%{name}/tessdata/pdf.ttf
+%{_datadir}/%{name}/tessdata/pdf.ttx
 %{_libdir}/lib%{name}*.so.*
 %{_mandir}/man1/*
 %{_mandir}/man5/*
@@ -78,7 +98,30 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/lib%{name}*.so
 %{_libdir}/pkgconfig/%{name}.pc
 
+%files osd
+%{_datadir}/%{name}/tessdata/osd.traineddata
+
 %changelog
+* Mon Jan 26 2015 David Tardon <dtardon@redhat.com> - 3.03-0.4.rc1
+- rebuild for ICU 54.1
+
+* Tue Aug 26 2014 David Tardon <dtardon@redhat.com> - 3.03-0.3.rc1
+- rebuild for ICU 53.1
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.03-0.2.rc1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Tue Aug 12 2014 Sandro Mani <manisandro@gmail.com> - 3.03-0.1.rc1
+- Update to v3.03-rc1
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.02.02-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Thu Mar 27 2014 Karol Trzcionka <karlik at fedoraproject.org> - 3.02.02-3
+- Fix rhbz#1037350 (-Werror=format-security)
+- Add OSD data
+- Remove BuildRoot tag
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.02.02-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
@@ -144,7 +187,7 @@ rm -rf $RPM_BUILD_ROOT
 - Including patch bases on cvs
 * Tue Feb 13 2007 Karol Trzcionka <karlikt at gmail.com> - 1.03-1
 - Update to v1.03
-* Sat Jan 26 2007 Karol Trzcionka <karlikt at gmail.com> - 1.02-3
+* Sat Jan 27 2007 Karol Trzcionka <karlikt at gmail.com> - 1.02-3
 - Update BRs
 - Fix x86_64 compile
 * Sat Dec 30 2006 Karol Trzcionka <karlikt at gmail.com> - 1.02-2

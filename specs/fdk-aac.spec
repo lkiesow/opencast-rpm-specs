@@ -1,28 +1,32 @@
-Name:           fdk-aac
-Version:        0.1.1
-Release:        1%{?dist}
-Summary:        Fraunhofer FDK AAC Codec Library
+Name: fdk-aac
+License: Fraunhofer Cusom License
+Group: Applications/Multimedia
+Version: 0.1.3
+Release: 1%{?dist}
+Summary: Modified library of Fraunhofer AAC decoder and encoder.
+Source: http://netcologne.dl.sourceforge.net/project/opencore-amr/fdk-aac/%{name}-%{version}.tar.gz
+URL: http://sourceforge.net/projects/opencore-amr/
+BuildRoot: %{_tmppath}/%{name}-%{version}-buildroot
 
-License:        ASL 2.0
-URL:            http://sourceforge.net/projects/opencore-amr
-Source0:        http://downloads.sourceforge.net/opencore-amr/%{name}-%{version}.tar.gz
-
+BuildRequires: gcc-c++
+BuildRequires: libtool
 
 %description
-The Fraunhofer FDK AAC Codec Library ("FDK AAC Codec") is software that
-implements the MPEG Advanced Audio Coding ("AAC") encoding and decoding
-scheme for digital audio.
+fdk-aac is a free software library and application for encoding video
+streams into the H.264/MPEG-4 AVC format, and is released under the
+terms of the GNU GPL.
 
 
-%package        devel
-Summary:        Development files for %{name}
-Group:          Development/Libraries
-Requires:       %{name} = %{version}-%{release}
+%package devel
+Summary: Development files for fdk-aac
+Group: Development/Libraries
 
-%description    devel
-The %{name}-devel package contains libraries and header files for
-developing applications that use %{name}.
+%description devel
+fdk-aac is a free software library and application for encoding video
+streams into the H.264/MPEG-4 AVC format, and is released under the
+terms of the GNU GPL.
 
+This package contains libraries, header files and developer documentation.
 
 
 %prep
@@ -31,37 +35,46 @@ developing applications that use %{name}.
 
 %build
 autoreconf -fiv
-%configure \
-  --disable-silent-rules \
-  --disable-static
-
+%configure --enable-shared --disable-static
 make %{?_smp_mflags}
 
 
 %install
-make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
-find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
+rm -rf %{buildroot}
+make DESTDIR=%{buildroot} install
+rm %{buildroot}%{_libdir}/libfdk-aac.la
 
-%post -p /sbin/ldconfig
 
-%postun -p /sbin/ldconfig
+%clean
+rm -rf %{buildroot}
 
 
 %files
-%defattr(-,root,root,-)
-%doc ChangeLog NOTICE
-%{_libdir}/*.so.*
+%defattr(-,root,root)
+%doc NOTICE ChangeLog
+%{_libdir}/libfdk-aac.so.*
+
 
 %files devel
-%defattr(-,root,root,-)
-%doc documentation/*.pdf
-%dir %{_includedir}/fdk-aac
-%{_includedir}/fdk-aac/*.h
-%{_libdir}/*.so
-%{_libdir}/pkgconfig/%{name}.pc
+%defattr(-,root,root)
+%{_includedir}/fdk-aac/
+%{_libdir}/libfdk-aac.so
+%{_libdir}/pkgconfig/fdk-aac.pc
 
+
+%post
+/sbin/ldconfig
+
+
+%postun
+/sbin/ldconfig
 
 %changelog
-* Thu Mar 28 2013 Nicolas Chauvet <kwizart@gmail.com> - 0.1.1-1
-- Initial spec
+* Mon Jan 27 2014 Lars Kiesow <lkiesow@uos.de> - 0.1.3-1
+- Update to 0.1.3
 
+* Sun May 19 2013 Lars Kiesow <lkiesow@uos.de> - 0.1.0-1
+- Downgrade to 0.1.0
+
+* Mon Apr 29 2013 Lars Kiesow <lkiesow@uos.de> - 0.1.1-1
+- Initial build for libfdk-aac

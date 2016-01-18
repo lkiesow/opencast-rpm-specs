@@ -1,6 +1,6 @@
 Name:           vo-aacenc
-Version:        0.1.2
-Release:        2%{?dist}
+Version:        0.1.3
+Release:        1%{?dist}
 Summary:        VisualOn AAC encoder library
 
 Group:          System Environment/Libraries
@@ -35,7 +35,7 @@ make %{?_smp_mflags}
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 pushd $RPM_BUILD_ROOT%{_libdir}
-   mv libvo-aacenc.so.0.0.3 libvo-aacenc.so.%{version}
+   mv libvo-aacenc.so.0.0.4 libvo-aacenc.so.%{version}
    ln -fs libvo-aacenc.so.%{version} libvo-aacenc.so.0
    ln -fs libvo-aacenc.so.%{version} libvo-aacenc.so
 popd
@@ -60,8 +60,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Thu Jun 18 2015 Lars Kiesow <lkiesow@uos.de> - 0.1.3-1
+- Update to 0.1.3
+
 * Fri Mar  2 2012 Lars Kiesow <lkiesow@uos.de> - 0.1.2-2
 - Corrected some minor packaging issues.
 - Fixed library filename
+
 * Fri Feb 24 2012 Lars Kiesow <lkiesow@uos.de> - 0.1.2-1
 - Initial package for vo-aacenc.
