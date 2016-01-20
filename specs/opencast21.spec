@@ -4,7 +4,7 @@
 %define __requires_exclude_from ^.*\\.jar$
 %define __provides_exclude_from ^.*\\.jar$
 
-%define srcversion 2.1.0
+%define srcversion 2.1.1-rc1
 %define uid   opencast
 %define gid   opencast
 %define nuid  7967
@@ -15,8 +15,8 @@
 %endif
 
 Name:          opencast21-%{ocdist}
-Version:       2.1.0
-Release:       0%{?dist}
+Version:       2.1.1
+Release:       0.rc1%{?dist}
 Summary:       Open Source Lecture Capture & Video Management Tool
 
 Group:         Applications/Multimedia
@@ -29,7 +29,7 @@ Source3:       settings.xml
 Source4:       opencast.logrotate
 
 BuildRequires: bzip2
-BuildRequires: ffmpeg >= 2.5
+BuildRequires: ffmpeg >= 2.8
 BuildRequires: hunspell >= 1.2.8
 BuildRequires: java-devel >= 1:1.7.0
 BuildRequires: maven >= 3.1
@@ -151,13 +151,13 @@ echo "export KARAF_ETC=%{_sysconfdir}/opencast" >> \
    %{buildroot}%{_datadir}/opencast/bin/setenv
 
 # Patch log file locations
-sed 's#path.logs: ${karaf.data}/log#path.logs: %{_localstatedir}/log/opencast#' \
+sed -i 's#path.logs: ${karaf.data}/log#path.logs: %{_localstatedir}/log/opencast#' \
    %{buildroot}%{_sysconfdir}/opencast/index/adminui/settings.yml
-sed 's#file=${karaf.data}/log#file=%{_localstatedir}/log/opencast#' \
+sed -i 's#file=${karaf.data}/log#file=%{_localstatedir}/log/opencast#' \
    %{buildroot}%{_sysconfdir}/opencast/org.ops4j.pax.logging.cfg
 
 # Patch storage dir
-sed 's#^\(org.opencastproject.storage.dir\)=.*$#\1=/srv/opencast#' \
+sed -i 's#^\(org.opencastproject.storage.dir\)=.*$#\1=/srv/opencast#' \
    %{buildroot}%{_sysconfdir}/opencast/custom.properties
 
 
@@ -168,8 +168,8 @@ rm -rf ${buildroot}
 
 
 %pre
-# Create user and group if nonexistant
-# Try using a common nummeric uid/gid if possible
+# Create user and group if nonexistent
+# Try using a common numeric uid/gid if possible
 if [ ! $(getent group %{gid}) ]; then
    if [ ! $(getent group %{ngid}) ]; then
       groupadd -r -g %{ngid} %{gid} > /dev/null 2>&1 || :
@@ -210,6 +210,11 @@ fi
 
 
 %changelog
+* Tue Jan 19 2016 Lars Kiesow <lkiesow@uos.de> 2.1.1-0.rc1
+- Update to Opencast 2.1.1-rc1
+- Fix sed commands
+- Fix required FFmpeg version
+
 * Wed Jan  6 2016 Lars Kiesow <lkiesow@uos.de> - 2.1.0-0
 - Opencast 2.1.0
 
