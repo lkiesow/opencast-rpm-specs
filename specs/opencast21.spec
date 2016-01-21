@@ -16,7 +16,7 @@
 
 Name:          opencast21-%{ocdist}
 Version:       2.1.1
-Release:       0.rc1%{?dist}
+Release:       0.1.rc1%{?dist}
 Summary:       Open Source Lecture Capture & Video Management Tool
 
 Group:         Applications/Multimedia
@@ -40,13 +40,16 @@ BuildRequires: tesseract >= 3
 BuildRequires: tesseract-langpack-deu >= 3
 BuildRequires: xz
 
-Requires: bash
-Requires: ffmpeg >= 2.5
+Requires: ffmpeg >= 2.8
 Requires: hunspell >= 1.2.8
 Requires: java-headless >= 1:1.7.0
-Requires: sed
 Requires: sox >= 14
 Requires: tesseract >= 3
+
+# For the start/stop scripts:
+Requires: bash
+Requires: nc
+Requires: sed
 
 %if "%{?ocdist}" == "allinone"
 Requires: activemq-dist >= 5.10
