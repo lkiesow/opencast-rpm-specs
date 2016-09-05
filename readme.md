@@ -19,7 +19,7 @@ This repository only contains the spec files. The source files can be either
 retrieved directly from upstream or bundled with the specs from the source
 repository located at:
 
- - [http://repo.virtuos.uos.de/srpms/](http://repo.virtuos.uos.de/srpms/)
+ - [http://pkg.opencast.org/srpms/](http://pkg.opencast.org/srpms/)
 
 If you only want to build your own RPM repository, I recommend using the source
 RPMs instead of downloading all source files by yourself. If you have
@@ -37,4 +37,4 @@ repository provided by the University of Osnabrück. It contains all necessary
 pre-compiled RPMs for an up-to-date Opencast installation. The repository can
 be found at:
 
- - [http://repo.virtuos.uos.de](http://repo.virtuos.uos.de)
+ - [https://pkg.opencast.org](https://pkg.opencast.org)
