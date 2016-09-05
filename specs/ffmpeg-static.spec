@@ -1,51 +1,15 @@
+%define debug_package %{nil}
+
 Name:          ffmpeg
 Summary:       Hyper fast MPEG1/MPEG4/H263/RV and AC3/MPEG audio encoder
-Version:       3.1.1
+Version:       3.1.3
 Release:       1%{?dist}
 License:       GPLv3+
 Group:         System Environment/Libraries
 
-Source:        http://ffmpeg.org/releases/%{name}-%{version}.tar.xz
-URL:           http://ffmpeg.sourceforge.net/
+Source:        https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-64bit-static.tar.xz
+URL:           http://ffmpeg.org
 BuildRoot:     %{_tmppath}/%{name}-root
-
-Provides:      ffmpeg = %{version}-%{release}
-
-#BuildRequires: SDL-devel
-#BuildRequires: a52dec-devel
-BuildRequires: bzip2-devel
-#BuildRequires: faad2-devel
-BuildRequires: freetype-devel
-BuildRequires: imlib2-devel
-BuildRequires: lame-devel
-BuildRequires: libstdc++-devel
-BuildRequires: libvorbis-devel
-BuildRequires: libtheora-devel
-BuildRequires: libass-devel
-BuildRequires: opus-devel
-BuildRequires: pulseaudio-libs-devel
-BuildRequires: libv4l-devel
-BuildRequires: openal-soft-devel
-BuildRequires: libvpx-devel >= 1.3.0
-BuildRequires: openjpeg-devel
-BuildRequires: openssl-devel
-BuildRequires: texi2html
-BuildRequires: x264-devel
-BuildRequires: x265-devel
-BuildRequires: yasm
-BuildRequires: zlib-devel
-Requires:      %{name}-libs = %{version}-%{release}
-
-
-%package libs
-Summary:        Library for ffmpeg
-Group:          System Environment/Libraries
-
-
-%package devel
-Summary:        Development files for %{name}
-Group:          Development/Libraries
-Requires:       %{name}-libs = %{version}-%{release}
 
 
 %description
@@ -57,108 +21,43 @@ usually to give only the target bitrate you want. FFmpeg can also convert
 from any sample rate to any other, and resize video on the fly with a high
 quality polyphase filter.
 
-%description devel
-FFmpeg is a complete and free Internet live audio and video broadcasting
-solution for Linux/Unix. It also includes a digital VCR. It can encode in real
-time in many formats including MPEG1 audio and video, MPEG4, h263, ac3, asf,
-avi, real, mjpeg, and flash.
-This package contains development files for ffmpeg
-
-%description libs
-FFmpeg is a complete and free Internet live audio and video broadcasting
-solution for Linux/Unix. It also includes a digital VCR. It can encode in real
-time in many formats including MPEG1 audio and video, MPEG4, h263, ac3, asf,
-avi, real, mjpeg, and flash.
-This package contains the libraries for ffmpeg
-
-
 
 %prep
-%setup -q -n %{name}-%{version}
-test -f version.h || echo "#define FFMPEG_VERSION \"%{evr}\"" > version.h
+%setup -q -n %{name}-%{version}-64bit-static
+
 
 %build
-./configure --prefix=%{_prefix} --libdir=%{_libdir} \
-            --shlibdir=%{_libdir} --mandir=%{_mandir} \
-   --enable-shared \
-   --disable-static \
-   --enable-runtime-cpudetect \
-   --enable-gpl \
-   --enable-version3 \
-   --enable-postproc \
-   --enable-avfilter \
-   --enable-pthreads \
-   --enable-x11grab \
-   --enable-libmp3lame \
-   --enable-libopenjpeg \
-   --enable-libtheora \
-   --enable-bzlib \
-   --enable-libass \
-   --enable-libfreetype \
-   --enable-openal \
-   --enable-libopus \
-   --enable-libpulse \
-   --enable-libv4l2 \
-   --disable-debug \
-   --enable-libvorbis \
-   --enable-libvpx \
-   --enable-libx264 \
-	--enable-libx265 \
-%ifarch %ix86
-   --extra-cflags="%{optflags}" \
-%else
-   --extra-cflags="%{optflags} -fPIC" \
-%endif
-   --disable-stripping
-
-make
-# remove some zero-length files, ...
-pushd doc
-rm -f general.html.d platform.html.d git-howto.html.d \
-   developer.html.d texi2pod.pl faq.html.d
-popd
 
 
 %install
 rm -rf %{buildroot}
-make install DESTDIR=%{buildroot} incdir=%{buildroot}%{_includedir}/ffmpeg
-# Remove from the included docs
-rm -f doc/Makefile
-rm -f %{buildroot}/usr/share/doc/ffmpeg/*.html
 
+install -p -d -m 0755 %{buildroot}%{_bindir}
+install -p ffmpeg %{buildroot}%{_bindir}
+install -p ffprobe %{buildroot}%{_bindir}
+install -p ffserver %{buildroot}%{_bindir}
 
 %clean
 rm -rf %{buildroot}
 
 
-%post libs -p /sbin/ldconfig
-%postun libs -p /sbin/ldconfig
-
-
 %files
 %defattr(-,root,root,-)
-%doc COPYING* CREDITS README* MAINTAINERS LICENSE* RELEASE doc/ RELEASE_NOTES VERSION
+%doc GPLv3.txt
 %{_bindir}/*
-%{_datadir}/ffmpeg
-%{_mandir}/man1/*
-
-
-%files libs
-%defattr(-,root,root,-)
-%doc COPYING* CREDITS README* MAINTAINERS LICENSE* RELEASE doc/ RELEASE_NOTES VERSION
-%{_libdir}/*.so.*
-%{_mandir}/man3/*
-
-
-%files devel
-%defattr(-,root,root,-)
-%doc COPYING* CREDITS README* MAINTAINERS LICENSE* RELEASE doc/ RELEASE_NOTES VERSION
-%{_includedir}/*
-%{_libdir}/pkgconfig/*.pc
-%{_libdir}/*.so
 
 
 %changelog
+* Mon Sep 05 2016 Lars Kiesow <lkiesow@uos.de> - 3.1.3-1
+- Update to FFmpeg 3.1.3
+
+* Wed Aug 17 2016 Lars Kiesow <lkiesow@uos.de> - 3.1.2-2
+- Fixed requirements
+
+* Mon Jul 25 2016 Lars Kiesow <lkiesow@uos.de> - 3.1.2-1
+- Static build of FFmpeg
+- Update to FFmpeg 3.1.2
+
 * Wed Jul 13 2016 Lars Kiesow <lkiesow@uos.de> - 3.1.1-1
 - Dependency cleanup
 - Update to FFmpeg 3.1.1

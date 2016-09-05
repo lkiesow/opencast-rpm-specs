@@ -6,9 +6,10 @@
 %define __provides_exclude_from ^.*\\.jar$
 
 Name:           activemq-dist
-Version:        5.12.1
-Release:        2%{?dist}
+Version:        5.14.0
+Release:        1%{?dist}
 Summary:        ActiveMQ Messaging Broker
+Group:          Networking/Daemons
 License:        ASL 2.0
 URL:            http://activemq.apache.org/
 Source0:        http://ftp.halifax.rwth-aachen.de/apache/activemq/%{version}/%{pkgname}-%{version}-bin.tar.gz
@@ -30,6 +31,7 @@ Requires:       which
 
 %package client
 Summary: Client jar for Apache ActiveMQ
+Group:       System
 %description client
 Client jar for Apache ActiveMQ
 
@@ -137,6 +139,12 @@ getent passwd %{project} >/dev/null || \
 %{_javadir}
 
 %changelog
+* Wed Aug 17 2016 Lars Kiesow <lkiesow@uos.de> 5.14.0-1
+- Update to ActiveMQ 5.14.0
+
+* Wed Jul 13 2016 Lars Kiesow <lkiesow@uos.de> - 5.13.3-1
+- Update to 5.13.3
+
 * Fri Jan  8 2016 Lars Kiesow <lkiesow@uos.de> - 5.12.1-1
 - Update to 5.12.1
 
