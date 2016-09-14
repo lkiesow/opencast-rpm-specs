@@ -4,7 +4,7 @@
 %define __requires_exclude_from ^.*\\.jar$
 %define __provides_exclude_from ^.*\\.jar$
 
-%define srcversion 2.2.1
+%define srcversion 2.2.2
 %define uid   opencast
 %define gid   opencast
 %define nuid  7967
@@ -15,7 +15,7 @@
 %endif
 
 Name:          opencast22-%{ocdist}
-Version:       2.2.1
+Version:       2.2.2
 Release:       1%{?dist}
 Summary:       Open Source Lecture Capture & Video Management Tool
 
@@ -213,6 +213,9 @@ fi
 
 
 %changelog
+* Tue Sep 13 2016 Lars Kiesow <lkiesow@uos.de> - 2.2.2-1
+- Update to Opencast 2.2.2
+
 * Fri Jul 29 2016 Lars Kiesow <lkiesow@uos.de> - 2.2.1-1
 - Update to Opencast 2.2.1
 
