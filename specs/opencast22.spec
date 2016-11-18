@@ -27,6 +27,7 @@ Source1:       opencast-maven-repo-%{srcversion}.tar.xz
 Source2:       jetty.xml
 Source3:       settings.xml
 Source4:       opencast.logrotate
+Source5:       org.apache.aries.transaction.cfg
 
 BuildRequires: bzip2
 BuildRequires: ffmpeg >= 2.8
@@ -136,6 +137,11 @@ cp %{SOURCE2} %{buildroot}%{_sysconfdir}/opencast/jetty.xml
 # Install logrotate configuration
 install -p -D -m 0644 %{SOURCE4} \
    %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
+   
+# Install workaround dummy file in /etc
+install -p -D -m 0644 %{SOURCE5} \
+   %{buildroot}%{_sysconfdir}/opencast
+
 
 # Install Systemd unit file
 install -p -D -m 0644 \
