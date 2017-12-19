@@ -6,7 +6,7 @@
 %define __provides_exclude_from ^.*\\.jar$
 
 Name:           activemq-dist
-Version:        5.14.0
+Version:        5.15.2
 Release:        1%{?dist}
 Summary:        ActiveMQ Messaging Broker
 Group:          Networking/Daemons
@@ -24,7 +24,7 @@ BuildRoot:      %{_tmppath}/%{pkgname}-%{version}-%{release}-root-%(%{__id_u} -n
 BuildArch: noarch
 
 BuildRequires:  systemd
-Requires:       java-headless >= 1:1.6.0
+Requires:       java-headless >= 1:1.8.0
 Requires:       which
 
 %define amqhome /usr/share/%{project}
@@ -57,9 +57,20 @@ mkdir -p $RPM_BUILD_ROOT/usr/bin
 ln -s %{amqhome}/bin/activemq-admin $RPM_BUILD_ROOT/usr/bin/activemq-admin
 ln -s %{amqhome}/bin/activemq       $RPM_BUILD_ROOT/usr/bin/activemq
 
+# Disable Java RMI
+sed -i 's/^ACTIVEMQ_SUNJMX_START=/#ACTIVEMQ_SUNJMX_START=/' $RPM_BUILD_ROOT%{amqhome}/bin/env
+
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}
 mv conf $RPM_BUILD_ROOT%{_sysconfdir}/activemq
 ln -s %{_sysconfdir}/activemq $RPM_BUILD_ROOT%{amqhome}/conf
+
+# Fix default connections
+sed -i 's_\(<transportConnector.*/>\)_<!--\1-->_' \
+   $RPM_BUILD_ROOT%{_sysconfdir}/activemq/activemq.xml
+
+# Disable web ui by default
+sed -i 's_\(<import resource="jetty.xml"/>\)_<!--\1-->_' \
+   $RPM_BUILD_ROOT%{_sysconfdir}/activemq/activemq.xml
 
 mkdir -p $RPM_BUILD_ROOT/var/log/activemq
 ln -s /var/log/activemq $RPM_BUILD_ROOT%{amqhome}/log
@@ -139,6 +150,19 @@ getent passwd %{project} >/dev/null || \
 %{_javadir}
 
 %changelog
+* Thu Aug 03 2017 Lars Kiesow <lkiesow@uos.de> 5.15.0-1
+- Update to ActiveMQ 5.15.0
+
+* Fri Mar 17 2017 Lars Kiesow <lkiesow@uos.de> 5.14.4-1
+- Update to ActiveMQ 5.14.4
+
+* Mon Nov 14 2016 Lars Kiesow <lkiesow@uos.de> 5.14.1-2
+- Fix several open ports
+
+* Mon Oct 24 2016 Lars Kiesow <lkiesow@uos.de> 5.14.1-1
+- Update to ActiveMQ 5.14.1
+- Fixed systemd unit fiöe
+
 * Wed Aug 17 2016 Lars Kiesow <lkiesow@uos.de> 5.14.0-1
 - Update to ActiveMQ 5.14.0
 
