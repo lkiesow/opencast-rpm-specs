@@ -4,7 +4,7 @@
 %define __requires_exclude_from ^.*\\.jar$
 %define __provides_exclude_from ^.*\\.jar$
 
-%define srcversion 2.3.1
+%define srcversion 2.3.5
 %define uid   opencast
 %define gid   opencast
 %define nuid  7967
@@ -15,7 +15,7 @@
 %endif
 
 Name:          opencast23-%{ocdist}
-Version:       2.3.1
+Version:       2.3.5
 Release:       1%{?dist}
 Summary:       Open Source Lecture Capture & Video Management Tool
 
@@ -41,7 +41,7 @@ BuildRequires: tesseract >= 3
 BuildRequires: tesseract-langpack-deu >= 3
 BuildRequires: xz
 
-Requires: ffmpeg >= 2.8
+Requires: ffmpeg >= 3
 Requires: hunspell >= 1.2.8
 Requires: java >= 1:1.7.0
 Requires: sox >= 14
@@ -203,7 +203,7 @@ fi
 
 
 %postun
-%systemd_postun opencast.service
+%systemd_postun_with_restart opencast.service
 
 
 %files
@@ -218,6 +218,21 @@ fi
 
 
 %changelog
+* Mon Dec 18 2017 Lars Kiesow <lkiesow@uos.de> 2.3.5-1
+- Update to Opencast 2.3.5
+
+* Mon Aug 21 2017 Lars Kiesow <lkiesow@uos.de> 2.3.4-1
+- Update to Opencast 2.3.4
+
+* Wed May 24 2017 Lars Kiesow <lkiesow@uos.de> 2.3.3-1
+- Update to Opencast 2.3.3
+
+* Mon Apr 03 2017 Lars Kiesow <lkiesow@uos.de> 2.3.2-2
+- Fixed Systemd unit restart after upgrade
+
+* Thu Mar 23 2017 Lars Kiesow <lkiesow@uos.de> 2.3.2-1
+- Update to Opencast 2.3.2
+
 * Wed Jan 25 2017 Lars Kiesow <lkiesow@uos.de> - 2.3.1-1
 - Update to Opencast 2.3.1
 
