@@ -4,7 +4,7 @@
 
 Name:           maven
 Version:        3.3.9
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Java project management and project comprehension tool
 
 Group:          Applications/Multimedia
@@ -15,7 +15,8 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch: noarch
 
-Requires: java-devel >= 1:1.7.0
+Requires: java-1.8.0-openjdk
+Requires: which
 
 
 %description
@@ -83,6 +84,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Apr 04 2017 Lars Kiesow <lkiesow@uos.de> 3.3.9-3
+- Hardwire Java8 since Java packages are stupid
+
+* Wed Feb 15 2017 Lars Kiesow <lkiesow@uos.de> - 3.3.9-2
+- Fixed `which` dependency
+
 * Thu Jul 14 2016 Lars Kiesow <lkiesow@uos.de> - 3.3.9-1
 - Update to version 3.3.9
 
