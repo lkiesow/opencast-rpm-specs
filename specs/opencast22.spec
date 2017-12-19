@@ -4,7 +4,7 @@
 %define __requires_exclude_from ^.*\\.jar$
 %define __provides_exclude_from ^.*\\.jar$
 
-%define srcversion 2.2.3
+%define srcversion 2.2.5
 %define uid   opencast
 %define gid   opencast
 %define nuid  7967
@@ -15,7 +15,7 @@
 %endif
 
 Name:          opencast22-%{ocdist}
-Version:       2.2.3
+Version:       2.2.5
 Release:       1%{?dist}
 Summary:       Open Source Lecture Capture & Video Management Tool
 
@@ -86,7 +86,7 @@ sed -i "s#BUILDPATH#$(pwd)#" settings.xml
 
 # Build Opencast
 cd opencast-%{srcversion}-source
-mvn -o -s ../settings.xml clean install
+mvn -o -s ../settings.xml clean install -DskipTests=true
 
 # Prepare base distribution
 cd build
@@ -137,11 +137,10 @@ cp %{SOURCE2} %{buildroot}%{_sysconfdir}/opencast/jetty.xml
 # Install logrotate configuration
 install -p -D -m 0644 %{SOURCE4} \
    %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
-   
+
 # Install workaround dummy file in /etc
 install -p -D -m 0644 %{SOURCE5} \
    %{buildroot}%{_sysconfdir}/opencast
-
 
 # Install Systemd unit file
 install -p -D -m 0644 \
@@ -204,7 +203,7 @@ fi
 
 
 %postun
-%systemd_postun opencast.service
+%systemd_postun_with_restart opencast.service
 
 
 %files
@@ -219,6 +218,12 @@ fi
 
 
 %changelog
+* Tue Jul 11 2017 Lars Kiesow <lkiesow@uos.de> 2.2.5-1
+- Update to Opencast 2.2.5
+
+* Tue Dec 06 2016 Lars Kiesow <lkiesow@uos.de> - 2.2.4-1
+- Update to Opencast 2.2.4
+
 * Thu Oct 13 2016 Lars Kiesow <lkiesow@uos.de> - 2.2.3-1
 - Update to Opencast 2.2.3
 
