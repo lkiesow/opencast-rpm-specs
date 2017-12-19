@@ -2,7 +2,7 @@
 
 Name:          ffmpeg
 Summary:       Hyper fast MPEG1/MPEG4/H263/RV and AC3/MPEG audio encoder
-Version:       3.2.2
+Version:       3.4.1
 Release:       1%{?dist}
 License:       GPLv3+
 Group:         System Environment/Libraries
@@ -48,6 +48,24 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Dec 19 2017 Lars Kiesow <lkiesow@uos.de> 3.4-1
+- Update to FFmpeg 3.4.1
+
+* Tue Oct 17 2017 Lars Kiesow <lkiesow@uos.de> 3.4-1
+- Update to FFmpeg 3.4
+
+* Mon Sep 18 2017 Lars Kiesow <lkiesow@uos.de> 3.3.4-1
+- Update to FFmpeg 3.3.4
+
+* Mon Jun 12 2017 Lars Kiesow <lkiesow@uos.de> 3.3.2-1
+- Update to FFmpeg 3.3.2
+
+* Thu Jun 01 2017 Lars Kiesow <lkiesow@uos.de> 3.3.1-1
+- Update to FFmpeg 3.3.1
+
+* Wed Feb 15 2017 Lars Kiesow <lkiesow@uos.de> - 3.2.4-1
+- Update to FFmpeg 3.2.4
+
 * Thu Dec 08 2016 Lars Kiesow <lkiesow@uos.de> - 3.2-1
 - Update to FFmpeg 3.2.2
 
