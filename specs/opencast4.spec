@@ -4,7 +4,7 @@
 %define __requires_exclude_from ^.*\\.jar$
 %define __provides_exclude_from ^.*\\.jar$
 
-%define srcversion 4.0
+%define srcversion 4.1
 %define uid   opencast
 %define gid   opencast
 %define nuid  7967
@@ -15,14 +15,14 @@
 %endif
 
 Name:          opencast4-%{ocdist}
-Version:       4.0
+Version:       %{srcversion}
 Release:       1%{?dist}
 Summary:       Open Source Lecture Capture & Video Management Tool
 
 Group:         Applications/Multimedia
 License:       ECL 2.0
 URL:           http://opencast.org
-Source0:       https://bitbucket.org/opencast-community/matterhorn/downloads/opencast-%{srcversion}-source.tar.xz
+Source0:       https://github.com/opencast/opencast/archive/%{srcversion}.tar.gz
 Source1:       opencast-maven-repo-%{srcversion}.tar.xz
 Source2:       jetty.xml
 Source3:       settings.xml
@@ -40,6 +40,7 @@ BuildRequires: tar
 BuildRequires: tesseract >= 3
 BuildRequires: tesseract-langpack-deu >= 3
 BuildRequires: xz
+BuildRequires: gzip
 
 Requires: ffmpeg >= 3
 Requires: hunspell >= 1.2.8
@@ -85,7 +86,7 @@ cp %{SOURCE3} settings.xml
 sed -i "s#BUILDPATH#$(pwd)#" settings.xml
 
 # Build Opencast
-cd opencast-%{srcversion}-source
+cd opencast-%{srcversion}
 mvn -o -s ../settings.xml clean install
 
 # Prepare base distribution
@@ -112,7 +113,7 @@ mkdir -m 755 -p %{buildroot}/srv/opencast
 mkdir -m 755 -p %{buildroot}%{_localstatedir}/log/opencast
 
 # Move files into the package filesystem
-mv opencast-%{srcversion}-source/build/opencast-dist-%{ocdist} \
+mv opencast-%{srcversion}/build/opencast-dist-%{ocdist} \
    %{buildroot}%{_datadir}/opencast
 mv %{buildroot}%{_datadir}/opencast/etc \
    %{buildroot}%{_sysconfdir}/opencast
@@ -218,6 +219,10 @@ fi
 
 
 %changelog
+* Wed Feb 07 2018 Lars Kiesow <lkiesow@uos.de> 4.1-1
+- Update to Opencast 4.1
+- Migration to Github
+
 * Mon Dec 18 2017 Lars Kiesow <lkiesow@uos.de> 4.0-1
 - Update to Opencast 4.0
 
