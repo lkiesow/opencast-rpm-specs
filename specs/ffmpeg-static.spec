@@ -2,7 +2,7 @@
 
 Name:          ffmpeg
 Summary:       Hyper fast MPEG1/MPEG4/H263/RV and AC3/MPEG audio encoder
-Version:       3.4.1
+Version:       4.0
 Release:       1%{?dist}
 License:       GPLv3+
 Group:         System Environment/Libraries
@@ -35,7 +35,6 @@ rm -rf %{buildroot}
 install -p -d -m 0755 %{buildroot}%{_bindir}
 install -p ffmpeg %{buildroot}%{_bindir}
 install -p ffprobe %{buildroot}%{_bindir}
-install -p ffserver %{buildroot}%{_bindir}
 
 %clean
 rm -rf %{buildroot}
@@ -48,6 +47,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Apr 24 2018 Lars Kiesow <lkiesow@uos.de> 4.0-1
+- Update to FFmpeg 4.0
+
 * Tue Dec 19 2017 Lars Kiesow <lkiesow@uos.de> 3.4-1
 - Update to FFmpeg 3.4.1
 
