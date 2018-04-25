@@ -78,10 +78,16 @@ educational videos.
 
 
 %prep
-%setup -q -c -a 0 -a 1
+%define fromsource %( if [ -d opencast%{ocversion}-%{ocdist}-%{srcversion}/opencast-%{srcversion}/build ]; then echo "1"; else echo "0"; fi )
 
+%if %fromsource
+%setup -q -c -a 0 -a 1
+%else
+%setup -c -D -T
+%endif
 
 %build
+%if %fromsource
 # Maven configuration
 cp %{SOURCE3} settings.xml
 sed -i "s#BUILDPATH#$(pwd)#" settings.xml
@@ -89,6 +95,9 @@ sed -i "s#BUILDPATH#$(pwd)#" settings.xml
 # Build Opencast
 cd opencast-%{srcversion}
 mvn -o -s ../settings.xml clean install
+%else
+cd opencast-%{srcversion}
+%endif
 
 # Prepare base distribution
 cd build
