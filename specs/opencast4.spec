@@ -4,6 +4,7 @@
 %define __requires_exclude_from ^.*\\.jar$
 %define __provides_exclude_from ^.*\\.jar$
 
+%define ocversion 4
 %define srcversion 4.4
 %define uid   opencast
 %define gid   opencast
@@ -14,7 +15,7 @@
 %define ocdist allinone
 %endif
 
-Name:          opencast4-%{ocdist}
+Name:          opencast%{ocversion}-%{ocdist}
 Version:       %{srcversion}
 Release:       1%{?dist}
 Summary:       Open Source Lecture Capture & Video Management Tool
