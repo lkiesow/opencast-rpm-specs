@@ -4,7 +4,7 @@
 %define __requires_exclude_from ^.*\\.jar$
 %define __provides_exclude_from ^.*\\.jar$
 
-%define srcversion 4.5
+%define srcversion 5.5
 %define uid   opencast
 %define gid   opencast
 %define nuid  7967
@@ -14,7 +14,7 @@
 %define ocdist allinone
 %endif
 
-Name:          opencast4-%{ocdist}
+Name:          opencast5-%{ocdist}
 Version:       %{srcversion}
 Release:       1%{?dist}
 Summary:       Open Source Lecture Capture & Video Management Tool
@@ -117,6 +117,8 @@ mv opencast-%{srcversion}/build/opencast-dist-%{ocdist} \
    %{buildroot}%{_datadir}/opencast
 mv %{buildroot}%{_datadir}/opencast/etc \
    %{buildroot}%{_sysconfdir}/opencast
+mv %{buildroot}%{_datadir}/opencast/bin/setenv \
+   %{buildroot}%{_sysconfdir}/opencast/setenv
 mv %{buildroot}%{_datadir}/opencast/data \
    %{buildroot}%{_sharedstatedir}/opencast
 
@@ -126,6 +128,8 @@ mkdir %{buildroot}%{_sharedstatedir}/opencast/instances
 # Create some links to circumvent Karaf bugs
 ln -s %{_sysconfdir}/opencast \
    %{buildroot}%{_datadir}/opencast/etc
+ln -s %{_sysconfdir}/opencast/setenv \
+   %{buildroot}%{_datadir}/opencast/bin/setenv
 ln -s %{_sharedstatedir}/opencast \
    %{buildroot}%{_datadir}/opencast/data
 ln -s %{_sharedstatedir}/opencast/instances \
@@ -155,9 +159,9 @@ sed -i 's#/opt/#/usr/share/#' %{buildroot}%{_unitdir}/opencast.service
 
 # Binary file configuration
 echo "export KARAF_DATA=%{_sharedstatedir}/opencast" >> \
-   %{buildroot}%{_datadir}/opencast/bin/setenv
+   %{buildroot}%{_sysconfdir}/opencast/setenv
 echo "export KARAF_ETC=%{_sysconfdir}/opencast" >> \
-   %{buildroot}%{_datadir}/opencast/bin/setenv
+   %{buildroot}%{_sysconfdir}/opencast/setenv
 
 # Patch log file locations
 sed -i 's#path.logs: ${karaf.data}/log#path.logs: %{_localstatedir}/log/opencast#' \
@@ -219,8 +223,14 @@ fi
 
 
 %changelog
-* Thu Nov 08 2018 Lars Kiesow <lkiesow@uos.de> 4.5-1
-- Update to Opencast 4.5
+* Tue Apr 02 2019 Lars Kiesow <lkiesow@uos.de> 5.5-1
+- Update to Opencast 5.5
+
+* Tue Nov 13 2018 Lars Kiesow <lkiesow@uos.de> 5.2-1
+- Update to Opencast 5.2
+
+* Mon Sep 03 2018 Lars Kiesow <lkiesow@uos.de> 5.1-1
+- Update to Opencast 5.1
 
 * Sun Jun 03 2018 Lars Kiesow <lkiesow@uos.de> 4.4-1
 - Update to Opencast 4.4

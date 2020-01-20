@@ -4,7 +4,7 @@
 %define __requires_exclude_from ^.*\\.jar$
 %define __provides_exclude_from ^.*\\.jar$
 
-%define srcversion 4.5
+%define srcversion 8.0
 %define uid   opencast
 %define gid   opencast
 %define nuid  7967
@@ -14,20 +14,19 @@
 %define ocdist allinone
 %endif
 
-Name:          opencast4-%{ocdist}
+Name:          opencast8-%{ocdist}
 Version:       %{srcversion}
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       Open Source Lecture Capture & Video Management Tool
 
 Group:         Applications/Multimedia
 License:       ECL 2.0
 URL:           http://opencast.org
 Source0:       https://github.com/opencast/opencast/archive/%{srcversion}.tar.gz
-Source1:       opencast-maven-repo-%{srcversion}.tar.xz
-Source2:       jetty.xml
-Source3:       settings.xml
-Source4:       opencast.logrotate
-Source5:       org.apache.aries.transaction.cfg
+Source1:       jetty.xml
+Source2:       settings-online.xml
+Source3:       opencast.logrotate
+Source4:       org.apache.aries.transaction.cfg
 
 BuildRequires: bzip2
 BuildRequires: ffmpeg >= 3
@@ -41,6 +40,7 @@ BuildRequires: tesseract >= 3
 BuildRequires: tesseract-langpack-deu >= 3
 BuildRequires: xz
 BuildRequires: gzip
+BuildRequires: git
 
 Requires: ffmpeg >= 3
 Requires: hunspell >= 1.2.8
@@ -54,7 +54,7 @@ Requires: nc
 Requires: sed
 
 %if "%{?ocdist}" == "allinone"
-Requires: activemq-dist >= 5.10
+Requires: activemq-dist >= 5.14
 %endif
 
 BuildRequires:     systemd
@@ -77,22 +77,22 @@ educational videos.
 
 
 %prep
-%setup -q -c -a 0 -a 1
+%setup -q -c -a 0
 
 
 %build
 # Maven configuration
-cp %{SOURCE3} settings.xml
+cp %{SOURCE2} settings.xml
 sed -i "s#BUILDPATH#$(pwd)#" settings.xml
 
 # Build Opencast
-cd opencast-%{srcversion}
-mvn -o -s ../settings.xml clean install
+cd opencast-*
+mvn -s ../settings.xml clean install
 
 # Prepare base distribution
 cd build
 find ./* -maxdepth 0 -type d -exec rm -rf '{}' \;
-tar xf opencast-dist-%{ocdist}-%{srcversion}.tar.gz
+tar xf opencast-dist-%{ocdist}-*.tar.gz
 
 # Fix newline character at end of configuration files
 find opencast-dist-%{ocdist}/etc -name '*.xml' \
@@ -113,10 +113,12 @@ mkdir -m 755 -p %{buildroot}/srv/opencast
 mkdir -m 755 -p %{buildroot}%{_localstatedir}/log/opencast
 
 # Move files into the package filesystem
-mv opencast-%{srcversion}/build/opencast-dist-%{ocdist} \
+mv opencast-*/build/opencast-dist-%{ocdist} \
    %{buildroot}%{_datadir}/opencast
 mv %{buildroot}%{_datadir}/opencast/etc \
    %{buildroot}%{_sysconfdir}/opencast
+mv %{buildroot}%{_datadir}/opencast/bin/setenv \
+   %{buildroot}%{_sysconfdir}/opencast/setenv
 mv %{buildroot}%{_datadir}/opencast/data \
    %{buildroot}%{_sharedstatedir}/opencast
 
@@ -126,6 +128,8 @@ mkdir %{buildroot}%{_sharedstatedir}/opencast/instances
 # Create some links to circumvent Karaf bugs
 ln -s %{_sysconfdir}/opencast \
    %{buildroot}%{_datadir}/opencast/etc
+ln -s %{_sysconfdir}/opencast/setenv \
+   %{buildroot}%{_datadir}/opencast/bin/setenv
 ln -s %{_sharedstatedir}/opencast \
    %{buildroot}%{_datadir}/opencast/data
 ln -s %{_sharedstatedir}/opencast/instances \
@@ -133,14 +137,14 @@ ln -s %{_sharedstatedir}/opencast/instances \
 
 # Add custom jetty.xml
 # Otherwise Karaf will attempt to do that and fail to start
-cp %{SOURCE2} %{buildroot}%{_sysconfdir}/opencast/jetty.xml
+cp %{SOURCE1} %{buildroot}%{_sysconfdir}/opencast/jetty.xml
 
 # Install logrotate configuration
-install -p -D -m 0644 %{SOURCE4} \
+install -p -D -m 0644 %{SOURCE3} \
    %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
 
 # Install workaround dummy file in /etc
-install -p -D -m 0644 %{SOURCE5} \
+install -p -D -m 0644 %{SOURCE4} \
    %{buildroot}%{_sysconfdir}/opencast
 
 # Install Systemd unit file
@@ -155,19 +159,21 @@ sed -i 's#/opt/#/usr/share/#' %{buildroot}%{_unitdir}/opencast.service
 
 # Binary file configuration
 echo "export KARAF_DATA=%{_sharedstatedir}/opencast" >> \
-   %{buildroot}%{_datadir}/opencast/bin/setenv
+   %{buildroot}%{_sysconfdir}/opencast/setenv
 echo "export KARAF_ETC=%{_sysconfdir}/opencast" >> \
-   %{buildroot}%{_datadir}/opencast/bin/setenv
+   %{buildroot}%{_sysconfdir}/opencast/setenv
 
 # Patch log file locations
-sed -i 's#path.logs: ${karaf.data}/log#path.logs: %{_localstatedir}/log/opencast#' \
-   %{buildroot}%{_sysconfdir}/opencast/index/adminui/settings.yml
-sed -i 's#file=${karaf.data}/log#file=%{_localstatedir}/log/opencast#' \
+sed -i 's#fileName *= *${karaf.data}/log#fileName = %{_localstatedir}/log/opencast#' \
    %{buildroot}%{_sysconfdir}/opencast/org.ops4j.pax.logging.cfg
 
 # Patch storage dir
 sed -i 's#^\(org.opencastproject.storage.dir\)=.*$#\1=/srv/opencast#' \
    %{buildroot}%{_sysconfdir}/opencast/custom.properties
+
+# Patch Sonatype repository
+sed -i 's#http:#https:#' \
+   %{buildroot}%{_sysconfdir}/opencast/org.ops4j.pax.url.mvn.cfg
 
 
 
@@ -219,8 +225,35 @@ fi
 
 
 %changelog
-* Thu Nov 08 2018 Lars Kiesow <lkiesow@uos.de> 4.5-1
-- Update to Opencast 4.5
+* Mon Jan 20 2020 Lars Kiesow <lkiesow@uos.de> 8.0-2
+- Fixed Sonatype repository
+
+* Tue Dec 17 2019 Lars Kiesow <lkiesow@uos.de> 8.0-1
+- Update to 8.0
+
+* Mon Oct 07 2019 Lars Kiesow <lkiesow@uos.de> 7.4-1
+- Update to 7.4
+
+* Mon Sep 23 2019 Lars Kiesow <lkiesow@uos.de> 7.3-1
+- Update to 7.3
+
+* Fri Aug 02 2019 Lars Kiesow <lkiesow@uos.de> 7.2-1
+- Update to Opencast 7.2
+
+* Wed Apr 03 2019 Lars Kiesow <lkiesow@uos.de> 6.4-1
+- Update to Opencast 6.4
+
+* Tue Mar 05 2019 Lars Kiesow <lkiesow@uos.de> 6.3-1
+- Update to Opencast 6.3
+
+* Mon Dec 10 2018 Lars Kiesow <lkiesow@uos.de> 6.x-1
+- Update to Opencast 6.0
+
+* Wed Oct 17 2018 Lars Kiesow <lkiesow@uos.de> 0.6.0-0.1
+- test Update to Opencast 6 (pre-release)
+
+* Mon Sep 03 2018 Lars Kiesow <lkiesow@uos.de> 5.1-1
+- Update to Opencast 5.1
 
 * Sun Jun 03 2018 Lars Kiesow <lkiesow@uos.de> 4.4-1
 - Update to Opencast 4.4
